@@ -1,0 +1,13 @@
+*.pyc
+*.swp
+ez_setup
+tw2*
+*.db*
+data
+build
+dist
+doc/build
+*.egg*
+README.pdf
+*.pid
+*.log
