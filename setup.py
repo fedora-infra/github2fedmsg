@@ -14,6 +14,8 @@ requires = [
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
+    'moksha>=0.8.7',
+    'weberror',
     ]
 
 setup(name='statatat',
