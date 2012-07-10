@@ -3,12 +3,23 @@ from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
+from moksha.api.widgets import get_moksha_socket
+
 from .models import (
     DBSession,
     MyModel,
-    )
+)
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
+def with_moksha_socket(func):
+    """ Decorator that injects a moksha socket. """
+    def wrapper(request):
+        d = func(request)
+        d['moksha_socket'] = get_moksha_socket(request.registry.settings)
+        return d
+    return wrapper
+
+@view_config(route_name='home', renderer='index.mak')
+@with_moksha_socket
 def my_view(request):
     try:
         one = DBSession.query(MyModel).filter(MyModel.name=='one').first()
