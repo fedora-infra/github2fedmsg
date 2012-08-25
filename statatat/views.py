@@ -1,5 +1,12 @@
 from pyramid.response import Response
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
+from pyramid.security import (
+    authenticated_userid,
+    remember,
+    forget,
+)
+
 
 from sqlalchemy.exc import DBAPIError
 
@@ -20,6 +27,7 @@ def with_moksha_socket(func):
 @view_config(route_name='home', renderer='index.mak')
 @with_moksha_socket
 def my_view(request):
+    print "logged in as", authenticated_userid(request)
     return {}
 
 
@@ -31,11 +39,18 @@ def github_login_complete_view(request):
     if query.count() == 0:
         m.DBSession.add(m.User(username=username))
 
+    headers = remember(request, username)
     # TODO -- how not to hard code this location?
-    return HTTPFound(location="/")
+    return HTTPFound(location="/", headers=headers)
 
 
 @view_config(context='velruse.AuthenticationDenied', renderer='json')
 def login_denied_view(request):
     # TODO -- fancy flash and redirect
     return {'result': 'denied'}
+
+
+@view_config(route_name='logout')
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location="/", headers=headers)
