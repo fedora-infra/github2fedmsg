@@ -1,3 +1,6 @@
+from pyramid.threadlocal import get_current_request
+from pyramid.events import subscriber
+from pyramid.events import BeforeRender
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -7,7 +10,6 @@ from pyramid.security import (
     forget,
 )
 
-
 from sqlalchemy.exc import DBAPIError
 
 from moksha.api.widgets import get_moksha_socket
@@ -15,17 +17,14 @@ from moksha.api.widgets import get_moksha_socket
 import statatat.models as m
 
 
-def with_moksha_socket(func):
-    """ Decorator that injects a moksha socket. """
-    def wrapper(request):
-        d = func(request)
-        d['moksha_socket'] = get_moksha_socket(request.registry.settings)
-        return d
-    return wrapper
+@subscriber(BeforeRender)
+def inject_globals(event):
+    event['moksha_socket'] = get_moksha_socket(
+        get_current_request().registry.settings
+    )
 
 
 @view_config(route_name='home', renderer='index.mak')
-@with_moksha_socket
 def my_view(request):
     print "logged in as", authenticated_userid(request)
     return {}
