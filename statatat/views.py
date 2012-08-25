@@ -10,6 +10,7 @@ from .models import (
     MyModel,
 )
 
+
 def with_moksha_socket(func):
     """ Decorator that injects a moksha socket. """
     def wrapper(request):
@@ -17,6 +18,7 @@ def with_moksha_socket(func):
         d['moksha_socket'] = get_moksha_socket(request.registry.settings)
         return d
     return wrapper
+
 
 @view_config(route_name='home', renderer='index.mak')
 @with_moksha_socket
@@ -43,3 +45,10 @@ After you fix the problem, please restart the Pyramid application to
 try it again.
 """
 
+@view_config(context='velruse.AuthenticationComplete', renderer='json')
+def github_login_complete_view(request):
+    return {"access": "granted"}
+
+@view_config(context='velruse.AuthenticationDenied', renderer='json')
+def login_denied_view(request):
+    return {'result': 'denied'}

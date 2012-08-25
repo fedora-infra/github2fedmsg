@@ -16,6 +16,7 @@ requires = [
     'waitress',
     'moksha>=0.8.7',
     'weberror',
+    'velruse',
     ]
 
 setup(name='statatat',
