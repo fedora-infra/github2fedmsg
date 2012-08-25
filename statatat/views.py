@@ -19,9 +19,9 @@ import statatat.models as m
 
 @subscriber(BeforeRender)
 def inject_globals(event):
-    event['moksha_socket'] = get_moksha_socket(
-        get_current_request().registry.settings
-    )
+    request = get_current_request()
+    event['moksha_socket'] = get_moksha_socket(request.registry.settings)
+    event['identity'] = authenticated_userid(request)
 
 
 @view_config(route_name='home', renderer='index.mak')
