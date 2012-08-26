@@ -1,7 +1,3 @@
-from pyramid.threadlocal import get_current_request
-from pyramid.events import subscriber
-from pyramid.events import BeforeRender
-from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import (
@@ -10,24 +6,8 @@ from pyramid.security import (
     forget,
 )
 
-from sqlalchemy.exc import DBAPIError
-
-from moksha.api.widgets import get_moksha_socket
 
 import statatat.models as m
-
-
-@subscriber(BeforeRender)
-def inject_globals(event):
-    request = get_current_request()
-    event['moksha_socket'] = get_moksha_socket(request.registry.settings)
-    event['identity'] = authenticated_userid(request)
-
-
-@view_config(route_name='home', renderer='index.mak')
-def my_view(request):
-    print "logged in as", authenticated_userid(request)
-    return {}
 
 
 @view_config(context='velruse.AuthenticationComplete')
