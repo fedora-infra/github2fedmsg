@@ -8,6 +8,7 @@ def my_view(request):
     return {}
 
 
-@view_config(context="tw2.core.widgets.WidgetMeta", renderer='string')
+@view_config(context="tw2.core.widgets.WidgetMeta",
+             renderer='widget.mak')
 def widget_view(request):
-    return request.context.display()
+    return dict(widget=request.context)
