@@ -26,4 +26,21 @@ class UserApp(statatat.widgets.UserProfile):
 
     @classmethod
     def __getitem__(self, key):
-        raise "watwat"
+        if key == 'new':
+            return statatat.widgets.NewWidgetWidget(user=self.user)
+
+        # I dunno about this yet.. what is this app going to do?
+        raise NotImplementedError("The stuff below this needs thinking over..")
+        suffix = '.widget'
+        if key.endswith(suffix):
+            # Visiting /username/my_widget produces a user page detailing the
+            # widget, what options it has, displaying it...  Visiting
+            # /username/my_widget.widget produces the embeddable version.
+            chrome = False
+            key = key[:-len(suffix)]
+
+        for conf in self.user.widget_configurations:
+            if conf.name == key:
+                return statatat.widgets.make_widget(conf, chrome)
+
+        raise KeyError("No such widget %r" % key)
