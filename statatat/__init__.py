@@ -6,6 +6,7 @@ from pyramid.security import authenticated_userid
 from sqlalchemy import engine_from_config
 
 import statatat.models
+import statatat.traversal
 
 # TODO -- replace this with pyramid_beaker
 crappy_session_factory = UnencryptedCookieSessionFactoryConfig('itsaseekreet')
@@ -27,6 +28,7 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     statatat.models.DBSession.configure(bind=engine)
     config = Configurator(
+        root_factory=statatat.traversal.make_root,
         settings=settings,
         session_factory=crappy_session_factory,
         authentication_policy=authn_policy,

@@ -6,3 +6,8 @@ from pyramid.security import authenticated_userid
 def my_view(request):
     print "logged in as", authenticated_userid(request)
     return {}
+
+
+@view_config(context="tw2.core.widgets.WidgetMeta", renderer='string')
+def widget_view(request):
+    return request.context.display()
