@@ -20,7 +20,7 @@ def github_login_complete_view(request):
 
     headers = remember(request, username)
     # TODO -- how not to hard code this location?
-    return HTTPFound(location="/", headers=headers)
+    return HTTPFound(location="/" + username, headers=headers)
 
 
 @view_config(context='velruse.AuthenticationDenied', renderer='json')
