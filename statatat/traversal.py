@@ -24,5 +24,6 @@ class UserApp(statatat.widgets.UserProfile):
     __name__ = None
     __parent__ = RootApp
 
+    @classmethod
     def __getitem__(self, key):
         raise "watwat"
