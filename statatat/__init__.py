@@ -28,8 +28,8 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     statatat.models.DBSession.configure(bind=engine)
     config = Configurator(
-        root_factory=statatat.traversal.make_root,
         settings=settings,
+        root_factory=statatat.traversal.make_root,
         session_factory=crappy_session_factory,
         authentication_policy=authn_policy,
         #authorization_policy=authz_policy,
