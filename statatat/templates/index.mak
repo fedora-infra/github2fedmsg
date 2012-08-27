@@ -12,6 +12,10 @@
       </form>
       Hai there.
     % endif
+
+    TODO - put stuff here about what this is, pictures of users using it and
+    having fun.. etc.
+
     ${moksha_socket.display() | n}
   </body>
 </html>
