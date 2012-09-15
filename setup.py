@@ -14,9 +14,16 @@ requires = [
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
-    'moksha>=0.8.7',
     'weberror',
     'velruse',
+
+    'requests <= 0.13.1',
+    # This breaks with the latest "requests"
+    # https://github.com/copitux/python-github3/issues/26
+    'pygithub3',
+
+    'moksha.hub',
+    'moksha.wsgi',
     ]
 
 setup(name='statatat',

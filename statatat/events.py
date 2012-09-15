@@ -3,7 +3,7 @@ from pyramid.events import subscriber
 from pyramid.events import BeforeRender
 from pyramid.security import authenticated_userid
 
-from moksha.api.widgets import get_moksha_socket
+from moksha.wsgi.widgets.api import get_moksha_socket
 
 
 @subscriber(BeforeRender)
