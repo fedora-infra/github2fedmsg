@@ -24,6 +24,8 @@ requires = [
 
     'moksha.hub',
     'moksha.wsgi',
+
+    'tw2.bootstrap.forms',
     ]
 
 setup(name='statatat',
