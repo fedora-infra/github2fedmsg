@@ -1,5 +1,7 @@
 <html>
-  <head></head>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/statatat.css" media="all"/>
+  </head>
   <body>
     <div class="header">
       <span class="logo">statat.at</span>

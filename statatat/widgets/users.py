@@ -19,3 +19,12 @@ class UserProfile(twc.Widget):
             gh.repos.list(self.user.username).all(),
             lambda x, y: cmp(x.name.lower(), y.name.lower()),
         )
+
+    def make_button(self, repo_name):
+        # TODO -- actually implement this by checking the DB or checking for the
+        # hook.
+        import random
+        if random.random() > 0.5:
+            return "<button class='btn btn-success'>Enable</button>"
+        else:
+            return "<button class='btn btn-danger'>Disable</button>"
