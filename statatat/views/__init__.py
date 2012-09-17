@@ -8,12 +8,12 @@ def home(request):
     return {}
 
 
-@view_config(route_name='hubbub', renderer='string')
-def hubbub(request):
-    """ Respond to pubsubhubbub challenges. """
+@view_config(route_name='webhook', renderer='string')
+def webhook(request):
+    """ Handle github webhook. """
     import pprint
     pprint.pprint(request.params)
-    return request.params['hub.challenge']
+    return "OK"
 
 
 @view_config(context="tw2.core.widgets.WidgetMeta",

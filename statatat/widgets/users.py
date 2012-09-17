@@ -23,8 +23,13 @@ class UserProfile(twc.Widget):
     def make_button(self, repo_name):
         # TODO -- actually implement this by checking the DB or checking for the
         # hook.
-        import random
-        if random.random() > 0.5:
-            return "<button class='btn btn-success'>Enable</button>"
-        else:
-            return "<button class='btn btn-danger'>Disable</button>"
+        link = 'http://github.com/%s/%s/admin/hooks#generic_minibucket' % (
+            self.user.username, repo_name)
+        click = 'onclick="window.open(\'%s\', \'_blank\');"' % link
+        return "<button class='btn btn-success' %s>Enable</button>" % click
+
+        #import random
+        #if random.random() > 0.5:
+        #    return "<button class='btn btn-success' %s>Enable</button>" % click
+        #else:
+        #    return "<button class='btn btn-danger' %s>Disable</button>" % click
