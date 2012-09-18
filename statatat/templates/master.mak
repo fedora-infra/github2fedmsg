@@ -32,7 +32,12 @@
       ${self.body()}
     </div>
     <footer class="container-fluid">
-    Footer.
+    <p>Statatat is written by <a href="http://threebean.org">Ralph Bean</a>
+      and is licened under the
+      <a href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>; the source
+      code can be found
+      <a href="http://github.com/ralphbean/statatat">on github.</a>
+    </p>
     </footer>
   </body>
 </html>
