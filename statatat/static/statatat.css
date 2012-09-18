@@ -49,7 +49,8 @@ body {
 .content {
     margin-left: auto;
     margin-right: auto;
-    width: 800px;
+    width: 100%;
+    /*width: 0px;*/
 }
 
 .logo {
@@ -68,9 +69,11 @@ body {
 }
 
 footer {
-    width: 900px;
+    width: 66%;
     border-top: solid #AAAAAA 1px;
     margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
     color: #AAAAAA;
 }
 footer p {
