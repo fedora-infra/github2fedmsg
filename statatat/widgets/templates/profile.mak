@@ -2,8 +2,7 @@
 <div class="photo-64"><img src="${w.gh_user.avatar_url}&s=64" /></div>
 <h1>
   ${w.user.username}
-  (${w.gh_user.name})
-  ${len(w.gh_repos)} repos
+  <small>${w.gh_user.name}, ${len(w.gh_repos)} repos</small>
 </h1>
 </span>
 

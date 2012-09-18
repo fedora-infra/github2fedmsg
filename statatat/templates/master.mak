@@ -31,7 +31,6 @@
     <div class="container-fluid">
       ${self.body()}
     </div>
-
     <footer class="container-fluid">
     Footer.
     </footer>
