@@ -14,7 +14,7 @@
 
   <div class="row">
     <span class="span2 offset1">
-      <h2>Show off</h2>
+      <h2>Swank</h2>
       <p>By embedding your Statatat widget on your blog, you can show
         off your daily foo to your friends.</p>
     </span>
