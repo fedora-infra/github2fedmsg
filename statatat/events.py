@@ -5,9 +5,12 @@ from pyramid.security import authenticated_userid
 
 from moksha.wsgi.widgets.api import get_moksha_socket
 
-from tw2.bootstrap.forms import (
-    bootstrap_css,
-    bootstrap_responsive_css,
+from tw2.bootstrap.forms import bootstrap_responsive_css
+import tw2.core
+
+bootstrap_css = tw2.core.CSSLink(
+    filename="static/bootswatch/united/bootstrap.min.css",
+    modname=__name__,
 )
 
 

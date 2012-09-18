@@ -41,6 +41,9 @@ body {
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
+.hero-unit h1 {
+    font-size:350% !important;
+}
 
 .vspace {
     height: 40px;
