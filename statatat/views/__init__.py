@@ -1,13 +1,14 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
+from hashlib import md5
+
 import moksha.hub.hub
 import json
 
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
-    print "logged in as", authenticated_userid(request)
     return {}
 
 
@@ -21,12 +22,18 @@ def webhook(request):
         if isinstance(payload, basestring):
             payload = json.loads(payload)
 
-        topic = "%s.%s" % (
-            payload['repository']['owner']['name'],
-            payload['repository']['name']
-        )
         hub = moksha.hub.hub.MokshaHub(request.registry.settings)
-        hub.send_message(topic=topic, message=payload)
+
+        topic_extractors = {
+            'repo': lambda i: payload['repository']['url'],
+            'repo_owner': lambda i: payload['repository']['owner']['email'],
+            'author': lambda i: payload['commits'][i]['author']['email'],
+            'committer': lambda i: payload['commits'][i]['committer']['email'],
+        }
+        for prefix, extractor in topic_extractors.items():
+            for i, commit in enumerate(payload['commits']):
+                topic = "%s.%s" % (prefix, md5(extractor(i)).hexdigest())
+                hub.send_message(topic=topic, message=commit)
 
     return "OK"
 
