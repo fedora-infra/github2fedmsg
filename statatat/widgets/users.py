@@ -1,5 +1,7 @@
 import tw2.core as twc
 
+from hashlib import md5
+
 from pygithub3 import Github
 gh = Github()
 
@@ -10,6 +12,7 @@ class UserProfile(twc.Widget):
     # These get filled in just before the widget is displayed.
     gh_user = twc.Variable()
     gh_repos = twc.Variable()
+    commits_widget = twc.Variable()
 
     def prepare(self):
         """ Query github for some information before display """
@@ -19,6 +22,12 @@ class UserProfile(twc.Widget):
             gh.repos.list(self.user.username).all(),
             lambda x, y: cmp(x.name.lower(), y.name.lower()),
         )
+
+        topics = [
+            "%s.%s" % ('author', md5(email).hexdigest())
+            for email in self.user.emails.split(',')
+        ]
+        #self.commits_widget = CommitsWidget(topics=topics)
 
     def make_button(self, repo_name):
         # TODO -- actually implement this by checking the DB or checking for the

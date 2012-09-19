@@ -6,17 +6,21 @@ from pyramid.security import (
     forget,
 )
 
-
 import statatat.models as m
 
 
 @view_config(context='velruse.AuthenticationComplete')
 def github_login_complete_view(request):
     username = request.context.profile['preferredUsername']
+    emails = ','.join((
+        item['value'] for item in request.context.profile['emails']
+    ))
 
     query = m.User.query.filter_by(username=username)
     if query.count() == 0:
-        m.DBSession.add(m.User(username=username))
+        m.DBSession.add(m.User(username=username, emails=emails))
+
+    # TODO -- how to update the users emails if they change them on github
 
     headers = remember(request, username)
     # TODO -- how not to hard code this location?
