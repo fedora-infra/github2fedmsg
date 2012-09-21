@@ -85,3 +85,7 @@ footer p {
     margin-right: auto;
     font-size: 80% !important;
 }
+form.navbar-form {
+    margin-left: 50px;
+    padding-top: 2px;
+}
