@@ -35,7 +35,8 @@
           href="http://pylonsproject.org">Pyramid</a>.  The widgets are
         rendered with <a href="http://d3js.org">d3js</a>.</p>
       <div class="logo">
-        <img style="height:88px;" src="http://mokshaproject.net/img/moksha-logo.png"/>
+        <img style="height:88px;"
+        src="http://mokshaproject.github.com/mokshaproject.net/img/moksha-logo.png"/>
       </div>
     </span>
     <span class="span2">
