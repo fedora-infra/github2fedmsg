@@ -12,7 +12,6 @@ class UserProfile(twc.Widget):
     # These get filled in just before the widget is displayed.
     gh_user = twc.Variable()
     gh_repos = twc.Variable()
-    commits_widget = twc.Variable()
 
     def prepare(self):
         """ Query github for some information before display """
@@ -27,7 +26,6 @@ class UserProfile(twc.Widget):
             "%s.%s" % ('author', md5(email).hexdigest())
             for email in self.user.emails.split(',')
         ]
-        #self.commits_widget = CommitsWidget(topics=topics)
 
     def make_button(self, repo_name):
         # TODO -- actually implement this by checking the DB or checking for the

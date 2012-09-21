@@ -38,7 +38,7 @@
               </form>
             %else:
               <form class="navbar-form pull-right" action="/login/github" method="post">
-                <input class="btn btn-inverse" type="submit" value="Sign in with Github" />
+                <input class="btn btn-primary" type="submit" value="Sign in with Github" />
               </form>
             %endif
             </li>
