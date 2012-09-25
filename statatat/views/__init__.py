@@ -9,6 +9,13 @@ import requests
 import moksha.hub.hub
 import json
 
+github_api_url = "https://api.github.com/hub"
+github_events = [
+    "push", "issues", "issue_comment", "pull_request", "gollum",
+    "watch", "download", "fork", "fork_apply", "member", "public",
+    "status",
+]
+
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
@@ -51,20 +58,21 @@ def widget_view(request):
 def repo_toggle_enabled(request):
     repo = request.context
     repo.enabled = not repo.enabled
-    event = "push"
-    github_url = "https://api.github.com/hub"
     data = {
-      "access_token": request.session['token'],
-      "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
-      "hub.topic": "https://github.com/%s/%s/events/%s" % (
-          repo.user.username, repo.name, event),
-      "hub.callback": "http://requestb.in/15zb0tk1",
+        "access_token": request.session['token'],
+        "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
+        # TODO -- use our own callback and not requestb.in
+        # ... think over the best pattern for traversal first.
+        "hub.callback": "http://requestb.in/15zb0tk1",
     }
-    # Subscribe to events via pubsubhubbub
-    result = requests.post(github_url, data=data)
+    for event in github_events:
+        data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
+            repo.user.username, repo.name, event)
+        # Subscribe to events via pubsubhubbub
+        result = requests.post(github_api_url, data=data)
 
-    # TODO -- handle errors more gracefully.
-    assert(result.status_code == 204)
+        # TODO -- handle errors more gracefully.
+        assert(result.status_code == 204)
 
     return {
         'status': 'ok',
