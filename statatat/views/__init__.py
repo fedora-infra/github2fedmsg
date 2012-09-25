@@ -9,11 +9,21 @@ import requests
 import moksha.hub.hub
 import json
 
+# http://developer.github.com/v3/repos/hooks/
 github_api_url = "https://api.github.com/hub"
 github_events = [
-    "push", "issues", "issue_comment", "pull_request", "gollum",
-    "watch", "download", "fork", "fork_apply", "member", "public",
-    "status",
+    "push",
+    #"issues",
+    #"issue_comment",
+    #"pull_request",
+    #"gollum",
+    #"watch",
+    #"download",
+    #"fork",
+    #"fork_apply",
+    #"member",
+    #"public",
+    #"status",
 ]
 
 
