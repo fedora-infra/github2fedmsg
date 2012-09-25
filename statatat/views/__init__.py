@@ -1,6 +1,8 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
+import statatat.models as m
+
 from hashlib import md5
 
 import moksha.hub.hub
@@ -42,3 +44,13 @@ def webhook(request):
              renderer='widget.mak')
 def widget_view(request):
     return dict(widget=request.context)
+
+
+@view_config(name='toggle', context=m.Repo, renderer='json')
+def repo_toggle_enabled(request):
+    request.context.enabled = not request.context.enabled
+    return {
+        'status': 'ok',
+        'enabled': request.context.enabled,
+        'repo': request.context.__json__(),
+    }

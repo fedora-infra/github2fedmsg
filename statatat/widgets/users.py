@@ -1,4 +1,5 @@
 import tw2.core as twc
+import statatat.models
 
 from hashlib import md5
 
@@ -8,6 +9,9 @@ gh = Github()
 class UserProfile(twc.Widget):
     template = "mako:statatat.widgets.templates.profile"
     user = twc.Param("An instance of the User SQLAlchemy model.")
+    resources = [
+        twc.JSLink(filename="static/profile.js"),
+    ]
 
     # These get filled in just before the widget is displayed.
     gh_user = twc.Variable()
@@ -22,21 +26,31 @@ class UserProfile(twc.Widget):
             lambda x, y: cmp(x.name.lower(), y.name.lower()),
         )
 
+        # Add repos to our DB if we haven't seen them before.
+        existant_repos = [repo.name for repo in self.user.repos]
+
+        # TODO -- fix this.  this is inefficient
+        for repo in self.gh_repos:
+            if repo not in existant_repos:
+                statatat.models.DBSession.add(statatat.models.Repo(
+                    user=self.user,
+                    name=repo.name,
+                    enabled=False,
+                ))
+
         topics = [
             "%s.%s" % ('author', md5(email).hexdigest())
             for email in self.user.emails.split(',')
         ]
 
     def make_button(self, repo_name):
-        # TODO -- actually implement this by checking the DB or checking for the
-        # hook.
-        link = 'http://github.com/%s/%s/admin/hooks#generic_minibucket' % (
-            self.user.username, repo_name)
-        click = 'onclick="window.open(\'%s\', \'_blank\');"' % link
-        return "<button class='btn btn-success' %s>Enable</button>" % click
+        # TODO -- Can we use resource_url here?
+        link = '/api/%s/%s/toggle' % (self.user.username, repo_name)
+        click = 'onclick="subscribe(\'%s\')"' % link
+        if self.user.repo_by_name(repo_name).enabled:
+            cls, text = "btn-success", "Disable"
+        else:
+            cls, text = "btn-danger", "Enable"
 
-        #import random
-        #if random.random() > 0.5:
-        #    return "<button class='btn btn-success' %s>Enable</button>" % click
-        #else:
-        #    return "<button class='btn btn-danger' %s>Disable</button>" % click
+        return "<button id='%s' class='btn %s' %s>%s</button>" % (
+            repo_name, cls, click, text)

@@ -5,19 +5,36 @@ import statatat.widgets
 
 
 def make_root(request):
-    return RootApp()
+    return RootApp(request)
 
 
-class RootApp(object):
+class RootApp(dict):
     __name__ = None
     __parent__ = None
 
+    def __init__(self, request):
+        dict.__init__(self)
+        self.request = request
+        self.static = dict(
+            api=ApiApp(),
+        )
+
+    def __getitem__(self, key):
+        if key in self.static:
+            return self.static[key]
+
+        query = statatat.models.User.query.filter_by(username=key)
+        if query.count() != 1:
+            raise KeyError("No such user")
+        return UserApp(user=query.one())
+
+
+class ApiApp(object):
     def __getitem__(self, key):
         query = statatat.models.User.query.filter_by(username=key)
-        if query.count() == 1:
-            return UserApp(user=query.one())
-
-        raise KeyError("No such user.")
+        if query.count() != 1:
+            raise KeyError("No such user")
+        return query.one()
 
 
 class UserApp(statatat.widgets.UserProfile):
@@ -44,3 +61,8 @@ class UserApp(statatat.widgets.UserProfile):
                 return statatat.widgets.make_widget(conf, chrome)
 
         raise KeyError("No such widget %r" % key)
+
+
+class APISuccess(object):
+    def __init__(self, data):
+        self.data = data
