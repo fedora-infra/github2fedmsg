@@ -4,6 +4,7 @@ from pyramid.security import authenticated_userid
 import statatat.models as m
 
 from hashlib import md5
+import requests
 
 import moksha.hub.hub
 import json
@@ -48,7 +49,23 @@ def widget_view(request):
 
 @view_config(name='toggle', context=m.Repo, renderer='json')
 def repo_toggle_enabled(request):
-    request.context.enabled = not request.context.enabled
+    repo = request.context
+    repo.enabled = not repo.enabled
+    event = "push"
+    github_url = "https://api.github.com/hub"
+    data = {
+      "access_token": request.session['token'],
+      "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
+      "hub.topic": "https://github.com/%s/%s/events/%s" % (
+          repo.user.username, repo.name, event),
+      "hub.callback": "http://requestb.in/15zb0tk1",
+    }
+    # Subscribe to events via pubsubhubbub
+    result = requests.post(github_url, data=data)
+
+    # TODO -- handle errors more gracefully.
+    assert(result.status_code == 204)
+
     return {
         'status': 'ok',
         'enabled': request.context.enabled,
