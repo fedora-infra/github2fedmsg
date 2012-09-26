@@ -47,6 +47,15 @@ def make_moksha_hub(settings):
     return _hub
 
 
+@view_config(route_name='stats', renderer='stats.mak')
+def stats(request):
+    """ Show the stats page """
+    num_users = m.User.query.count()
+    num_repos = m.Repo.query.count()
+    num_enabled_repos = m.Repo.query.filter_by(enabled=True).count()
+    return locals()
+
+
 @view_config(route_name='webhook', request_method="POST", renderer='string')
 def webhook(request):
     """ Handle github webhook. """

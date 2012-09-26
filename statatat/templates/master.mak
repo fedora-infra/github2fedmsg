@@ -18,6 +18,9 @@
         <div class="container">
           <a class="brand" href="http://statatat.threebean.org">statatat</a>
           <ul class="nav pull-right">
+            <li class="${['', 'active'][request.on_stats]}">
+              <a href="/stats">Stats</a>
+            </li>
             %if request.user:
               <li class="${['', 'active'][request.on_profile]}">
               <a href="/${request.user.username}">
