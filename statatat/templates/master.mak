@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" type="text/css" href="/static/statatat.css" media="all"/>
+
+    <script type="text/javascript">
+      $.extend($.gritter.options, {
+        position: 'bottom-left',
+        fade_in_speed: 'medium',
+        fade_out_speed: 500,
+        time: 1500,
+      });
+    </script>
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -52,6 +61,7 @@
     <div class="container-fluid">
       ${self.body()}
     </div>
+    ${moksha_socket.display() |n }
     <footer class="container-fluid">
     <p>Statatat is written by <a href="http://threebean.org">Ralph Bean</a>
       and is licened under the
