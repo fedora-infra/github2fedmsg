@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
 import statatat.models as m
+from statatat.widgets.graph import make_chart
 
 from hashlib import md5
 import requests
@@ -27,9 +28,13 @@ github_events = [
 ]
 
 
+
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
-    return {}
+    backend_key = "moksha.livesocket.backend"
+    return {
+        'chart': make_chart(request.registry.settings[backend_key]),
+    }
 
 
 _hub = None

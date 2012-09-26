@@ -13,6 +13,12 @@
   </div>
 
   <div class="row">
+    <span class="span10 offset1">
+      ${chart.display() |n}
+    </span>
+  </div>
+
+  <div class="row">
     <span class="span2 offset1">
       <h2>Swank</h2>
       <p>By embedding your Statatat widget on your blog, you can show
