@@ -32,8 +32,17 @@ def home(request):
     return {}
 
 
+_hub = None
+def make_moksha_hub(settings):
+    """ Global singleton. """
+    global _hub
+    if not _hub:
+        _hub = moksha.hub.hub.MokshaHub(settings)
 
-@view_config(route_name='webhook', renderer='string')
+    return _hub
+
+
+@view_config(route_name='webhook', request_method="POST", renderer='string')
 def webhook(request):
     """ Handle github webhook. """
 
@@ -42,7 +51,7 @@ def webhook(request):
         if isinstance(payload, basestring):
             payload = json.loads(payload)
 
-        hub = moksha.hub.hub.MokshaHub(request.registry.settings)
+        hub = make_moksha_hub(request.registry.settings)
 
         topic_extractors = {
             'repo': lambda i: payload['repository']['url'],
@@ -54,6 +63,8 @@ def webhook(request):
             for i, commit in enumerate(payload['commits']):
                 topic = "%s.%s" % (prefix, md5(extractor(i)).hexdigest())
                 hub.send_message(topic=topic, message=commit)
+    else:
+        raise NotImplementedError()
 
     return "OK"
 
