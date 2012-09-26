@@ -84,7 +84,7 @@ def repo_toggle_enabled(request):
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our own callback and not requestb.in
         # ... think over the best pattern for traversal first.
-        "hub.callback": "http://requestb.in/15zb0tk1",
+        "hub.callback": "http://statatat.threebean.org/webhook",
     }
     for event in github_events:
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
