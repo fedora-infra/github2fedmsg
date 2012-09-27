@@ -31,7 +31,7 @@ class UserProfile(twc.Widget):
 
         # TODO -- fix this.  this is inefficient
         for repo in self.gh_repos:
-            if repo not in existant_repos:
+            if repo.name not in existant_repos:
                 statatat.models.DBSession.add(statatat.models.Repo(
                     user=self.user,
                     name=repo.name,
