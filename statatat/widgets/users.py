@@ -6,6 +6,7 @@ from hashlib import md5
 from pygithub3 import Github
 gh = Github()
 
+
 class UserProfile(twc.Widget):
     template = "mako:statatat.widgets.templates.profile"
     user = twc.Param("An instance of the User SQLAlchemy model.")
@@ -54,3 +55,17 @@ class UserProfile(twc.Widget):
 
         return "<button id='%s' class='btn %s' %s>%s</button>" % (
             repo_name, cls, click, text)
+
+    def widget_link(self):
+        # TODO -- use pyramid resource_url(...) here.
+        salt = "TODO MAKE THIS SECRET"
+        topics = ",".join((
+            "%s.%s" % ("author", md5(salt + email).hexdigest())
+            for email in self.user.emails
+        ))
+        prefix = "http://localhost:6543"
+        tmpl = "{prefix}/widget/{topics}/embed"
+        return tmpl.format(
+            prefix=prefix,
+            topics=topics,
+        )

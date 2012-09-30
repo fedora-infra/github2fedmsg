@@ -27,20 +27,8 @@
                 Profile
               </a>
               </li>
-              <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Widgets <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <li><a href="/${request.user.username}/new" tabindex="-1">
-                  Create New...
-                </a></li>
-                % for conf in request.user.widget_configurations:
-                  <li><a href="/${request.user.username}/%{conf.name}">
-                    ${conf.name}
-                  </a></li>
-                % endfor
-              </ul>
+              <li class="">
+                <a href="#widgets_modal" data-toggle="modal">Widgets</a>
               </li>
             %endif
             <li class="">
@@ -73,5 +61,6 @@
       <a href="http://github.com/ralphbean/statatat">on github.</a>
     </p>
     </footer>
+
   </body>
 </html>

@@ -19,5 +19,5 @@ class MessagesTimeSeries(TimeSeriesChart, LiveWidget):
     data = [0] * n
 
 
-def make_chart(backend):
-    return MessagesTimeSeries(backend=backend)
+def make_chart(backend, topic="*"):
+    return MessagesTimeSeries(backend=backend, topic=topic)

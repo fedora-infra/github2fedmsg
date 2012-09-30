@@ -2,6 +2,7 @@ import tw2.core as twc
 
 import statatat.models
 import statatat.widgets
+import statatat.widgets.graph
 
 
 def make_root(request):
@@ -17,7 +18,10 @@ class RootApp(dict):
         self.request = request
         self.static = dict(
             api=ApiApp(),
+            widget=WidgetApp(),
         )
+        # TODO.. need some nice pattern for doing this "automatically"
+        self.static['widget'].__parent__ = self
 
     def __getitem__(self, key):
         if key in self.static:
@@ -27,6 +31,13 @@ class RootApp(dict):
         if query.count() != 1:
             raise KeyError("No such user")
         return UserApp(user=query.one())
+
+class WidgetApp(object):
+    def __getitem__(self, key):
+        backend_key = "moksha.livesocket.backend"
+        backend = self.__parent__.request.registry.settings[backend_key]
+        topics = key.split(',')
+        return statatat.widgets.graph.make_chart(backend=backend, topic=topics)
 
 
 class ApiApp(object):

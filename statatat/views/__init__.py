@@ -51,6 +51,8 @@ def make_moksha_hub(settings):
 def webhook(request):
     """ Handle github webhook. """
 
+    salt = "TODO MAKE THIS SECRET"
+
     if 'payload' in request.params:
         payload = request.params['payload']
         if isinstance(payload, basestring):
@@ -66,7 +68,7 @@ def webhook(request):
         }
         for prefix, extractor in topic_extractors.items():
             for i, commit in enumerate(payload['commits']):
-                topic = "%s.%s" % (prefix, md5(extractor(i)).hexdigest())
+                topic = "%s.%s" % (prefix, md5(salt + extractor(i)).hexdigest())
                 hub.send_message(topic=topic, message=commit)
     else:
         raise NotImplementedError()
@@ -74,6 +76,9 @@ def webhook(request):
     return "OK"
 
 
+@view_config(context="tw2.core.widgets.WidgetMeta",
+             name='embed',
+             renderer='embed.mak')
 @view_config(context="tw2.core.widgets.WidgetMeta",
              renderer='widget.mak')
 def widget_view(request):
