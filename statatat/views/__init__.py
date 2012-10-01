@@ -28,7 +28,6 @@ github_events = [
 ]
 
 
-
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
     backend_key = "moksha.livesocket.backend"
@@ -38,6 +37,8 @@ def home(request):
 
 
 _hub = None
+
+
 def make_moksha_hub(settings):
     """ Global singleton. """
     global _hub
@@ -68,7 +69,9 @@ def webhook(request):
         }
         for prefix, extractor in topic_extractors.items():
             for i, commit in enumerate(payload['commits']):
-                topic = "%s.%s" % (prefix, md5(salt + extractor(i)).hexdigest())
+                topic = "%s.%s" % (
+                    prefix, md5(salt + extractor(i)).hexdigest()
+                )
                 hub.send_message(topic=topic, message=commit)
     else:
         raise NotImplementedError()
