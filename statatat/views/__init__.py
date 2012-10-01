@@ -77,8 +77,8 @@ def webhook(request):
 
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
-             name='embed',
-             renderer='embed.mak')
+             name='iframe',
+             renderer='iframe.mak')
 @view_config(context="tw2.core.widgets.WidgetMeta",
              renderer='widget.mak')
 def widget_view(request):
