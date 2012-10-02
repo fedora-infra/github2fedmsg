@@ -1,4 +1,6 @@
-from hashlib import md5
+import datetime
+import time
+
 from sqlalchemy.orm import (
     class_mapper,
 )
@@ -30,10 +32,13 @@ class JSONifiable(object):
         for attr in relationships:
             d[attr] = self._expand(getattr(self, attr), seen)
 
-        if 'emails' in d:
-            email = d['emails'].split(',')[0]
-            digest = md5(email).hexdigest()
-            d['avatar'] = "http://www.gravatar.com/avatar/%s" % digest
+        if hasattr(self, 'avatar'):
+            d['avatar'] = self.avatar
+
+        # Serialize datetime objects
+        for k, v in d.items():
+            if isinstance(v, datetime.datetime):
+                d[k] = time.mktime(v.timetuple())
 
         return d
 
