@@ -1,5 +1,6 @@
 """ Contains code for producing embeddable widgets """
 
+from pyramid.threadlocal import get_current_request
 from pyramid.view import view_config
 
 import tw2.core.core
@@ -63,8 +64,8 @@ def widget_view_javascript(request):
     But it produces a widget as a self-extracting script.
     """
 
-    # TODO -- get this from the pyramid config
-    prefix = "http://localhost:6543"
+    # Get http://statatat.threebean.org/ and strip the trailing slash.
+    prefix = get_current_request().resource_url(None)[:-1]
 
     raw_widget = request.context.display()
     socket = get_moksha_socket(request.registry.settings).display()
