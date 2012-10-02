@@ -49,9 +49,3 @@ class UserProfile(twc.Widget):
 
         return "<button id='%s' class='btn %s' %s>%s</button>" % (
             repo_name, cls, click, text)
-
-    def widget_link(self):
-        prefix = pyramid.threadlocal.get_current_request().resource_url(None)
-        tmpl = "{prefix}widget/{username}/embed.js"
-        link = tmpl.format(prefix=prefix, username=self.user.username)
-        return "<script type='text/javascript' src='%s'></script>" % link

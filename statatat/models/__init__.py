@@ -15,6 +15,7 @@ from sqlalchemy.orm import (
     backref,
 )
 
+import pyramid.threadlocal
 import statatat.traversal
 from .jsonifiable import JSONifiable
 
@@ -42,6 +43,12 @@ class User(Base):
 
     def repo_by_name(self, repo_name):
         return self[repo_name]
+
+    def widget_link(self):
+        prefix = pyramid.threadlocal.get_current_request().resource_url(None)
+        tmpl = "{prefix}widget/{username}/embed.js"
+        link = tmpl.format(prefix=prefix, username=self.username)
+        return "<script type='text/javascript' src='%s'></script>" % link
 
 
 class Repo(Base):
