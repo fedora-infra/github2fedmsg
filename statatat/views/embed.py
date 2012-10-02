@@ -52,6 +52,7 @@ function run_with_jquery(callback) {
     }
 }"""
 
+css_helper = """$('head').append('<link rel="stylesheet" href="%s" type="text/css"/>');"""
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
              name='javascript',
@@ -69,12 +70,19 @@ def widget_view_javascript(request):
     socket = get_moksha_socket(request.registry.settings).display()
     socket = '\n'.join(socket.strip().split('\n')[1:-1])
     resources = tw2.core.core.request_local().pop('resources', [])
-    scripts, calls = [], [socket]
+    scripts, calls, css = [], [socket], []
     for r in resources:
         if getattr(r, 'link', None):
-            if any(map(r.link.endswith, ['jquery.js', '.css'])):
+            if r.link.endswith('jquery.js'):
+                # We include jquer by other means (since we don't want to stomp
+                # on the embedding users' jquery if they have it).  We're not so
+                # careful about other resources like d3.
                 continue
-            scripts.append(r.link)
+
+            if r.link.endswith('.css'):
+                calls.append(css_helper % (prefix + r.link))
+            else:
+                scripts.append(r.link)
         else:
             calls.append(str(r))
 
