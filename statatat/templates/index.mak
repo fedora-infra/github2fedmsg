@@ -5,7 +5,8 @@
     <span class="span10 offset1">
       <div class="hero-unit">
         <h1>Realtime dev widgets.</h1>
-        <p>Statatat provides embeddable, WebSocket-driven charts.
+        <p>Statatat provides embeddable, WebSocket-driven charts of your github
+          activity.
           Enable the webhook for your repositories, and include the javascript
           scriptlet on your page for <em>fanciness</em>.</p>
       </div>
