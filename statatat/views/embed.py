@@ -55,7 +55,7 @@ function run_with_jquery(callback) {
 css_helper = """$('head').append('<link rel="stylesheet" href="%s" type="text/css"/>');"""
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
-             name='javascript',
+             name='embed.js',
              renderer='string')
 def widget_view_javascript(request):
     """ This code is super ugly.

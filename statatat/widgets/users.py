@@ -63,8 +63,9 @@ class UserProfile(twc.Widget):
             "%s.%s" % ("author", md5(salt + email).hexdigest())
             for email in self.user.emails
         ))
+        # TODO -- get the prefix thing from pyramid config.
         prefix = "http://localhost:6543"
-        tmpl = "{prefix}/widget/{topics}/embed"
+        tmpl = "{prefix}/widget/{topics}/embed.js"
         return tmpl.format(
             prefix=prefix,
             topics=topics,
