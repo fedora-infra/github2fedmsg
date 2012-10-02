@@ -1,3 +1,4 @@
+from hashlib import md5
 import tw2.core as twc
 
 import statatat.models
@@ -32,11 +33,23 @@ class RootApp(dict):
             raise KeyError("No such user")
         return UserApp(user=query.one())
 
+
 class WidgetApp(object):
     def __getitem__(self, key):
+        query = statatat.models.User.query.filter_by(username=key)
+        if query.count() != 1:
+            raise KeyError("No such user")
+        user = query.first()
+
+        salt = "TODO MAKE THIS SECRET"
+        topics = ",".join((
+            "%s.%s" % ("author", md5(salt + email).hexdigest())
+            for email in user.emails
+        ))
+
         backend_key = "moksha.livesocket.backend"
         backend = self.__parent__.request.registry.settings[backend_key]
-        topics = key.split(',')
+
         return statatat.widgets.graph.make_chart(backend=backend, topic=topics)
 
 

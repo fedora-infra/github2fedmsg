@@ -2,8 +2,6 @@ import tw2.core as twc
 import statatat.models
 import pyramid.threadlocal
 
-from hashlib import md5
-
 from pygithub3 import Github
 gh = Github()
 
@@ -40,11 +38,6 @@ class UserProfile(twc.Widget):
                     enabled=False,
                 ))
 
-        topics = [
-            "%s.%s" % ('author', md5(email).hexdigest())
-            for email in self.user.emails.split(',')
-        ]
-
     def make_button(self, repo_name):
         # TODO -- Can we use resource_url here?
         link = '/api/%s/%s/toggle' % (self.user.username, repo_name)
@@ -58,15 +51,7 @@ class UserProfile(twc.Widget):
             repo_name, cls, click, text)
 
     def widget_link(self):
-        # TODO -- use pyramid resource_url(...) here.
-        salt = "TODO MAKE THIS SECRET"
-        topics = ",".join((
-            "%s.%s" % ("author", md5(salt + email).hexdigest())
-            for email in self.user.emails
-        ))
         prefix = pyramid.threadlocal.get_current_request().resource_url(None)
-        tmpl = "{prefix}widget/{topics}/embed.js"
-        return tmpl.format(
-            prefix=prefix,
-            topics=topics,
-        )
+        tmpl = "{prefix}widget/{username}/embed.js"
+        link = tmpl.format(prefix=prefix, username=self.user.username)
+        return "<script type='text/javascript' src='%s'></script>" % link

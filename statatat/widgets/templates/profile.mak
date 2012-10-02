@@ -37,7 +37,7 @@
     <h3 id="widgets_modal_label">Embeddable Widgets</h3>
   </div>
   <div class="modal-body">
-    <p>Copy-and-paste any of the following into another webpage.</p>
+    <p>Copy-and-paste the following into another webpage.</p>
     <p>Your commits <input value="${w.widget_link() | n}" /></p>
   </div>
   <div class="modal-footer">
