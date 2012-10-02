@@ -1,7 +1,9 @@
+from hashlib import md5
 from sqlalchemy.orm import (
     class_mapper,
 )
 from sqlalchemy.orm.properties import RelationshipProperty
+
 
 class JSONifiable(object):
     """ A mixin for sqlalchemy models providing a .__json__ method. """
@@ -27,6 +29,11 @@ class JSONifiable(object):
 
         for attr in relationships:
             d[attr] = self._expand(getattr(self, attr), seen)
+
+        if 'emails' in d:
+            email = d['emails'].split(',')[0]
+            digest = md5(email).hexdigest()
+            d['avatar'] = "http://www.gravatar.com/avatar/%s" % digest
 
         return d
 

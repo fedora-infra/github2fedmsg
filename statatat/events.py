@@ -11,6 +11,8 @@ from tw2.bootstrap.forms import bootstrap_css
 from tw2.bootstrap.forms import bootstrap_responsive_css
 import tw2.core
 
+from statatat.widgets.graph import PopupNotification
+
 # TODO -- move this into tw2.bootstrap like tw2.jqplugins.ui
 #bootstrap_css = tw2.core.CSSLink(
 #    filename="static/bootswatch/united/bootstrap.min.css",
@@ -30,6 +32,8 @@ def inject_globals(event):
     # Expose these as global attrs for our templates
     event['moksha_socket'] = get_moksha_socket(request.registry.settings)
     event['identity'] = authenticated_userid(request)
+
+    PopupNotification.display()
 
     # Register bootstrap for injection with the tw2 middleware
     bootstrap_css.inject()

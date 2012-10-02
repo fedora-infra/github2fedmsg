@@ -8,7 +8,7 @@
         position: 'bottom-left',
         fade_in_speed: 'medium',
         fade_out_speed: 500,
-        time: 1500,
+        time: 2500,
       });
     </script>
   </head>

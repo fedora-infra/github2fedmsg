@@ -8,6 +8,8 @@ from pyramid.security import (
 
 import statatat.models as m
 
+from statatat.views import make_moksha_hub
+
 
 @view_config(context='velruse.AuthenticationComplete')
 def github_login_complete_view(request):
@@ -20,11 +22,17 @@ def github_login_complete_view(request):
     if query.count() == 0:
         m.DBSession.add(m.User(username=username, emails=emails))
 
+    user = query.one()
+
     # TODO -- how to update the users emails if they change them on github
 
     headers = remember(request, username)
 
     request.session['token'] = request.context.credentials['oauthAccessToken']
+
+    # Emit a message for popups on login
+    hub = make_moksha_hub(request.registry.settings)
+    hub.send_message("login", user.__json__())
 
     # TODO -- how not to hard code this location?
     return HTTPFound(location="/" + username, headers=headers)
