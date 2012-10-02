@@ -79,15 +79,6 @@ def webhook(request):
     return "OK"
 
 
-@view_config(context="tw2.core.widgets.WidgetMeta",
-             name='iframe',
-             renderer='iframe.mak')
-@view_config(context="tw2.core.widgets.WidgetMeta",
-             renderer='widget.mak')
-def widget_view(request):
-    return dict(widget=request.context)
-
-
 @view_config(name='toggle', context=m.Repo, renderer='json')
 def repo_toggle_enabled(request):
     repo = request.context
