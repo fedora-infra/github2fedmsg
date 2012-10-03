@@ -75,10 +75,20 @@ def widget_view_javascript(request):
 
     """
 
+    defaults = {
+        'width': 960,
+        'height': 75,
+        'n': 100,
+        'duration': 750,
+    }
+
+    params = defaults
+    params.update(dict([(k, int(v)) for k, v in request.params.items()]))
+
     # Get http://statatat.ws/ and strip the trailing slash.
     prefix = get_current_request().resource_url(None)[:-1]
 
-    raw_widget = request.context.display()
+    raw_widget = request.context(**params).display()
     socket = get_moksha_socket(request.registry.settings).display()
     socket = '\n'.join(socket.strip().split('\n')[1:-1])
     resources = tw2.core.core.request_local().pop('resources', [])
