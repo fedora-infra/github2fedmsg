@@ -25,6 +25,8 @@ requires = [
     'moksha.hub',
     'moksha.wsgi',
 
+    'tw2.core <= 2.1.1',   # only because 2.1.2 is busted
+    'tw2.forms <= 2.1.1',  # only because 2.1.2 is busted
     'tw2.bootstrap.forms',
     'tw2.d3',
     ]
