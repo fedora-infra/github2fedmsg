@@ -18,10 +18,12 @@ def stats(request):
     all_users = m.User.query.all()
     by_total_enabled_repos = sorted(
         all_users,
-        lambda x, y: cmp(x.total_enabled_repos, y.total_enabled_repos)
+        lambda x, y: cmp(x.total_enabled_repos, y.total_enabled_repos),
+        reverse=True,
     )[:n]
     by_percent_enabled_repos = sorted(
         all_users,
-        lambda x, y: cmp(x.percent_enabled_repos, y.percent_enabled_repos)
+        lambda x, y: cmp(x.percent_enabled_repos, y.percent_enabled_repos),
+        reverse=True,
     )[:n]
     return locals()
