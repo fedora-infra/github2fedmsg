@@ -60,8 +60,19 @@ css_helper = """$('head').append('<link rel="stylesheet" href="%s" type="text/cs
              renderer='string')
 def widget_view_javascript(request):
     """ This code is super ugly.
-
     But it produces a widget as a self-extracting script.
+
+    It can take some parameters to change the shape and character of the
+    chart.
+
+    It renders the chart widget and the moksha socket, strips any boilerplate
+    html, grabs all the resources and then builds a single javascript blob that
+    dynamically loads the resources before finally calling the moksha_socket and
+    widget javascript.
+
+    It takes the boilerplate html that it stripped and
+    dynamically injects it back into the host page.
+
     """
 
     # Get http://statatat.ws/ and strip the trailing slash.
