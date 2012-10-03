@@ -24,7 +24,7 @@
             <td>${repo.name}</td>
             <td>${repo.description}</td>
             <td>${repo.language}</td>
-            <td>${w.make_button(repo.name)}</td>
+            <td>${w.make_button(repo.name) | n}</td>
           </tr>
         % endfor
       </table>
