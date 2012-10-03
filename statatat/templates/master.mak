@@ -15,7 +15,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="http://statatat.threebean.org">statatat</a>
+          <a class="brand" href="http://statatat.ws">statatat.ws</a>
           <ul class="nav pull-right">
             <li class="${['', 'active'][request.on_stats]}">
               <a href="/stats">Stats</a>

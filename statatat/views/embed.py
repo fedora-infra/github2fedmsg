@@ -64,7 +64,7 @@ def widget_view_javascript(request):
     But it produces a widget as a self-extracting script.
     """
 
-    # Get http://statatat.threebean.org/ and strip the trailing slash.
+    # Get http://statatat.ws/ and strip the trailing slash.
     prefix = get_current_request().resource_url(None)[:-1]
 
     raw_widget = request.context.display()
