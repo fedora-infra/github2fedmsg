@@ -18,7 +18,7 @@ github_events = [
     "push",
     #"issues",
     #"issue_comment",
-    #"pull_request",
+    "pull_request",
     #"gollum",
     #"watch",
     #"download",
