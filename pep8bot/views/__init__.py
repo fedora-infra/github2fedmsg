@@ -9,6 +9,8 @@ import requests
 
 import moksha.hub.hub
 import json
+import retask.task
+import retask.queue
 
 # http://developer.github.com/v3/repos/hooks/
 github_api_url = "https://api.github.com/hub"
@@ -52,6 +54,8 @@ def make_moksha_hub(settings):
 def webhook(request):
     """ Handle github webhook. """
 
+    # TODO -- check X-Hub-Signature
+
     salt = "TODO MAKE THIS SECRET"
 
     if 'payload' in request.params:
@@ -59,20 +63,12 @@ def webhook(request):
         if isinstance(payload, basestring):
             payload = json.loads(payload)
 
-        hub = make_moksha_hub(request.registry.settings)
+        queue = retask.queue.Queue('commits')
+        task = retask.task.Task(payload)
+        queue.connect()
 
-        topic_extractors = {
-            'repo': lambda i: payload['repository']['url'],
-            'repo_owner': lambda i: payload['repository']['owner']['email'],
-            'author': lambda i: payload['commits'][i]['author']['email'],
-            'committer': lambda i: payload['commits'][i]['committer']['email'],
-        }
-        for prefix, extractor in topic_extractors.items():
-            for i, commit in enumerate(payload['commits']):
-                topic = "%s.%s" % (
-                    prefix, md5(salt + extractor(i)).hexdigest()
-                )
-                hub.send_message(topic=topic, message=commit)
+        # Fire and forget
+        job = queue.enqueue(task)
     else:
         raise NotImplementedError()
 
