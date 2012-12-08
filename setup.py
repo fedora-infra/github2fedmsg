@@ -22,9 +22,7 @@ requires = [
     # https://github.com/copitux/python-github3/issues/26
     'pygithub3',
 
-    'moksha.hub',
-    'moksha.wsgi',
-
+    # Is this necessary?
     'tw2.core <= 2.1.1',   # only because 2.1.2 is busted
     'tw2.forms <= 2.1.1',  # only because 2.1.2 is busted
     'tw2.bootstrap.forms',

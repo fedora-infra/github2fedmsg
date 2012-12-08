@@ -2,12 +2,10 @@ from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
 import pep8bot.models as m
-from pep8bot.widgets.graph import make_chart
 
 from hashlib import md5
 import requests
 
-import moksha.hub.hub
 import json
 import retask.task
 import retask.queue
@@ -32,22 +30,8 @@ github_events = [
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
-    backend_key = "moksha.livesocket.backend"
     return {
-        'chart': make_chart(request.registry.settings[backend_key]),
     }
-
-
-_hub = None
-
-
-def make_moksha_hub(settings):
-    """ Global singleton. """
-    global _hub
-    if not _hub:
-        _hub = moksha.hub.hub.MokshaHub(settings)
-
-    return _hub
 
 
 @view_config(route_name='webhook', request_method="POST", renderer='string')

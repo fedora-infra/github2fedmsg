@@ -3,7 +3,6 @@ import tw2.core as twc
 
 import pep8bot.models
 import pep8bot.widgets
-import pep8bot.widgets.graph
 
 
 def make_root(request):
@@ -36,21 +35,8 @@ class RootApp(dict):
 
 class WidgetApp(object):
     def __getitem__(self, key):
-        query = pep8bot.models.User.query.filter_by(username=key)
-        if query.count() != 1:
-            raise KeyError("No such user")
-        user = query.first()
-
-        salt = "TODO MAKE THIS SECRET"
-        topics = ",".join((
-            "%s.%s" % ("author", md5(salt + email).hexdigest())
-            for email in user.emails
-        ))
-
-        backend_key = "moksha.livesocket.backend"
-        backend = self.__parent__.request.registry.settings[backend_key]
-
-        return pep8bot.widgets.graph.make_chart(backend=backend, topic=topics)
+        # TODO -- remove this?
+        return "THIS USED TO RETURN A CHART"
 
 
 class ApiApp(object):

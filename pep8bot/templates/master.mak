@@ -65,24 +65,6 @@
       ${self.body()}
     </div>
 
-    %if request.user:
-    <div class="modal hide fade" id="widgets_modal" tabindex="-1" role="dialog" aria-labelledby="widgets_modal_label" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="widgets_modal_label">Embeddable Widgets</h3>
-      </div>
-      <div class="modal-body">
-        <p>Copy-and-paste the following into another webpage.</p>
-        <p>Your commits <input value="${request.user.widget_link() | n}" /></p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-      </div>
-    </div>
-    %endif
-
-    ${moksha_socket.display() |n }
-
     <footer class="container-fluid">
     <p>Pep8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
       and is licened under the
