@@ -28,7 +28,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="http://pep8bot.ws">pep8bot.ws</a>
+          <a class="brand" href="http://pep8.me">pep8.me</a>
           <ul class="nav pull-right">
             <li class="${['', 'active'][request.on_stats]}">
               <a href="/stats">Stats</a>
