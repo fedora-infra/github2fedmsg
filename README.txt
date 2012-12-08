@@ -1,14 +1,3 @@
-statatat README
-==================
+pep8bot readme
 
-Getting Started
----------------
-
-- cd <directory containing this file>
-
-- $venv/bin/python setup.py develop
-
-- $venv/bin/populate_statatat development.ini
-
-- $venv/bin/pserve development.ini
-
+TODO!

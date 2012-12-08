@@ -6,9 +6,9 @@ from pyramid.security import (
     forget,
 )
 
-import statatat.models as m
+import pep8bot.models as m
 
-from statatat.views import make_moksha_hub
+from pep8bot.views import make_moksha_hub
 
 
 @view_config(context='velruse.AuthenticationComplete')

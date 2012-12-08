@@ -1,8 +1,8 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
-import statatat.models as m
-from statatat.widgets.graph import make_chart
+import pep8bot.models as m
+from pep8bot.widgets.graph import make_chart
 
 from hashlib import md5
 import requests
@@ -88,7 +88,7 @@ def repo_toggle_enabled(request):
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our own callback and not requestb.in
         # ... think over the best pattern for traversal first.
-        "hub.callback": "http://statatat.ws/webhook",
+        "hub.callback": "http://pep8bot.ws/webhook",
     }
     for event in github_events:
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="/static/statatat.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/static/pep8bot.css" media="all"/>
     <script type="text/javascript">
       $.extend($.gritter.options, {
         position: 'bottom-left',
@@ -28,7 +28,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="http://statatat.ws">statatat.ws</a>
+          <a class="brand" href="http://pep8bot.ws">pep8bot.ws</a>
           <ul class="nav pull-right">
             <li class="${['', 'active'][request.on_stats]}">
               <a href="/stats">Stats</a>
@@ -84,11 +84,11 @@
     ${moksha_socket.display() |n }
 
     <footer class="container-fluid">
-    <p>Statatat is written by <a href="http://threebean.org">Ralph Bean</a>
+    <p>Pep8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
       and is licened under the
       <a href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>; the source
       code can be found
-      <a href="http://github.com/ralphbean/statatat">on github.</a>
+      <a href="http://github.com/ralphbean/pep8bot">on github.</a>
     </p>
     </footer>
 

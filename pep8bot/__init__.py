@@ -5,8 +5,8 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.security import authenticated_userid
 from sqlalchemy import engine_from_config
 
-import statatat.models
-import statatat.traversal
+import pep8bot.models
+import pep8bot.traversal
 
 # TODO -- replace this with pyramid_beaker
 crappy_session_factory = UnencryptedCookieSessionFactoryConfig('itsaseekreet')
@@ -17,7 +17,7 @@ authn_policy = AuthTktAuthenticationPolicy(secret='verysecret')
 def get_user(request):
     """ A utility property hanging on 'request' """
     username = authenticated_userid(request)
-    query = statatat.models.User.query.filter_by(username=username)
+    query = pep8bot.models.User.query.filter_by(username=username)
     if username and query.count() > 0:
         return query.one()
 
@@ -26,10 +26,10 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     engine = engine_from_config(settings, 'sqlalchemy.')
-    statatat.models.DBSession.configure(bind=engine)
+    pep8bot.models.DBSession.configure(bind=engine)
     config = Configurator(
         settings=settings,
-        root_factory=statatat.traversal.make_root,
+        root_factory=pep8bot.traversal.make_root,
         session_factory=crappy_session_factory,
         authentication_policy=authn_policy,
         #authorization_policy=authz_policy,

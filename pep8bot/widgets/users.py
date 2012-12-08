@@ -1,5 +1,5 @@
 import tw2.core as twc
-import statatat.models
+import pep8bot.models
 import pyramid.threadlocal
 
 from pygithub3 import Github
@@ -7,7 +7,7 @@ gh = Github()
 
 
 class UserProfile(twc.Widget):
-    template = "mako:statatat.widgets.templates.profile"
+    template = "mako:pep8bot.widgets.templates.profile"
     user = twc.Param("An instance of the User SQLAlchemy model.")
     resources = [
         twc.JSLink(filename="static/profile.js"),
@@ -32,7 +32,7 @@ class UserProfile(twc.Widget):
         # TODO -- fix this.  this is inefficient
         for repo in self.gh_repos:
             if repo.name not in existant_repos:
-                statatat.models.DBSession.add(statatat.models.Repo(
+                pep8bot.models.DBSession.add(pep8bot.models.Repo(
                     user=self.user,
                     name=repo.name,
                     enabled=False,

@@ -85,7 +85,7 @@ def widget_view_javascript(request):
     params = defaults
     params.update(dict([(k, int(v)) for k, v in request.params.items()]))
 
-    # Get http://statatat.ws/ and strip the trailing slash.
+    # Get http://pep8bot.ws/ and strip the trailing slash.
     prefix = get_current_request().resource_url(None)[:-1]
 
     raw_widget = request.context(**params).display()

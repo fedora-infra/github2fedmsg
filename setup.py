@@ -31,9 +31,9 @@ requires = [
     'tw2.d3',
     ]
 
-setup(name='statatat',
+setup(name='pep8bot',
       version='0.0',
-      description='statatat',
+      description='pep8bot',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -48,13 +48,13 @@ setup(name='statatat',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='statatat',
+      test_suite='pep8bot',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = statatat:main
+      main = pep8bot:main
       [console_scripts]
-      initialize_statatat_db = statatat.scripts.initializedb:main
+      initialize_pep8bot_db = pep8bot.scripts.initializedb:main
       """,
       )
 

@@ -1,9 +1,9 @@
 from hashlib import md5
 import tw2.core as twc
 
-import statatat.models
-import statatat.widgets
-import statatat.widgets.graph
+import pep8bot.models
+import pep8bot.widgets
+import pep8bot.widgets.graph
 
 
 def make_root(request):
@@ -28,7 +28,7 @@ class RootApp(dict):
         if key in self.static:
             return self.static[key]
 
-        query = statatat.models.User.query.filter_by(username=key)
+        query = pep8bot.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
         return UserApp(user=query.one())
@@ -36,7 +36,7 @@ class RootApp(dict):
 
 class WidgetApp(object):
     def __getitem__(self, key):
-        query = statatat.models.User.query.filter_by(username=key)
+        query = pep8bot.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
         user = query.first()
@@ -50,25 +50,25 @@ class WidgetApp(object):
         backend_key = "moksha.livesocket.backend"
         backend = self.__parent__.request.registry.settings[backend_key]
 
-        return statatat.widgets.graph.make_chart(backend=backend, topic=topics)
+        return pep8bot.widgets.graph.make_chart(backend=backend, topic=topics)
 
 
 class ApiApp(object):
     def __getitem__(self, key):
-        query = statatat.models.User.query.filter_by(username=key)
+        query = pep8bot.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
         return query.one()
 
 
-class UserApp(statatat.widgets.UserProfile):
+class UserApp(pep8bot.widgets.UserProfile):
     __name__ = None
     __parent__ = RootApp
 
     @classmethod
     def __getitem__(self, key):
         if key == 'new':
-            return statatat.widgets.NewWidgetWidget(user=self.user)
+            return pep8bot.widgets.NewWidgetWidget(user=self.user)
 
         # I dunno about this yet.. what is this app going to do?
         raise NotImplementedError("The stuff below this needs thinking over..")
@@ -82,7 +82,7 @@ class UserApp(statatat.widgets.UserProfile):
 
         for conf in self.user.widget_configurations:
             if conf.name == key:
-                return statatat.widgets.make_widget(conf, chrome)
+                return pep8bot.widgets.make_widget(conf, chrome)
 
         raise KeyError("No such widget %r" % key)
 

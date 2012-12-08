@@ -11,7 +11,7 @@ from tw2.bootstrap.forms import bootstrap_css
 from tw2.bootstrap.forms import bootstrap_responsive_css
 import tw2.core
 
-from statatat.widgets.graph import PopupNotification
+from pep8bot.widgets.graph import PopupNotification
 
 # TODO -- move this into tw2.bootstrap like tw2.jqplugins.ui
 #bootstrap_css = tw2.core.CSSLink(

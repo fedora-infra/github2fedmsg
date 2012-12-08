@@ -1,5 +1,5 @@
 from pyramid.view import view_config
-import statatat.models as m
+import pep8bot.models as m
 
 
 @view_config(route_name='stats', renderer='stats.mak')

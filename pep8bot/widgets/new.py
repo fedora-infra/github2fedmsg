@@ -23,7 +23,7 @@ class NewWidgetForm(twb.HorizontalForm):
 
 
 class NewWidgetWidget(twc.Widget):
-    template = "mako:statatat.widgets.templates.new"
+    template = "mako:pep8bot.widgets.templates.new"
     user = twc.Param("An instance of the User SQLAlchemy model.")
 
     # These get filled in just before the widget is displayed.

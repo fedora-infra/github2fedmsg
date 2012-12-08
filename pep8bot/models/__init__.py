@@ -17,7 +17,7 @@ from sqlalchemy.orm import (
 )
 
 import pyramid.threadlocal
-import statatat.traversal
+import pep8bot.traversal
 import datetime
 from hashlib import md5
 from .jsonifiable import JSONifiable
