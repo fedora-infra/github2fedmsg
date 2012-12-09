@@ -25,7 +25,7 @@ requires = [
     # Retask, for communication between webapp and the worker
     'retask',
     'redis',
-    'mock'
+    'mock',
 
     # Required by the worker to do git commands
     'sh',
