@@ -4,11 +4,25 @@ import tempfile
 import time
 import pprint
 import os
+import shutil
 
 # pypi
 import sh
 from retask.task import Task
 from retask.queue import Queue
+
+
+class directory(object):
+    """ pushd/popd context manager. """
+    def __init__(self, newPath):
+        self.newPath = newPath
+
+    def __enter__(self, *args, **kw):
+        self.savedPath = os.getcwd()
+        os.chdir(self.newPath)
+
+    def __exit__(self, *args, **kw):
+        os.chdir(self.savedPath)
 
 
 class Worker(object):
@@ -38,14 +52,37 @@ class Worker(object):
             task = self.queue.dequeue()
             data = task.data
             url = data['repository']['url']
+
+            # TODO -- don't clone this url.  But fork and clone our url.
+
             name = data['repository']['name']
             owner = data['repository']['owner']['name']
             self.working_dir = tempfile.mkdtemp(
                 prefix=owner + '-' + name,
                 dir=self.scratch_dir,
             )
-            print self.working_dir
-            sh.git.clone(url, self.working_dir)
+            print "** Cloning to", self.working_dir
+            print sh.git.clone(url, self.working_dir)
+            print "** Processing files."
+            for root, dirs, files in os.walk(self.working_dir):
+
+                if '.git' in root:
+                    continue
+
+                for filename in files:
+                    if filename.endswith(".py"):
+                        infile = root + "/" + filename
+                        print "** Tidying", infile
+                        tmpfile = infile + ".bak"
+                        script = os.path.expanduser(
+                            "~/devel/PythonTidy/PythonTidy.py"
+                        )
+                        sh.python(script, infile, tmpfile)
+                        shutil.move(tmpfile, infile)
+
+            with directory(self.working_dir):
+                print sh.pwd()
+                print sh.git.status()
 
 
 def worker():
