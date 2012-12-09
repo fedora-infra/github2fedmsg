@@ -22,6 +22,14 @@ requires = [
     # https://github.com/copitux/python-github3/issues/26
     'pygithub3',
 
+    # Retask, for communication between webapp and the worker
+    'retask',
+    'redis',
+    'mock'
+
+    # Required by the worker to do git commands
+    'sh',
+
     # Is this necessary?
     'tw2.core <= 2.1.1',   # only because 2.1.2 is busted
     'tw2.forms <= 2.1.1',  # only because 2.1.2 is busted
