@@ -11,3 +11,4 @@ doc/build
 README.pdf
 *.pid
 *.log
+pep8bot/githubsecrets.*

@@ -11,6 +11,9 @@ import sh
 from retask.task import Task
 from retask.queue import Queue
 
+# local
+import githubutils as gh
+
 
 class directory(object):
     """ pushd/popd context manager. """
@@ -51,16 +54,23 @@ class Worker(object):
 
             task = self.queue.dequeue()
             data = task.data
-            url = data['repository']['url']
 
-            # TODO -- don't clone this url.  But fork and clone our url.
-
-            name = data['repository']['name']
+            repo = data['repository']['name']
             owner = data['repository']['owner']['name']
+
+            fork = gh.my_fork(owner, repo)
+            if not fork:
+                fork = gh.create_fork(owner, repo)
+
+            url = fork['url']
+
             self.working_dir = tempfile.mkdtemp(
                 prefix=owner + '-' + name,
                 dir=self.scratch_dir,
             )
+
+            # TODO -- what if our fork is out of date of their upstream?  We
+            # need to "git pull --force # or something"
             print "** Cloning to", self.working_dir
             print sh.git.clone(url, self.working_dir)
             print "** Processing files."
@@ -83,6 +93,11 @@ class Worker(object):
             with directory(self.working_dir):
                 print sh.pwd()
                 print sh.git.status()
+
+            # TODO
+            # 1) commit
+            # 2) push
+            # 3) create pull request
 
 
 def worker():
