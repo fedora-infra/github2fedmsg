@@ -87,17 +87,18 @@ class Worker(object):
                         script = os.path.expanduser(
                             "~/devel/PythonTidy/PythonTidy.py"
                         )
+                        # Run it twice for now.. since its a little unstable.
+                        sh.python(script, infile, tmpfile)
                         sh.python(script, infile, tmpfile)
                         shutil.move(tmpfile, infile)
 
             with directory(self.working_dir):
                 print sh.pwd()
                 print sh.git.status()
+                print sh.git.commit(a=True, m="'(Auto commit from PEP8 Bot)'")
+                print sh.git.push("origin")
 
-            # TODO
-            # 1) commit
-            # 2) push
-            # 3) create pull request
+            gh.create_pull_request(owner, repo)
 
 
 def worker():
