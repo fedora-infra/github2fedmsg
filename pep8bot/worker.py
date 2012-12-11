@@ -62,10 +62,10 @@ class Worker(object):
             if not fork:
                 fork = gh.create_fork(owner, repo)
 
-            url = fork['url']
+            url = fork['ssh_url']
 
             self.working_dir = tempfile.mkdtemp(
-                prefix=owner + '-' + name,
+                prefix=owner + '-' + repo,
                 dir=self.scratch_dir,
             )
 
@@ -82,7 +82,7 @@ class Worker(object):
                 for filename in files:
                     if filename.endswith(".py"):
                         infile = root + "/" + filename
-                        print "** Tidying", infile
+                        print "**** Tidying", infile
                         tmpfile = infile + ".bak"
                         script = os.path.expanduser(
                             "~/devel/PythonTidy/PythonTidy.py"
