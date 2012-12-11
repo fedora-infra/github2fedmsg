@@ -1,4 +1,5 @@
 import requests
+import json
 import logging
 log = logging.getLogger("github")
 
@@ -56,19 +57,18 @@ def create_pull_request(username, repo):
     """
     log.info("Creating github pull request on %s/%s" % (username, repo))
     url = prefix + "/repos/%s/%s/pulls" % (username, repo)
+    branch = default_branch(username, repo)
     payload = dict(
         title='PEP8 Cleanup',
         body=pull_request_body,
-        base=default_branch(username, repo),
+        base=branch,
+        head="pep8bot:" + branch,
     )
-    response = requests.post(url, params=oauth_dict, data=payload)
+    response = requests.post(url, params=oauth_dict, data=json.dumps(payload))
 
-    if response.status_code not in [200, 202]:
+    if not response.status_code == 201:
         raise IOError(response.status_code)
 
     log.debug("Successful.")
-
-    import pprint
-    pprint.pprint(response.json)
 
     return response.json

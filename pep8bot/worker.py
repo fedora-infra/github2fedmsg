@@ -61,6 +61,8 @@ class Worker(object):
             fork = gh.my_fork(owner, repo)
             if not fork:
                 fork = gh.create_fork(owner, repo)
+                print "Sleeping for 4 seconds"
+                time.sleep(4)
 
             url = fork['ssh_url']
 
@@ -95,9 +97,15 @@ class Worker(object):
             with directory(self.working_dir):
                 print sh.pwd()
                 print sh.git.status()
-                print sh.git.commit(a=True, m="'(Auto commit from PEP8 Bot)'")
+                print sh.git.commit(
+                    a=True,
+                    message="(Auto commit from PEP8 Bot)",
+                    author="PEP8 Bot <bot@pep8.me>",
+                )
                 print sh.git.push("origin")
 
+            print "Sleeping for 4 seconds"
+            time.sleep(4)
             gh.create_pull_request(owner, repo)
 
 
