@@ -51,7 +51,7 @@ def default_branch(username, repo):
 
 pull_request_body = "Melissa is a babe!"
 
-def create_pull_request(username, repo):
+def create_pull_request(username, repo, patch_branch):
     """
     http://developer.github.com/v3/pulls/#create-a-pull-request
     """
@@ -62,7 +62,7 @@ def create_pull_request(username, repo):
         title='PEP8 Cleanup',
         body=pull_request_body,
         base=branch,
-        head="pep8bot:" + branch,
+        head="pep8bot:" + patch_branch,
     )
     response = requests.post(url, params=oauth_dict, data=json.dumps(payload))
 

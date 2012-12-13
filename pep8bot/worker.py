@@ -5,6 +5,7 @@ import time
 import pprint
 import os
 import shutil
+import uuid
 
 # pypi
 import sh
@@ -98,6 +99,7 @@ class Worker(object):
                         sh.python(script, infile, tmpfile)
                         shutil.move(tmpfile, infile)
 
+            patch_name = "pep8-" + str(uuid.uuid4())
             with directory(self.working_dir):
                 print sh.pwd()
                 print sh.git.status()
@@ -106,11 +108,14 @@ class Worker(object):
                     message="(Auto commit from PEP8 Bot)",
                     author="PEP8 Bot <bot@pep8.me>",
                 )
-                print sh.git.push("origin")
+                print sh.git.push(
+                    "origin",
+                    data['repository']['master_branch'] + ":" + patch_name,
+                )
 
             print "Sleeping for 4 seconds"
             time.sleep(4)
-            gh.create_pull_request(owner, repo)
+            gh.create_pull_request(owner, repo, patch_name)
 
 
 def worker():
