@@ -71,10 +71,14 @@ class Worker(object):
                 dir=self.scratch_dir,
             )
 
-            # TODO -- what if our fork is out of date of their upstream?  We
-            # need to "git pull --force # or something"
             print "** Cloning to", self.working_dir
             print sh.git.clone(url, self.working_dir)
+
+            print "** Adding remote upstream"
+            with directory(self.working_dir):
+                print sh.git.remote.add("upstream", data['repository']['url'])
+                print sh.git.pull("upstream", data['repository']['master_branch'])
+
             print "** Processing files."
             for root, dirs, files in os.walk(self.working_dir):
 
