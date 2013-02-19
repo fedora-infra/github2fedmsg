@@ -30,6 +30,9 @@ requires = [
     # Required by the worker to do git commands
     'sh',
 
+    # Required by the worker to do its checking.
+    'pep8',
+
     # Is this necessary?
     'tw2.core <= 2.1.1',   # only because 2.1.2 is busted
     'tw2.forms <= 2.1.1',  # only because 2.1.2 is busted

@@ -9,8 +9,9 @@ import uuid
 
 # pypi
 import sh
-from retask.task import Task
 from retask.queue import Queue
+
+import pep8
 
 # local
 import githubutils as gh
@@ -58,6 +59,9 @@ class Worker(object):
 
             repo = data['repository']['name']
             owner = data['repository']['owner']['name']
+            commits = data['commits']
+            import pprint
+            pprint.pprint(commits)
 
             fork = gh.my_fork(owner, repo)
             if not fork:
@@ -78,44 +82,31 @@ class Worker(object):
             print "** Adding remote upstream"
             with directory(self.working_dir):
                 print sh.git.remote.add("upstream", data['repository']['url'])
-                print sh.git.pull("upstream", data['repository']['master_branch'])
+                print sh.git.pull("upstream",
+                                  data['repository']['master_branch'])
 
-            print "** Processing files."
-            for root, dirs, files in os.walk(self.working_dir):
+            print "** Processing commits."
+            for commit in commits:
+                print "** Processing files on commit", commit
+                print sh.git.checkout(commit)
+                infiles = []
+                for root, dirs, files in os.walk(self.working_dir):
 
-                if '.git' in root:
-                    continue
+                    if '.git' in root:
+                        continue
 
-                for filename in files:
-                    if filename.endswith(".py"):
-                        infile = root + "/" + filename
-                        print "**** Tidying", infile
-                        tmpfile = infile + ".bak"
-                        script = os.path.expanduser(
-                            "~/devel/PythonTidy/PythonTidy.py"
-                        )
-                        # Run it twice for now.. since its a little unstable.
-                        sh.python(script, infile, tmpfile)
-                        sh.python(script, infile, tmpfile)
-                        shutil.move(tmpfile, infile)
+                    infiles.extend([
+                        root + "/" + fname
+                        for fname in files
+                        if fname.endswith(".py")
+                    ])
 
-            patch_name = "pep8-" + str(uuid.uuid4())
-            with directory(self.working_dir):
-                print sh.pwd()
-                print sh.git.status()
-                print sh.git.commit(
-                    a=True,
-                    message="(Auto commit from PEP8 Bot)",
-                    author="PEP8 Bot <bot@pep8.me>",
-                )
-                print sh.git.push(
-                    "origin",
-                    data['repository']['master_branch'] + ":" + patch_name,
-                )
-
-            print "Sleeping for 4 seconds"
-            time.sleep(4)
-            gh.create_pull_request(owner, repo, patch_name)
+                pep8style = pep8.StyleGuide(quiet=True)
+                result = pep8style.check_files(infiles)
+                print result.total_errors
+                # TODO - mark gh commit with errors
+                # TODO - add a note in our DB about the status
+                # TODO - try/except/finally mark as 'failed' if necessary.
 
 
 def worker():
