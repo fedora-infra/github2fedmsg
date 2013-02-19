@@ -15,6 +15,16 @@ import tw2.core
 #)
 
 
+def when_ready(func):
+    """
+    Takes a js_function and returns a js_callback that will run
+    when the document is ready.
+    """
+    return tw2.core.js_callback(
+        '$(document).ready(function(){' + str(func) + '});'
+    )
+
+
 @subscriber(BeforeRender)
 def inject_globals(event):
     request = get_current_request()
@@ -33,7 +43,6 @@ def inject_globals(event):
     bootstrap_responsive_css.inject()
     bootstrap_js.inject()
 
-    # TODO -- steal this from moksha.wsgi
     when_ready(
         "$('.dropdown-toggle').dropdown();"
     )
