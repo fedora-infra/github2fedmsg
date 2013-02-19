@@ -15,7 +15,7 @@
 
   <div class="row">
     <span class="span10 offset1">
-      ${chart.display() |n}
+	chart used to go here..
     </span>
   </div>
 
