@@ -91,6 +91,7 @@ class Worker(object):
                 with directory(self.working_dir):
                     print sh.git.checkout(commit['id'])
 
+                # TODO -- only process those in modified and added
                 infiles = []
                 for root, dirs, files in os.walk(self.working_dir):
 

@@ -4,6 +4,8 @@ from sqlalchemy import (
     DateTime,
     Boolean,
     Text,
+    String,
+    Unicode,
     ForeignKey,
 )
 
@@ -31,8 +33,7 @@ Base.query = DBSession.query_property()
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    username = Column(Text, unique=True, nullable=False)
+    username = Column(Text, primary_key=True)
     emails = Column(Text, nullable=False)
     created_on = Column(DateTime, default=datetime.datetime.now)
     widget_configurations = relation('WidgetConfiguration', backref=('user'))
@@ -69,21 +70,40 @@ class User(Base):
     def widget_link(self):
         prefix = pyramid.threadlocal.get_current_request().resource_url(None)
         tmpl = "{prefix}widget/{username}/embed.js" + \
-                "?width=400&height=55&duration=1600&n=100"
+            "?width=400&height=55&duration=1600&n=100"
         link = tmpl.format(prefix=prefix, username=self.username)
         return "<script type='text/javascript' src='%s'></script>" % link
 
 
 class Repo(Base):
     __tablename__ = 'repos'
-    id = Column(Integer, primary_key=True)
-    name = Column(Text, nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    name = Column(Text, primary_key=True)
+    username = Column(Text, ForeignKey('users.username'))
     enabled = Column(Boolean, default=False)
+    commits = relation('Commit', backref=('repo'))
 
 
+class Commit(Base):
+    __tablename__ = 'commits'
+    sha = Column(String(40), primary_key=True)
+    message = Column(Unicode, nullable=False)
+    timestamp = Column(DateTime, nullable=False)
+    url = Column(Text, nullable=False)
+    repo_name = Column(Text, ForeignKey('repos.name'))
+    author_name = Column(Text, ForeignKey('users.username'))
+    committer_name = Column(Text, ForeignKey('users.username'))
+    author = relation(User, foreign_keys=[author_name],
+                      backref=('authored_commits'))
+    committer = relation(User, foreign_keys=[committer_name],
+                      backref=('committed_commits'))
+
+    pep8_error_count = Column(Integer, nullable=True)
+    pep8_errors = Column(Text, nullable=True)
+
+
+# TODO -- this is unused.
 class WidgetConfiguration(Base):
     __tablename__ = 'widget_configurations'
     id = Column(Integer, primary_key=True)
     name = Column(Text, unique=True, nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_username = Column(Integer, ForeignKey('users.username'))
