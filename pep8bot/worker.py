@@ -87,8 +87,10 @@ class Worker(object):
 
             print "** Processing commits."
             for commit in commits:
-                print "** Processing files on commit", commit
-                print sh.git.checkout(commit)
+                print "** Processing files on commit", commit['id']
+                with directory(self.working_dir):
+                    print sh.git.checkout(commit['id'])
+
                 infiles = []
                 for root, dirs, files in os.walk(self.working_dir):
 
