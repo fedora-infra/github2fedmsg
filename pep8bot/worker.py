@@ -2,7 +2,6 @@
 # stdlib
 import tempfile
 import time
-import pprint
 import os
 import shutil
 import uuid
@@ -60,8 +59,6 @@ class Worker(object):
             repo = data['repository']['name']
             owner = data['repository']['owner']['name']
             commits = data['commits']
-            import pprint
-            pprint.pprint(commits)
 
             fork = gh.my_fork(owner, repo)
             if not fork:
