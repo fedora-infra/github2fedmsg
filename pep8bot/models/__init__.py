@@ -35,6 +35,7 @@ class User(Base):
     __tablename__ = 'users'
     username = Column(Text, primary_key=True)
     emails = Column(Text, nullable=False)
+    oauth_access_token = Column(Text)
     created_on = Column(DateTime, default=datetime.datetime.now)
     widget_configurations = relation('WidgetConfiguration', backref=('user'))
     repos = relation('Repo', backref=('user'))

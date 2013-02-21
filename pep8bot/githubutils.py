@@ -75,12 +75,12 @@ def create_pull_request(username, repo, patch_branch):
     return response.json
 
 
-def post_status(username, repo, sha, state):
+def post_status(username, repo, sha, state, token):
     """
     http://developer.github.com/v3/repos/statuses/#create-a-status
     """
     description_lookup = {
-        "success": "PEP8bot says \"OK\",
+        "success": "PEP8bot says \"OK\"",
         "failure": "PEP8bot detected errors",
         "pending": "Still waiting on PEP8bot check",
         "error": "PEP8bot ran into trouble",
@@ -93,8 +93,12 @@ def post_status(username, repo, sha, state):
         #target_url="...",
         description=description_lookup[state],
     )
-    raise NotImplementedError("oauth-dict must have a user-specific token")
-    response = requests.post(url, params=oauth_dict, data=json.dumps(payload))
+
+    response = requests.post(
+        url,
+        params=dict(access_token=token),
+        data=json.dumps(payload),
+    )
 
     if not response.status_code == 201:
         raise IOError(response.status_code)

@@ -1,19 +1,27 @@
+#!/usr/bin/env python
 
 # stdlib
 import tempfile
 import time
 import os
 import shutil
+import sys
 import uuid
 
 # pypi
 import sh
 from retask.queue import Queue
+from sqlalchemy import engine_from_config
+from pyramid.paster import (
+    get_appsettings,
+    setup_logging,
+)
 
 import pep8
 
 # local
-import githubutils as gh
+import pep8bot.githubutils as gh
+import pep8bot.models as m
 
 
 class directory(object):
@@ -34,7 +42,12 @@ class Worker(object):
     webapp and then acts on them.
     """
 
-    def __init__(self):
+    def __init__(self, config_uri):
+        setup_logging(config_uri)
+        settings = get_appsettings(config_uri, name="pep8bot")
+        engine = engine_from_config(settings, 'sqlalchemy.')
+        m.DBSession.configure(bind=engine)
+
         self.queue = Queue('commits')
         self.queue.connect()
         # TODO -- set both of these with the config file.
@@ -59,6 +72,8 @@ class Worker(object):
             repo = data['repository']['name']
             owner = data['repository']['owner']['name']
             commits = data['commits']
+            user = m.User.query.filter_by(username=owner).one()
+            token = user.oauth_access_token
 
             fork = gh.my_fork(owner, repo)
             if not fork:
@@ -111,20 +126,33 @@ class Worker(object):
                     else:
                         status = "success"
 
-                    gh.post_status(owner, repo, sha, status)
+                    gh.post_status(owner, repo, sha, status, token)
                 except Exception:
-                    gh.post_status(owner, repo, sha, "error")
+                    gh.post_status(owner, repo, sha, "error", token)
                     raise
 
                 # TODO - add a note in our DB about the status
 
 
-def worker():
-    w = Worker()
+def usage(argv):
+    cmd = os.path.basename(argv[0])
+    print('usage: %s <config_uri>\n'
+          '(example: "%s development.ini")' % (cmd, cmd))
+    sys.exit(1)
+
+
+def worker(config_filename):
+    w = Worker(config_filename)
     try:
         w.run()
     except KeyboardInterrupt:
         pass
 
+
+def main(argv=sys.argv):
+    if len(argv) != 2:
+        usage(argv)
+    worker(sys.argv[1])
+
 if __name__ == '__main__':
-    worker()
+    main()
