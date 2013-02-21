@@ -78,7 +78,8 @@ class User(Base):
 
 class Repo(Base):
     __tablename__ = 'repos'
-    name = Column(Text, primary_key=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=False)
     username = Column(Text, ForeignKey('users.username'))
     enabled = Column(Boolean, default=False)
     commits = relation('Commit', backref=('repo'))
@@ -86,7 +87,9 @@ class Repo(Base):
 
 class Commit(Base):
     __tablename__ = 'commits'
-    sha = Column(String(40), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    status = Column(String(20), nullable=False)
+    sha = Column(String(40), nullable=False)
     message = Column(Unicode, nullable=False)
     timestamp = Column(DateTime, nullable=False)
     url = Column(Text, nullable=False)

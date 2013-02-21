@@ -3,6 +3,7 @@ from pyramid.security import authenticated_userid
 
 import pep8bot.models as m
 
+import datetime
 from hashlib import md5
 import requests
 
@@ -47,12 +48,40 @@ def webhook(request):
         if isinstance(payload, basestring):
             payload = json.loads(payload)
 
+        # Drop a note in our db about it
+        user = m.User.query.filter_by(
+            username=payload['repository']['owner']['name']).one()
+        repo = m.Repo.query.filter_by(
+            name=payload['repository']['name'],
+            username=payload['repository']['owner']['name'],
+        ).one()
+
+        for commit in payload['commits']:
+            if m.Commit.query.filter_by(sha=commit['id']).count() > 0:
+                continue
+            m.DBSession.add(m.Commit(
+                status="pending",
+                sha=commit['id'],
+                message=commit['message'],
+                timestamp=datetime.datetime.strptime(
+                    commit['timestamp'][:-6],  # strip timezone.. :/
+                    "%Y-%m-%dT%H:%M:%S",
+                ),
+                url=commit['url'],
+                repo=repo,
+                # TODO -- sort this out.  what if author isn't in pep8bot?
+                #author=author,
+                #committer=committer,
+            ))
+
+        # Now, put a note in our work queue for it, too.
         queue = retask.queue.Queue('commits')
         task = retask.task.Task(payload)
         queue.connect()
 
         # Fire and forget
         job = queue.enqueue(task)
+
     else:
         raise NotImplementedError()
 
@@ -84,3 +113,8 @@ def repo_toggle_enabled(request):
         'enabled': request.context.enabled,
         'repo': request.context.__json__(),
     }
+
+@view_config(context="tw2.core.widgets.WidgetMeta",
+             renderer='widget.mak')
+def widget_view(request):
+    return dict(widget=request.context)

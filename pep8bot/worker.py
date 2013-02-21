@@ -73,16 +73,19 @@ class Worker(object):
             repo = data['repository']['name']
             owner = data['repository']['owner']['name']
             commits = data['commits']
-            user = m.User.query.filter_by(username=owner).one()
-            token = user.oauth_access_token
+            _user = m.User.query.filter_by(username=owner).one()
+            token = _user.oauth_access_token
 
-            fork = gh.my_fork(owner, repo)
-            if not fork:
-                fork = gh.create_fork(owner, repo)
-                print "Sleeping for 4 seconds"
-                time.sleep(4)
+            # We used to fork repos in order to issue pull requests.. but thats
+            # not necessary anymore...
+            url = data['repository']['url']
+            #fork = gh.my_fork(owner, repo)
+            #if not fork:
+            #    fork = gh.create_fork(owner, repo)
+            #    print "Sleeping for 4 seconds"
+            #    time.sleep(4)
 
-            url = fork['ssh_url']
+            #url = fork['ssh_url']
 
             self.working_dir = tempfile.mkdtemp(
                 prefix=owner + '-' + repo,
@@ -101,6 +104,9 @@ class Worker(object):
             print "** Processing commits."
             for commit in commits:
                 sha = commit['id']
+                # TODO -- what about hash collisions?
+                _commit = m.Commit.query.filter_by(sha=sha).one()
+                import transaction
                 try:
                     print "** Processing files on commit", sha
                     with directory(self.working_dir):
@@ -132,12 +138,14 @@ class Worker(object):
                     else:
                         status = "success"
 
+                    _commit.status = status
                     gh.post_status(owner, repo, sha, status, token)
                 except Exception:
+                    _commit.status = status
                     gh.post_status(owner, repo, sha, "error", token)
                     raise
-
-                # TODO - add a note in our DB about the status
+                finally:
+                    transaction.commit()
 
 
 def usage(argv):
