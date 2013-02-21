@@ -93,20 +93,20 @@ def repo_toggle_enabled(request):
     repo = request.context
     repo.enabled = not repo.enabled
     data = {
-        "access_token": request.session['token'],
+        "access_token": repo.user.oauth_access_token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
-        # TODO -- use our own callback and not requestb.in
-        # ... think over the best pattern for traversal first.
-        "hub.callback": "http://pep8.me/webhook",
+        # TODO -- use our real url
+        "hub.callback": "http://localhost:6543/webhook",
     }
+
     for event in github_events:
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
             repo.user.username, repo.name, event)
         # Subscribe to events via pubsubhubbub
         result = requests.post(github_api_url, data=data)
 
-        # TODO -- handle errors more gracefully.
-        assert(result.status_code == 204)
+        if result.status_code != 204:
+            raise IOError(result.status_code)
 
     return {
         'status': 'ok',
