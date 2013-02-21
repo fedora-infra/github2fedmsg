@@ -88,18 +88,12 @@ class Worker(object):
                 with directory(self.working_dir):
                     print sh.git.checkout(commit['id'])
 
-                # TODO -- only process those in modified and added
-                infiles = []
-                for root, dirs, files in os.walk(self.working_dir):
-
-                    if '.git' in root:
-                        continue
-
-                    infiles.extend([
-                        root + "/" + fname
-                        for fname in files
-                        if fname.endswith(".py")
-                    ])
+                # Don't process every file in the project, just modified stuff
+                infiles = [
+                    self.working_dir + '/' + fname
+                    for fname in commit['added'] + commit['modified']
+                    if fname.endswith(".py")
+                ]
 
                 pep8style = pep8.StyleGuide(quiet=True)
                 result = pep8style.check_files(infiles)
