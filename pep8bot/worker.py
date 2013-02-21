@@ -84,29 +84,39 @@ class Worker(object):
 
             print "** Processing commits."
             for commit in commits:
-                print "** Processing files on commit", commit['id']
-                with directory(self.working_dir):
-                    print sh.git.checkout(commit['id'])
+                sha = commit['id']
+                try:
+                    print "** Processing files on commit", sha
+                    with directory(self.working_dir):
+                        print sh.git.checkout(sha)
 
-                # TODO -- only process those in modified and added
-                infiles = []
-                for root, dirs, files in os.walk(self.working_dir):
+                    # TODO -- only process those in modified and added
+                    infiles = []
+                    for root, dirs, files in os.walk(self.working_dir):
 
-                    if '.git' in root:
-                        continue
+                        if '.git' in root:
+                            continue
 
-                    infiles.extend([
-                        root + "/" + fname
-                        for fname in files
-                        if fname.endswith(".py")
-                    ])
+                        infiles.extend([
+                            root + "/" + fname
+                            for fname in files
+                            if fname.endswith(".py")
+                        ])
 
-                pep8style = pep8.StyleGuide(quiet=True)
-                result = pep8style.check_files(infiles)
-                print result.total_errors
-                # TODO - mark gh commit with errors
+                    pep8style = pep8.StyleGuide(quiet=True)
+                    result = pep8style.check_files(infiles)
+
+                    if result.total_errors > 0:
+                        status = "failure"
+                    else:
+                        status = "success"
+
+                    gh.post_status(owner, repo, sha, status)
+                except Exception:
+                    gh.post_status(owner, repo, sha, "error")
+                    raise
+
                 # TODO - add a note in our DB about the status
-                # TODO - try/except/finally mark as 'failed' if necessary.
 
 
 def worker():
