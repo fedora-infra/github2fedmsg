@@ -1,19 +1,27 @@
+#!/usr/bin/env python
 
 # stdlib
 import tempfile
 import time
-import pprint
 import os
 import shutil
+import sys
 import uuid
 
 # pypi
 import sh
-from retask.task import Task
 from retask.queue import Queue
+from sqlalchemy import engine_from_config
+from pyramid.paster import (
+    get_appsettings,
+    setup_logging,
+)
+
+import pep8
 
 # local
-import githubutils as gh
+import pep8bot.githubutils as gh
+import pep8bot.models as m
 
 
 class directory(object):
@@ -34,7 +42,13 @@ class Worker(object):
     webapp and then acts on them.
     """
 
-    def __init__(self):
+    def __init__(self, config_uri):
+        setup_logging(config_uri)
+        settings = get_appsettings(config_uri, name="pep8bot")
+        engine = engine_from_config(settings, 'sqlalchemy.')
+        m.DBSession.configure(bind=engine)
+
+        # TODO -- pass in redis params from config, hostname, etc.
         self.queue = Queue('commits')
         self.queue.connect()
         # TODO -- set both of these with the config file.
@@ -58,14 +72,20 @@ class Worker(object):
 
             repo = data['repository']['name']
             owner = data['repository']['owner']['name']
+            commits = data['commits']
+            _user = m.User.query.filter_by(username=owner).one()
+            token = _user.oauth_access_token
 
-            fork = gh.my_fork(owner, repo)
-            if not fork:
-                fork = gh.create_fork(owner, repo)
-                print "Sleeping for 4 seconds"
-                time.sleep(4)
+            # We used to fork repos in order to issue pull requests.. but thats
+            # not necessary anymore...
+            url = data['repository']['url']
+            #fork = gh.my_fork(owner, repo)
+            #if not fork:
+            #    fork = gh.create_fork(owner, repo)
+            #    print "Sleeping for 4 seconds"
+            #    time.sleep(4)
 
-            url = fork['ssh_url']
+            #url = fork['ssh_url']
 
             self.working_dir = tempfile.mkdtemp(
                 prefix=owner + '-' + repo,
@@ -78,52 +98,75 @@ class Worker(object):
             print "** Adding remote upstream"
             with directory(self.working_dir):
                 print sh.git.remote.add("upstream", data['repository']['url'])
-                print sh.git.pull("upstream", data['repository']['master_branch'])
+                print sh.git.pull("upstream",
+                                  data['repository']['master_branch'])
 
-            print "** Processing files."
-            for root, dirs, files in os.walk(self.working_dir):
+            print "** Processing commits."
+            for commit in commits:
+                sha = commit['id']
+                # TODO -- what about hash collisions?
+                _commit = m.Commit.query.filter_by(sha=sha).one()
+                import transaction
+                try:
+                    print "** Processing files on commit", sha
+                    with directory(self.working_dir):
+                        print sh.git.checkout(sha)
 
-                if '.git' in root:
-                    continue
+                    # TODO -- only process those in modified and added
+                    infiles = []
+                    for root, dirs, files in os.walk(self.working_dir):
 
-                for filename in files:
-                    if filename.endswith(".py"):
-                        infile = root + "/" + filename
-                        print "**** Tidying", infile
-                        tmpfile = infile + ".bak"
-                        script = os.path.expanduser(
-                            "~/devel/PythonTidy/PythonTidy.py"
-                        )
-                        # Run it twice for now.. since its a little unstable.
-                        sh.python(script, infile, tmpfile)
-                        sh.python(script, infile, tmpfile)
-                        shutil.move(tmpfile, infile)
+                        if '.git' in root:
+                            continue
 
-            patch_name = "pep8-" + str(uuid.uuid4())
-            with directory(self.working_dir):
-                print sh.pwd()
-                print sh.git.status()
-                print sh.git.commit(
-                    a=True,
-                    message="(Auto commit from PEP8 Bot)",
-                    author="PEP8 Bot <bot@pep8.me>",
-                )
-                print sh.git.push(
-                    "origin",
-                    data['repository']['master_branch'] + ":" + patch_name,
-                )
+                        infiles.extend([
+                            root + "/" + fname
+                            for fname in files
+                            if fname.endswith(".py")
+                        ])
 
-            print "Sleeping for 4 seconds"
-            time.sleep(4)
-            gh.create_pull_request(owner, repo, patch_name)
+                    # TODO -- document that the user can keep a .config/pep8
+                    # file in their project dir.
+                    pep8style = pep8.StyleGuide(
+                        quiet=True,
+                        config_file="./.config/pep8",
+                    )
+                    result = pep8style.check_files(infiles)
+
+                    if result.total_errors > 0:
+                        status = "failure"
+                    else:
+                        status = "success"
+
+                    _commit.status = status
+                    gh.post_status(owner, repo, sha, status, token)
+                except Exception:
+                    _commit.status = status
+                    gh.post_status(owner, repo, sha, "error", token)
+                    raise
+                finally:
+                    transaction.commit()
 
 
-def worker():
-    w = Worker()
+def usage(argv):
+    cmd = os.path.basename(argv[0])
+    print('usage: %s <config_uri>\n'
+          '(example: "%s development.ini")' % (cmd, cmd))
+    sys.exit(1)
+
+
+def worker(config_filename):
+    w = Worker(config_filename)
     try:
         w.run()
     except KeyboardInterrupt:
         pass
 
+
+def main(argv=sys.argv):
+    if len(argv) != 2:
+        usage(argv)
+    worker(sys.argv[1])
+
 if __name__ == '__main__':
-    worker()
+    main()

@@ -51,6 +51,7 @@ def default_branch(username, repo):
 
 pull_request_body = "Melissa is a babe!"
 
+
 def create_pull_request(username, repo, patch_branch):
     """
     http://developer.github.com/v3/pulls/#create-a-pull-request
@@ -65,6 +66,39 @@ def create_pull_request(username, repo, patch_branch):
         head="pep8bot:" + patch_branch,
     )
     response = requests.post(url, params=oauth_dict, data=json.dumps(payload))
+
+    if not response.status_code == 201:
+        raise IOError(response.status_code)
+
+    log.debug("Successful.")
+
+    return response.json
+
+
+def post_status(username, repo, sha, state, token):
+    """
+    http://developer.github.com/v3/repos/statuses/#create-a-status
+    """
+    description_lookup = {
+        "success": "PEP8bot says \"OK\"",
+        "failure": "PEP8bot detected errors",
+        "pending": "Still waiting on PEP8bot check",
+        "error": "PEP8bot ran into trouble",
+    }
+    log.info("Posting status on %s/%s#%s" % (username, repo, sha))
+    url = prefix + "/repos/%s/%s/statuses/%s" % (username, repo, sha)
+    payload = dict(
+        state=state,
+        # TODO -- include target_url
+        #target_url="...",
+        description=description_lookup[state],
+    )
+
+    response = requests.post(
+        url,
+        params=dict(access_token=token),
+        data=json.dumps(payload),
+    )
 
     if not response.status_code == 201:
         raise IOError(response.status_code)
