@@ -51,6 +51,9 @@ class JSONifiable(object):
         if hasattr(relation, '__iter__'):
             return [self._expand(item, seen) for item in relation]
 
+        if not relation:
+            return []
+
         if type(relation) not in seen:
             return relation.__json__(seen + [type(self)])
         else:
