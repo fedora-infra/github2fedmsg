@@ -15,7 +15,7 @@
   </div>
 
   <div class="row">
-    <span class="span2 offset1">
+    <span class="span2 offset2">
       <h2>Foolish</h2>
       <p>Was your latest work good enough or could it be more perfecter?
         Let PEP8Bot enforce foolish consistency all over your workflow.
@@ -27,7 +27,7 @@
         Relax:  Let Loose the Hobgoblin of Small Minds.  A full night's sleep is just around the corner.
         </p>
     </span>
-    <span class="span2 offset1">
+    <span class="span2">
       <h2>License</h2>
       <p>PEP8Bot is licensed under the <a
           href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>.  This means
@@ -37,7 +37,7 @@
         <img style="height:50px;" src="http://www.gnu.org/graphics/agplv3-155x51.png"/>
       </div>
     </span>
-    <span class="span3">
+    <span class="span2">
       <h2>Author</h2>
       <p>PEP8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
       <div class="logo">
