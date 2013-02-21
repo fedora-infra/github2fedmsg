@@ -48,6 +48,7 @@ class Worker(object):
         engine = engine_from_config(settings, 'sqlalchemy.')
         m.DBSession.configure(bind=engine)
 
+        # TODO -- pass in redis params from config, hostname, etc.
         self.queue = Queue('commits')
         self.queue.connect()
         # TODO -- set both of these with the config file.
@@ -118,7 +119,12 @@ class Worker(object):
                             if fname.endswith(".py")
                         ])
 
-                    pep8style = pep8.StyleGuide(quiet=True)
+                    # TODO -- document that the user can keep a .config/pep8
+                    # file in their project dir.
+                    pep8style = pep8.StyleGuide(
+                        quiet=True,
+                        config_file="./.config/pep8",
+                    )
                     result = pep8style.check_files(infiles)
 
                     if result.total_errors > 0:
