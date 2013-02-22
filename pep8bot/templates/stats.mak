@@ -3,7 +3,7 @@
 <div class="content">
   <div class="row">
     <span class="span6 offset3">
-      <h1>Stats on <a href="http://pep8bot.threebean.org"
+      <h1>Stats</h1>
           class="brand">pep8bot</a></h1>
       <p>There are <strong>${num_users} registered users</strong> with <strong>${num_repos} total
           repositories.</strong></p>
