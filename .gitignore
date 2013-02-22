@@ -13,3 +13,4 @@ README.pdf
 *.log
 pep8bot/githubsecrets.*
 web198.ini
+testlog.txt
