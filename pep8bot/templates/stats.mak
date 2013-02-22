@@ -4,7 +4,6 @@
   <div class="row">
     <span class="span6 offset3">
       <h1>Stats</h1>
-          class="brand">pep8bot</a></h1>
       <p>There are <strong>${num_users} registered users</strong> with <strong>${num_repos} total
           repositories.</strong></p>
       <p>Of those repositories, <strong>${num_enabled_repos} have the webhook
