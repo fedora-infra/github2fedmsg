@@ -19,24 +19,9 @@ class UserProfile(twc.Widget):
 
     def prepare(self):
         """ Query github for some information before display """
-        self.gh_user = gh.users.get(self.user.username)
-        # Sort repos alphabetically by name
-        self.gh_repos = sorted(
-            gh.repos.list(self.user.username).all(),
-            lambda x, y: cmp(x.name.lower(), y.name.lower()),
-        )
 
-        # Add repos to our DB if we haven't seen them before.
-        existant_repos = [repo.name for repo in self.user.repos]
-
-        # TODO -- fix this.  this is inefficient
-        for repo in self.gh_repos:
-            if repo.name not in existant_repos:
-                pep8bot.models.DBSession.add(pep8bot.models.Repo(
-                    user=self.user,
-                    name=repo.name,
-                    enabled=False,
-                ))
+        # TODO -- don't call this on every page load, only when asked.
+        #self.user.sync_repos()
 
     def make_button(self, repo_name):
         # TODO -- Can we use resource_url here?

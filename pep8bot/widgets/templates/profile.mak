@@ -2,10 +2,10 @@
 <div class="content">
   <div class="row">
     <span class="span10 offset1 profile-header">
-      <div class="photo-64"><img src="${w.gh_user.avatar_url}&s=64" /></div>
+      <div class="photo-64"><img src="${w.user.avatar}&s=64" /></div>
       <h1>
         ${w.user.username}
-        <small>${w.gh_user.name}, ${len(w.gh_repos)} repos</small>
+        <small>${w.user.full_name} ${len(w.user.all_repos)} repos</small>
       </h1>
     </span>
   </div>
@@ -19,9 +19,9 @@
           <th>Language</th>
           <th>Hook?</th>
         </tr>
-        % for repo in w.gh_repos:
+        % for repo in list(w.user.all_repos):
           <tr>
-            <td>${repo.name}</td>
+            <td>${repo.user.username}/${repo.name}</td>
             <td>${repo.description}</td>
             <td>${repo.language}</td>
             <td>${w.make_button(repo.name) | n}</td>
