@@ -46,6 +46,11 @@ class User(Base):
 
     @property
     def percent_enabled_repos(self):
+
+        # Avoid division by zero
+        if not len(self.repos):
+            return 0
+
         return 100.0 * self.total_enabled_repos / len(self.repos)
 
     @property
