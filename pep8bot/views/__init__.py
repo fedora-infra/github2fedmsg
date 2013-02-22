@@ -96,7 +96,7 @@ def repo_toggle_enabled(request):
         "access_token": repo.user.oauth_access_token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our real url
-        "hub.callback": "http://localhost:6543/webhook",
+        "hub.callback": "http://pep8.me/webhook",
     }
 
     for event in github_events:
