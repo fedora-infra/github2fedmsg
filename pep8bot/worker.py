@@ -63,11 +63,7 @@ class Worker(object):
     def run(self):
         while True:
             time.sleep(self.sleep_interval)
-            print "Waking"
-            if self.queue.length == 0:
-                continue
-
-            task = self.queue.dequeue()
+            task = self.queue.wait()
             data = task.data
 
             repo = data['repository']['name']
