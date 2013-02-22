@@ -75,23 +75,16 @@ def create_pull_request(username, repo, patch_branch):
     return response.json
 
 
-def post_status(username, repo, sha, state, token):
+def post_status(username, repo, sha, state, token, desc):
     """
     http://developer.github.com/v3/repos/statuses/#create-a-status
     """
-    description_lookup = {
-        "success": "PEP8bot says \"OK\"",
-        "failure": "PEP8bot detected errors",
-        "pending": "Still waiting on PEP8bot check",
-        "error": "PEP8bot ran into trouble",
-    }
     log.info("Posting status on %s/%s#%s" % (username, repo, sha))
     url = prefix + "/repos/%s/%s/statuses/%s" % (username, repo, sha)
     payload = dict(
         state=state,
-        # TODO -- include target_url
-        #target_url="...",
-        description=description_lookup[state],
+        target_url="http://pep8.me/%s/%s/commits/%s" % (username, repo, sha),
+        description=desc,
     )
 
     response = requests.post(

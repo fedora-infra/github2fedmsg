@@ -11,6 +11,8 @@ import json
 import retask.task
 import retask.queue
 
+import pep8bot.githubutils as gh
+
 # http://developer.github.com/v3/repos/hooks/
 github_api_url = "https://api.github.com/hub"
 github_events = [
@@ -40,13 +42,19 @@ def webhook(request):
     """ Handle github webhook. """
 
     # TODO -- check X-Hub-Signature
-
+    # TODO -- make this secret
     salt = "TODO MAKE THIS SECRET"
 
     if 'payload' in request.params:
         payload = request.params['payload']
         if isinstance(payload, basestring):
             payload = json.loads(payload)
+
+        if 'action' in payload:
+            # Then this is a pull request, and I don't know what to do with it.
+            import pprint
+            pprint.pprint(payload)
+            return
 
         # Drop a note in our db about it
         user = m.User.query.filter_by(
@@ -74,6 +82,12 @@ def webhook(request):
                 #committer=committer,
             ))
 
+            status = "pending"
+            token = user.oauth_access_token
+            desc = "PEP8Bot scan pending"
+            gh.post_status(user.username, repo.name, commit['id'],
+                           status, token, desc)
+
         # Now, put a note in our work queue for it, too.
         queue = retask.queue.Queue('commits')
         task = retask.task.Task(payload)
@@ -96,7 +110,7 @@ def repo_toggle_enabled(request):
         "access_token": repo.user.oauth_access_token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our real url
-        "hub.callback": "http://localhost:6543/webhook",
+        "hub.callback": "http://pep8.me/webhook",
     }
 
     for event in github_events:

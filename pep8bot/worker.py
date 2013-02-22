@@ -63,11 +63,7 @@ class Worker(object):
     def run(self):
         while True:
             time.sleep(self.sleep_interval)
-            print "Waking"
-            if self.queue.length == 0:
-                continue
-
-            task = self.queue.dequeue()
+            task = self.queue.wait()
             data = task.data
 
             repo = data['repository']['name']
@@ -101,6 +97,12 @@ class Worker(object):
                 print sh.git.pull("upstream",
                                   data['repository']['master_branch'])
 
+            lookup = {
+                "success": "PEP8bot says \"OK\"",
+                "failure": "PEP8bot detected {n} errors",
+                "pending": "Still waiting on PEP8bot check",
+                "error": "PEP8bot ran into trouble",
+            }
             print "** Processing commits."
             for commit in commits:
                 sha = commit['id']
@@ -138,11 +140,14 @@ class Worker(object):
                     else:
                         status = "success"
 
+                    desc = lookup[status].format(n=result.total_errors)
                     _commit.status = status
-                    gh.post_status(owner, repo, sha, status, token)
+                    gh.post_status(owner, repo, sha, status, token, desc)
                 except Exception:
+                    status = "error"
+                    desc = lookup[status]
                     _commit.status = status
-                    gh.post_status(owner, repo, sha, "error", token)
+                    gh.post_status(owner, repo, sha, status, token, desc)
                     raise
                 finally:
                     transaction.commit()
