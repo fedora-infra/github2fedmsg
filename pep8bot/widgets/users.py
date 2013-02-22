@@ -1,5 +1,6 @@
 import tw2.core as twc
 import pep8bot.models
+from sqlalchemy import and_
 import pyramid.threadlocal
 
 from pygithub3 import Github
@@ -20,14 +21,21 @@ class UserProfile(twc.Widget):
     def prepare(self):
         """ Query github for some information before display """
 
-        # TODO -- don't call this on every page load, only when asked.
-        #self.user.sync_repos()
+        # Try to refresh list of repos only if the user has none.
+        if not self.user.all_repos:
+            self.user.sync_repos()
 
-    def make_button(self, repo_name):
+    def make_button(self, username, repo_name):
         # TODO -- Can we use resource_url here?
-        link = '/api/%s/%s/toggle' % (self.user.username, repo_name)
+        link = '/api/%s/%s/toggle' % (username, repo_name)
         click = 'onclick="subscribe(\'%s\')"' % link
-        if self.user.repo_by_name(repo_name).enabled:
+        Repo = pep8bot.models.Repo
+        query = Repo.query.filter(and_(
+            Repo.username==username, Repo.name==repo_name))
+
+        repo = query.one()
+
+        if repo.enabled:
             cls, text = "btn-success", "Disable"
         else:
             cls, text = "btn-danger", "Enable"

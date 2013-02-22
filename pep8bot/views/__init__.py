@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 
 import pep8bot.models as m
+from sqlalchemy import and_
 
 import datetime
 from hashlib import md5
@@ -66,7 +67,8 @@ def webhook(request):
 
         # Drop a note in our db about it
         user = m.User.query.filter_by(username=username).one()
-        repo = m.Repo.query.filter_by(name=reponame, username=username).one()
+        repo = m.Repo.query.filter_by(and_(
+            Repo.name==reponame, Repo.username==username)).one()
 
         template = "https://github.com/%s/%s/commit/%s"
 

@@ -6,6 +6,7 @@ from sqlalchemy import (
     Boolean,
     Unicode,
     ForeignKey,
+    and_,
 )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -67,12 +68,12 @@ class User(Base):
             # Then I am a real boy
             gh_repos = gh.repos.list(self.username).all()
 
-        # Add repos to our DB if we haven't seen them before.
-        existant_repos = [repo.name for repo in self.repos]
-
         # TODO -- fix this.  this is inefficient
         for repo in gh_repos:
-            if repo.name not in existant_repos:
+            if Repo.query.filter(and_(
+                Repo.name==repo.name,
+                Repo.username==self.username
+            )).count() < 1:
                 pep8bot.models.DBSession.add(pep8bot.models.Repo(
                     user=self,
                     name=unicode(repo.name),
@@ -85,9 +86,8 @@ class User(Base):
         if not self.users:
             # Then I am a real User.
             gh_orgs = gh.orgs.list(self.username).all()
-            existant_orgs = [org.username for org in self.organizations]
             for o in gh_orgs:
-                if o.login not in existant_orgs:
+                if User.query.filter(User.name==o.login).count() < 1:
                     organization = User(
                         username=o.login, full_name='', emails='')
                     organization.users.append(self)
