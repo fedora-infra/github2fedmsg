@@ -2,7 +2,7 @@
 
 <div class="content">
   <div class="row">
-    <span class="span10 offset1">
+    <span class="span8 offset2">
       <div class="hero-unit">
         <h1>PEP8Bot</h1>
         <p>Do you write code in Python?  PEP8Bot will monitor your github
