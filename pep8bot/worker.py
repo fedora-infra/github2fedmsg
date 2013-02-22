@@ -66,22 +66,12 @@ class Worker(object):
             task = self.queue.wait()
             data = task.data
 
-            repo = data['repository']['name']
-            owner = data['repository']['owner']['name']
+            repo = data['reponame']
+            owner = data['username']
             commits = data['commits']
             _user = m.User.query.filter_by(username=owner).one()
             token = _user.oauth_access_token
-
-            # We used to fork repos in order to issue pull requests.. but thats
-            # not necessary anymore...
-            url = data['repository']['url']
-            #fork = gh.my_fork(owner, repo)
-            #if not fork:
-            #    fork = gh.create_fork(owner, repo)
-            #    print "Sleeping for 4 seconds"
-            #    time.sleep(4)
-
-            #url = fork['ssh_url']
+            clone_url = data['clone_url']
 
             self.working_dir = tempfile.mkdtemp(
                 prefix=owner + '-' + repo,
@@ -89,13 +79,7 @@ class Worker(object):
             )
 
             print "** Cloning to", self.working_dir
-            print sh.git.clone(url, self.working_dir)
-
-            print "** Adding remote upstream"
-            with directory(self.working_dir):
-                print sh.git.remote.add("upstream", data['repository']['url'])
-                print sh.git.pull("upstream",
-                                  data['repository']['master_branch'])
+            print sh.git.clone(clone_url, self.working_dir)
 
             lookup = {
                 "success": "PEP8bot says \"OK\"",
@@ -104,8 +88,7 @@ class Worker(object):
                 "error": "PEP8bot ran into trouble",
             }
             print "** Processing commits."
-            for commit in commits:
-                sha = commit['id']
+            for sha in commits:
                 # TODO -- what about hash collisions?
                 _commit = m.Commit.query.filter_by(sha=sha).one()
                 import transaction

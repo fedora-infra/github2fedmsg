@@ -50,32 +50,34 @@ def webhook(request):
         if isinstance(payload, basestring):
             payload = json.loads(payload)
 
-        if 'action' in payload:
-            # Then this is a pull request, and I don't know what to do with it.
-            import pprint
-            pprint.pprint(payload)
-            return
+        if 'action' not in payload:
+            # This is a regular old push.. don't worry about it.
+            commits = [c['id'] for c in payload['commits']]
+            username = payload['repository']['owner']['name']
+            reponame = payload['repository']['name']
+            clone_url = "https://github.com/%s/%s/" % (username, reponame)
+        else:
+            # This is a pull request
+            sha = payload['pull_request']['head']['sha']
+            commits = [sha]
+            username = payload['repository']['owner']['login']
+            reponame = payload['repository']['name']
+            clone_url = payload['pull_request']['base']['repo']['clone_url']
 
         # Drop a note in our db about it
-        user = m.User.query.filter_by(
-            username=payload['repository']['owner']['name']).one()
-        repo = m.Repo.query.filter_by(
-            name=payload['repository']['name'],
-            username=payload['repository']['owner']['name'],
-        ).one()
+        user = m.User.query.filter_by(username=username).one()
+        repo = m.Repo.query.filter_by(name=reponame, username=username).one()
 
-        for commit in payload['commits']:
-            if m.Commit.query.filter_by(sha=commit['id']).count() > 0:
+        template = "https://github.com/%s/%s/commit/%s"
+
+        for sha in commits:
+            if m.Commit.query.filter_by(sha=sha).count() > 0:
                 continue
+
             m.DBSession.add(m.Commit(
                 status="pending",
-                sha=commit['id'],
-                message=commit['message'],
-                timestamp=datetime.datetime.strptime(
-                    commit['timestamp'][:-6],  # strip timezone.. :/
-                    "%Y-%m-%dT%H:%M:%S",
-                ),
-                url=commit['url'],
+                sha=sha,
+                url=template % (username, reponame, sha),
                 repo=repo,
                 # TODO -- sort this out.  what if author isn't in pep8bot?
                 #author=author,
@@ -85,12 +87,16 @@ def webhook(request):
             status = "pending"
             token = user.oauth_access_token
             desc = "PEP8Bot scan pending"
-            gh.post_status(user.username, repo.name, commit['id'],
-                           status, token, desc)
+            gh.post_status(username, reponame, sha, status, token, desc)
 
         # Now, put a note in our work queue for it, too.
         queue = retask.queue.Queue('commits')
-        task = retask.task.Task(payload)
+        task = retask.task.Task({
+            'reponame': reponame,
+            'username': username,
+            'commits': commits,
+            'clone_url': clone_url,
+        })
         queue.connect()
 
         # Fire and forget
