@@ -146,6 +146,7 @@ def repo_toggle_enabled(request):
         'status': 'ok',
         'enabled': request.context.enabled,
         'repo': request.context.__json__(),
+        'user': repo.user.username,
     }
 
 @view_config(context="tw2.core.widgets.WidgetMeta",

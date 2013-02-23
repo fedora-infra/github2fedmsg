@@ -1,7 +1,7 @@
 function subscribe(link) {
     $.ajax(link, {
         success: function(json, stat, xhr) {
-            var sel = $("#" + json.repo.name);
+            var sel = $("#" + json.user + '-' + json.repo.name);
             sel.toggleClass('btn-success');
             sel.toggleClass('btn-danger');
 

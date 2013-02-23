@@ -40,5 +40,5 @@ class UserProfile(twc.Widget):
         else:
             cls, text = "btn-danger", "Enable"
 
-        return "<button id='%s' class='btn %s' %s>%s</button>" % (
-            repo_name, cls, click, text)
+        return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
+            username, repo_name, cls, click, text)
