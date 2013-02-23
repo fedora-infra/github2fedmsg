@@ -57,4 +57,14 @@ class JSONifiable(object):
         if type(relation) not in seen:
             return relation.__json__(seen + [type(self)])
         else:
-            return relation.id
+            return self._primary(relation)
+
+    def _primary(self, obj):
+        """ This is an ugly hack, and can be done much more nicely by
+        introspecting primary keys...
+        """
+
+        if hasattr(obj, 'id'):
+            return obj.id
+        else:
+            return obj.username
