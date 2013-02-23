@@ -87,7 +87,7 @@ class User(Base):
             # Then I am a real User.
             gh_orgs = gh.orgs.list(self.username).all()
             for o in gh_orgs:
-                if User.query.filter(User.name==o.login).count() < 1:
+                if User.query.filter(User.username==o.login).count() < 1:
                     organization = User(
                         username=o.login, full_name='', emails='')
                     organization.users.append(self)
