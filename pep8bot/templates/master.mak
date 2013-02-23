@@ -39,9 +39,6 @@
                 Profile
               </a>
               </li>
-              <li class="">
-                <a href="#widgets_modal" data-toggle="modal">Widgets</a>
-              </li>
             %endif
             <li class="">
             %if request.user:
