@@ -81,9 +81,6 @@ def webhook(request):
                 sha=sha,
                 url=template % (username, reponame, sha),
                 repo=repo,
-                # TODO -- sort this out.  what if author isn't in pep8bot?
-                #author=author,
-                #committer=committer,
             ))
 
             status = "pending"

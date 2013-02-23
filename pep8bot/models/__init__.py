@@ -79,7 +79,6 @@ class User(Base):
                     name=unicode(repo.name),
                     description=unicode(repo.description),
                     language=unicode(repo.language),
-                    enabled=False,
                 ))
 
         # Refresh my list of organizations.
@@ -162,8 +161,13 @@ class Repo(Base):
     description = Column(Unicode, nullable=False)
     language = Column(Unicode, nullable=False)
     username = Column(Unicode, ForeignKey('users.username'))
-    enabled = Column(Boolean, default=False)
     commits = relation('Commit', backref=('repo'))
+
+    #
+    pep8_enabled = Column(Boolean, default=False)
+    pylint_enabled = Column(Boolean, default=False)
+    pyflakes_enabled = Column(Boolean, default=False)
+    mccabe_enabled = Column(Boolean, default=False)
 
 
 class Commit(Base):
@@ -174,12 +178,11 @@ class Commit(Base):
     url = Column(Unicode, nullable=False)
     created = Column(DateTime, default=datetime.datetime.now)
     repo_name = Column(Unicode, ForeignKey('repos.name'))
-    author_name = Column(Unicode, ForeignKey('users.username'))
-    committer_name = Column(Unicode, ForeignKey('users.username'))
-    author = relation(User, foreign_keys=[author_name],
-                      backref=('authored_commits'))
-    committer = relation(User, foreign_keys=[committer_name],
-                         backref=('committed_commits'))
 
-    pep8_error_count = Column(Integer, nullable=True)
-    pep8_errors = Column(Unicode, nullable=True)
+    pep8_error_count = Column(Integer)
+    pep8_errors = Column(Unicode)
+    pylint_error_count = Column(Integer)
+    pylint_errors = Column(Unicode)
+    pyflakes_error_count = Column(Integer)
+    pyflakes_errors = Column(Unicode)
+    mccabe_complexity = Column(Integer)
