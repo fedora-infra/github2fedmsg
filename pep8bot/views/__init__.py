@@ -67,8 +67,8 @@ def webhook(request):
 
         # Drop a note in our db about it
         user = m.User.query.filter_by(username=username).one()
-        repo = m.Repo.query.filter_by(and_(
-            Repo.name==reponame, Repo.username==username)).one()
+        repo = m.Repo.query.filter(and_(
+            m.Repo.name==reponame, m.Repo.username==username)).one()
 
         template = "https://github.com/%s/%s/commit/%s"
 
