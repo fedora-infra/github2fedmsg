@@ -134,7 +134,13 @@ def repo_toggle_enabled(request):
         result = requests.post(github_api_url, data=data)
 
         if result.status_code != 204:
-            raise IOError(result.status_code)
+            d = result.json
+            if callable(d):
+                d = d()
+
+            d = dict(d)
+            d['status_code'] = result.status_code
+            raise IOError(d)
 
     return {
         'status': 'ok',
