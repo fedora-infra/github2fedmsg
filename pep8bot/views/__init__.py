@@ -114,12 +114,18 @@ def webhook(request):
 def repo_toggle_enabled(request):
     repo = request.context
     repo.enabled = not repo.enabled
+
+    token = repo.user.oauth_access_token
+    if not token and repo.user.users:
+        token = repo.user.users[0].oauth_access_token
+
     data = {
-        "access_token": repo.user.oauth_access_token,
+        "access_token": token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our real url
         "hub.callback": "http://pep8.me/webhook",
     }
+
 
     for event in github_events:
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
