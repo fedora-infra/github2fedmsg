@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized
 
 import pep8bot.models as m
 from sqlalchemy import and_
@@ -110,12 +110,22 @@ def webhook(request):
 
 @view_config(name='sync', context=m.User, renderer='json')
 def sync_user(request):
+    # TODO -- someday, learn how to do the __acls__ thing.. :/
+    userid = authenticated_userid(request)
+    if userid != request.context.username:
+        raise HTTPUnauthorized()
+
     request.context.sync_repos()
     raise HTTPFound('/' + request.context.username)
 
 
 @view_config(name='toggle', context=m.Repo, renderer='json')
 def repo_toggle_enabled(request):
+    # TODO -- someday, learn how to do the __acls__ thing.. :/
+    userid = authenticated_userid(request)
+    if userid != request.context.username:
+        raise HTTPUnauthorized()
+
     possible_kinds = ['pep8', 'pylint', 'pyflakes', 'mccabe']
     possible_attrs = ['%s_enabled' % kind for kind in possible_kinds]
 
