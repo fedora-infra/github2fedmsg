@@ -11,6 +11,16 @@
   </div>
 
   <div class="row">
+    <span class="span1 offset10">
+      <button class="btn btn-warning" onclick="window.location = '/api/${w.user.username}/sync';">
+        Sync..
+      </button>
+    </span>
+  </div>
+
+  <div class="row">&nbsp;</div>
+
+  <div class="row">
     <span class="span10 offset1">
       <table class="table table-condensed table-hover table-striped">
         <tr>
