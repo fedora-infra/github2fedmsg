@@ -18,10 +18,7 @@ class RootApp(dict):
         self.request = request
         self.static = dict(
             api=ApiApp(),
-            widget=WidgetApp(),
         )
-        # TODO.. need some nice pattern for doing this "automatically"
-        self.static['widget'].__parent__ = self
 
     def __getitem__(self, key):
         if key in self.static:
@@ -31,12 +28,6 @@ class RootApp(dict):
         if query.count() != 1:
             raise KeyError("No such user")
         return UserApp(user=query.one())
-
-
-class WidgetApp(object):
-    def __getitem__(self, key):
-        # TODO -- remove this?
-        return "THIS USED TO RETURN A CHART"
 
 
 class ApiApp(object):
