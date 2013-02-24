@@ -68,7 +68,7 @@ def webhook(request):
         # Drop a note in our db about it
         user = m.User.query.filter_by(username=username).one()
         repo = m.Repo.query.filter(and_(
-            m.Repo.name==reponame, m.Repo.username==username)).one()
+            m.Repo.name == reponame, m.Repo.username == username)).one()
 
         template = "https://github.com/%s/%s/commit/%s"
 
@@ -109,42 +109,68 @@ def webhook(request):
 
 @view_config(name='toggle', context=m.Repo, renderer='json')
 def repo_toggle_enabled(request):
+    possible_kinds = ['pep8', 'pylint', 'pyflakes', 'mccabe']
+    possible_attrs = ['%s_enabled' % kind for kind in possible_kinds]
+
+    kind = request.GET.get('kind')
+    if kind not in possible_kinds:
+        raise ValueError("%r not in %r" % (kind, possible_kinds))
+
+    attr = '%s_enabled' % kind
+
     repo = request.context
-    repo.enabled = not repo.enabled
 
-    token = repo.user.oauth_access_token
-    if not token and repo.user.users:
-        token = repo.user.users[0].oauth_access_token
+    should_notify_github = False
+    # If we had *no* attributes on *before* toggling, then *subscribe*.
+    if not any([getattr(repo, a) for a in possible_attrs]):
+        should_notify_github = True
 
-    data = {
-        "access_token": token,
-        "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
-        # TODO -- use our real url
-        "hub.callback": "http://pep8.me/webhook",
-    }
+    # Toggle that attribute on our db model.
+    setattr(repo, attr, not getattr(repo, attr))
 
+    # If we had *no* attributes on *after* toggling, then *unsubscribe*.
+    if not any([getattr(repo, a) for a in possible_attrs]):
+        should_notify_github = True
 
-    for event in github_events:
-        data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
-            repo.user.username, repo.name, event)
-        # Subscribe to events via pubsubhubbub
-        result = requests.post(github_api_url, data=data)
+    if should_notify_github:
+        token = repo.user.oauth_access_token
+        if not token and repo.user.users:
+            token = repo.user.users[0].oauth_access_token
 
-        if result.status_code != 204:
-            d = result.json
-            if callable(d):
-                d = d()
+        data = {
+            "access_token": token,
+            "hub.mode": ['unsubscribe', 'subscribe'][getattr(repo, attr)],
+            # TODO -- use our real url
+            "hub.callback": "http://pep8.me/webhook",
+        }
 
-            d = dict(d)
-            d['status_code'] = result.status_code
-            raise IOError(d)
+        for event in github_events:
+            data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
+                repo.user.username, repo.name, event)
+            # Subscribe to events via pubsubhubbub
+            result = requests.post(github_api_url, data=data)
 
-    return {
+            if result.status_code != 204:
+                d = result.json
+                if callable(d):
+                    d = d()
+
+                d = dict(d)
+                d['status_code'] = result.status_code
+                raise IOError(d)
+
+    response = {
         'status': 'ok',
-        'enabled': request.context.enabled,
         'repo': request.context.__json__(),
         'user': repo.user.username,
+        'kind': kind,
     }
+    response.update(dict(zip(
+        possible_attrs,
+        [getattr(request.context, a) for a in possible_attrs]
+    )))
+    return response
+
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
              renderer='widget.mak')

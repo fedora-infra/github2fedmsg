@@ -25,9 +25,9 @@ class UserProfile(twc.Widget):
         if not self.user.all_repos:
             self.user.sync_repos()
 
-    def make_button(self, username, repo_name):
+    def make_button(self, kind, username, repo_name):
         # TODO -- Can we use resource_url here?
-        link = '/api/%s/%s/toggle' % (username, repo_name)
+        link = '/api/%s/%s/toggle?kind=%s' % (username, repo_name, kind)
         click = 'onclick="subscribe(\'%s\')"' % link
         Repo = pep8bot.models.Repo
         query = Repo.query.filter(and_(
@@ -35,10 +35,10 @@ class UserProfile(twc.Widget):
 
         repo = query.one()
 
-        if repo.enabled:
+        if getattr(repo, '%s_enabled' % kind):
             cls, text = "btn-success", "Disable"
         else:
             cls, text = "btn-danger", "Enable"
 
-        return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
-            username, repo_name, cls, click, text)
+        return "<button id='%s-%s-%s' class='btn %s' %s>%s</button>" % (
+            username, repo_name, kind, cls, click, text)
