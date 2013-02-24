@@ -1,10 +1,6 @@
 import tw2.core as twc
 import pep8bot.models
 from sqlalchemy import and_
-import pyramid.threadlocal
-
-from pygithub3 import Github
-gh = Github()
 
 
 class UserProfile(twc.Widget):
@@ -14,9 +10,7 @@ class UserProfile(twc.Widget):
         twc.JSLink(filename="static/profile.js"),
     ]
 
-    # These get filled in just before the widget is displayed.
-    gh_user = twc.Variable()
-    gh_repos = twc.Variable()
+    show_buttons = twc.Param("show my buttons?", default=False)
 
     def prepare(self):
         """ Query github for some information before display """
@@ -25,8 +19,8 @@ class UserProfile(twc.Widget):
         if not self.user.all_repos:
             self.user.sync_repos()
 
-    def make_button(self, kind, username, repo_name):
 
+    def make_button(self, kind, username, repo_name):
         # Just for reference
         unimplemented = ['pylint', 'pyflakes', 'mccabe']
         implemented = ['pep8']

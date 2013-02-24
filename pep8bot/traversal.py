@@ -3,6 +3,8 @@ import tw2.core as twc
 
 import pep8bot.models
 import pep8bot.widgets
+import pyramid.threadlocal
+from pyramid.security import authenticated_userid
 
 
 def make_root(request):
@@ -27,7 +29,15 @@ class RootApp(dict):
         query = pep8bot.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
-        return UserApp(user=query.one())
+
+        user = query.one()
+
+        # TODO -- use __acl__ machinery some day
+        request = pyramid.threadlocal.get_current_request()
+        userid = authenticated_userid(request)
+        # TODO -- check if this is an org that I own
+        show_buttons = (userid == user.username)
+        return UserApp(user=query.one(), show_buttons=show_buttons)
 
 
 class ApiApp(object):
