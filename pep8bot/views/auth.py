@@ -12,8 +12,6 @@ import pep8bot.models as m
 @view_config(context='velruse.AuthenticationComplete')
 def github_login_complete_view(request):
     username = request.context.profile['preferredUsername']
-    import pprint
-    pprint.pprint(request.context.profile)
     full_name = request.context.profile['displayName']
     emails = ','.join((
         item['value'] for item in request.context.profile['emails']
