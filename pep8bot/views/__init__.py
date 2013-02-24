@@ -1,5 +1,6 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
+from pyramid.httpexceptions import HTTPFound
 
 import pep8bot.models as m
 from sqlalchemy import and_
@@ -105,6 +106,12 @@ def webhook(request):
         raise NotImplementedError()
 
     return "OK"
+
+
+@view_config(name='sync', context=m.User, renderer='json')
+def sync_user(request):
+    request.context.sync_repos()
+    raise HTTPFound('/' + request.context.username)
 
 
 @view_config(name='toggle', context=m.Repo, renderer='json')
