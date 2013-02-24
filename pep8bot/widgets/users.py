@@ -26,19 +26,27 @@ class UserProfile(twc.Widget):
             self.user.sync_repos()
 
     def make_button(self, kind, username, repo_name):
-        # TODO -- Can we use resource_url here?
-        link = '/api/%s/%s/toggle?kind=%s' % (username, repo_name, kind)
-        click = 'onclick="subscribe(\'%s\')"' % link
-        Repo = pep8bot.models.Repo
-        query = Repo.query.filter(and_(
-            Repo.username==username, Repo.name==repo_name))
 
-        repo = query.one()
+        # Just for reference
+        unimplemented = ['pylint', 'pyflakes', 'mccabe']
+        implemented = ['pep8']
 
-        if getattr(repo, '%s_enabled' % kind):
-            cls, text = "btn-success", "Disable"
+        if kind in implemented:
+            # TODO -- Can we use resource_url here?
+            link = '/api/%s/%s/toggle?kind=%s' % (username, repo_name, kind)
+            click = 'onclick="subscribe(\'%s\')"' % link
+            Repo = pep8bot.models.Repo
+            query = Repo.query.filter(and_(
+                Repo.username==username, Repo.name==repo_name))
+
+            repo = query.one()
+
+            if getattr(repo, '%s_enabled' % kind):
+                cls, text = "btn-success", "Disable"
+            else:
+                cls, text = "btn-danger", "Enable"
+
+            return "<button id='%s-%s-%s' class='btn %s' %s>%s</button>" % (
+                username, repo_name, kind, cls, click, text)
         else:
-            cls, text = "btn-danger", "Enable"
-
-        return "<button id='%s-%s-%s' class='btn %s' %s>%s</button>" % (
-            username, repo_name, kind, cls, click, text)
+            return "<button class='btn btn-inverse'>N/A</button>"
