@@ -40,6 +40,9 @@ org_to_user_mapping = Table(
     Column('usr_id', Unicode, ForeignKey('users.username'), primary_key=True),
 )
 
+import logging
+log = logging.getLogger("pep8bot.models")
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -86,12 +89,25 @@ class User(Base):
             # Then I am a real User.
             gh_orgs = gh.orgs.list(self.username).all()
             for o in gh_orgs:
-                if User.query.filter(User.username==o.login).count() < 1:
+                query = User.query.filter(User.username==o.login)
+                if query.count() < 1:
+                    log.debug("Adding new org %r" % o.login)
                     organization = User(
                         username=o.login, full_name='', emails='')
-                    organization.users.append(self)
                     DBSession.add(organization)
+                else:
+                    log.debug("Found prexisting org %r" % o.login)
+                    organization = query.one()
+
+                if self not in organization.users:
+                    log.debug("Adding %r to %r" % (
+                        self.username, organization.username))
+                    organization.users.append(self)
+                    DBSession.flush()
+                else:
+                    log.debug("Already in %r" % organization.username)
         else:
+            # I am an organization.  Do not recurse.
             pass
 
         # Follow up with all my orgs too (they are also "User"s)
