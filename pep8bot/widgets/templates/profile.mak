@@ -10,6 +10,7 @@
     </span>
   </div>
 
+% if w.show_buttons:
   <div class="row">
     <span class="span1 offset10">
       <button class="btn btn-warning" onclick="window.location = '/api/${w.user.username}/sync';">
@@ -17,6 +18,7 @@
       </button>
     </span>
   </div>
+% endif
 
   <div class="row">&nbsp;</div>
 
