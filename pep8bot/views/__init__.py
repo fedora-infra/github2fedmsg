@@ -124,7 +124,10 @@ def repo_toggle_enabled(request):
     # TODO -- someday, learn how to do the __acls__ thing.. :/
     userid = authenticated_userid(request)
     if userid != request.context.username:
-        raise HTTPUnauthorized()
+        if userid not in [
+            member.username for member in request.context.user.users
+        ]:
+            raise HTTPUnauthorized()
 
     possible_kinds = ['pep8', 'pylint', 'pyflakes', 'mccabe']
     possible_attrs = ['%s_enabled' % kind for kind in possible_kinds]
