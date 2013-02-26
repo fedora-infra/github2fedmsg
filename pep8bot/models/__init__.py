@@ -169,6 +169,14 @@ class Repo(Base):
     pyflakes_enabled = Column(Boolean, default=False)
     mccabe_enabled = Column(Boolean, default=False)
 
+    @property
+    def enabled(self):
+        return (
+            self.pep8_enabled or
+            self.pylint_enabled or
+            self.pyflakes_enabled or
+            self.mccabe_enabled
+        )
 
 class Commit(Base):
     __tablename__ = 'commits'

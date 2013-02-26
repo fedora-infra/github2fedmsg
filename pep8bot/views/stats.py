@@ -1,5 +1,6 @@
 from pyramid.view import view_config
 import pep8bot.models as m
+from sqlalchemy import or_
 
 
 @view_config(route_name='stats', renderer='stats.mak')
@@ -7,7 +8,12 @@ def stats(request):
     """ Show the stats page """
     num_users = m.User.query.count()
     num_repos = m.Repo.query.count()
-    num_enabled_repos = m.Repo.query.filter_by(enabled=True).count()
+    num_enabled_repos = m.Repo.query.filter(or_(
+        m.Repo.pep8_enabled==True,
+        m.Repo.pylint_enabled==True,
+        m.Repo.pyflakes_enabled==True,
+        m.Repo.mccabe_enabled==True,
+    )).count()
 
     # Show the top 'n' in various categories.
     n = 5
