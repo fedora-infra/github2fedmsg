@@ -121,7 +121,9 @@ def sync_user(request):
     if userid != request.context.username:
         raise HTTPUnauthorized()
 
+    import transaction
     request.context.sync_repos()
+    transaction.commit()
     raise HTTPFound('/' + request.context.username)
 
 
