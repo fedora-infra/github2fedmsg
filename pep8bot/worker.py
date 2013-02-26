@@ -70,7 +70,13 @@ class Worker(object):
             owner = data['username']
             commits = data['commits']
             _user = m.User.query.filter_by(username=owner).one()
+
             token = _user.oauth_access_token
+            if not token:
+                for u in _user.users:
+                    if u.oauth_access_token:
+                        token = u.oauth_access_token
+
             clone_url = data['clone_url']
 
             self.working_dir = tempfile.mkdtemp(

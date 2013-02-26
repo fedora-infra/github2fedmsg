@@ -85,8 +85,14 @@ def webhook(request):
             ))
 
             status = "pending"
-            token = user.oauth_access_token
             desc = "PEP8Bot scan pending"
+
+            token = user.oauth_access_token
+            if not token:
+                for u in user.users:
+                    if u.oauth_access_token:
+                        token = u.oauth_access_token
+
             gh.post_status(username, reponame, sha, status, token, desc)
 
         # Now, put a note in our work queue for it, too.
