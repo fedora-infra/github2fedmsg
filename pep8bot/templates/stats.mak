@@ -12,7 +12,7 @@
   </div>
 
   <div class="row"><span class="span6 offset3">
-      <h1>Latest 5 registered</h1>
+      <h1>Latest 10 registered</h1>
       <table class="table table-condensed">
         <thead><tr>
             <th>#</th><th>User</th><th>Registered</th>
