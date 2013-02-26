@@ -96,7 +96,7 @@ class Worker(object):
             print "** Processing commits."
             for sha in commits:
                 # TODO -- what about hash collisions?
-                _commit = m.Commit.query.filter_by(sha=sha).one()
+                _commit = m.Commit.query.filter_by(sha=sha).first()
                 import transaction
                 try:
                     print "** Processing files on commit", sha
