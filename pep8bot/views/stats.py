@@ -16,7 +16,7 @@ def stats(request):
     )).count()
 
     # Show the top 'n' in various categories.
-    n = 5
+    n = 10
 
     latest_registered = m.User.query\
             .order_by(m.User.created_on.desc()).limit(n).all()

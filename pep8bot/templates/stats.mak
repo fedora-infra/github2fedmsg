@@ -12,7 +12,7 @@
   </div>
 
   <div class="row"><span class="span6 offset3">
-      <h1>Last 5 registered users</h1>
+      <h1>Latest 5 registered</h1>
       <table class="table table-condensed">
         <thead><tr>
             <th>#</th><th>User</th><th>Registered</th>
@@ -35,7 +35,7 @@
   </span></div>
 
   <div class="row"><span class="span6 offset3">
-      <h1>Top five users by total enabled repos</h1>
+      <h1>Most repos enabled</h1>
       <table class="table table-condensed">
         <thead><tr>
             <th>#</th><th>User</th><th>Enabled Repos</th>
@@ -58,7 +58,7 @@
   </span></div>
 
   <div class="row"><span class="span6 offset3">
-      <h1>Top five users by percent enabled repos</h1>
+      <h1>Highest % repos enabled</h1>
       <table class="table table-condensed">
         <thead><tr>
             <th>#</th><th>User</th><th>Percent Enabled Repos</th>
