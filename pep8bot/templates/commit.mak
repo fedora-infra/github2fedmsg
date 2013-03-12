@@ -11,10 +11,10 @@
 
 %for kind in ['pep8', 'pylint', 'pyflakes']:
   <div class="row">
-    <span class="span6 offset4">
+    <span class="span10 offset4">
 	% if getattr(commit.repo, kind + "_enabled"):
 		<h2>${kind} -- ${str(getattr(commit, kind + "_error_count"))} errors</h2>
-<pre>${str(getattr(commit, kind + "_errors"))}</pre>
+<pre>${str(getattr(commit, kind + "_errors"))|n}</pre>
 	% else:
 		<h2>${kind} <code>disabled</code></h2>
 	% endif

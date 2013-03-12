@@ -37,6 +37,23 @@ class directory(object):
         os.chdir(self.savedPath)
 
 
+class WebReport(pep8.StandardReport):
+    """ Collect errors as the pep8check runs so we can save them in the DB """
+
+    def __init__(self, *args, **kw):
+        super(WebReport, self).__init__(*args, **kw)
+        self._deferred_print = []
+        self._all_errors = []
+
+    def init_file(self, *args, **kw):
+        """Signal a new file."""
+
+        for items in self._deferred_print:
+            self._all_errors.append(list(items) + [self.filename])
+
+        return super(WebReport, self).init_file(*args, **kw)
+
+
 class Worker(object):
     """ Represents the worker process.  Waits for tasks to come in from the
     webapp and then acts on them.
@@ -119,7 +136,7 @@ class Worker(object):
                     # TODO -- document that the user can keep a .config/pep8
                     # file in their project dir.
                     pep8style = pep8.StyleGuide(
-                        quiet=True,
+                        reporter=WebReport,
                         config_file="./.config/pep8",
                     )
                     result = pep8style.check_files(infiles)
@@ -132,9 +149,27 @@ class Worker(object):
                     desc = lookup[status].format(n=result.total_errors)
                     _commit.status = status
                     _commit.pep8_error_count = result.total_errors
-                    _commit.pep8_errors = '\n'.join([
-                        k + ": " + v for k, v in result.messages.items()
-                    ])
+
+                    errors = []
+                    url_tmpl = "https://github.com/{owner}/{repo}/blob" + \
+                            "/{sha}/{path}#L{lno}"
+                    fmt = "<a href='{url}'>{path}:{row}</a>:{col}: " + \
+                            "{code} {text}"
+                    for lno, oset, code, text, d, fname in result._all_errors:
+
+                        # Turn absolute path into relative path
+                        path = fname[len(self.working_dir)+1:]
+
+                        errors.append(fmt.format(
+                            path=path,
+                            row=result.line_offset + lno,
+                            col=oset + 1,
+                            code=code,
+                            text=text,
+                            url=url_tmpl.format(**locals()),
+                        ))
+
+                    _commit.pep8_errors = '\n'.join(errors)
                     gh.post_status(owner, repo, sha, status, token, desc)
                 except Exception:
                     status = "error"
