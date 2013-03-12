@@ -52,6 +52,14 @@ class UserApp(pep8bot.widgets.UserProfile):
     __name__ = None
     __parent__ = RootApp
 
+    @classmethod
+    def __getitem__(self, key):
+        for repo in self.user.repos:
+            if repo.name == key:
+                return repo
+
+        raise KeyError
+
 
 class APISuccess(object):
     def __init__(self, data):

@@ -131,6 +131,10 @@ class Worker(object):
 
                     desc = lookup[status].format(n=result.total_errors)
                     _commit.status = status
+                    _commit.pep8_error_count = result.total_errors
+                    _commit.pep8_errors = '\n'.join([
+                        k + ": " + v for k, v in result.messages.items()
+                    ])
                     gh.post_status(owner, repo, sha, status, token, desc)
                 except Exception:
                     status = "error"

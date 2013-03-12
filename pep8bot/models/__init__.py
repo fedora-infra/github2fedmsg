@@ -185,6 +185,21 @@ class Repo(Base):
     pyflakes_enabled = Column(Boolean, default=False)
     mccabe_enabled = Column(Boolean, default=False)
 
+    def __getitem__(self, key):
+        if key != 'commits':
+            raise KeyError
+
+        class DynamicCommitIndex(object):
+            def __getitem__(shmelf, key):
+                for commit in self.commits:
+                    if commit.sha == key:
+                        return commit
+
+                raise KeyError
+
+        return DynamicCommitIndex()
+
+
     @property
     def enabled(self):
         return (
