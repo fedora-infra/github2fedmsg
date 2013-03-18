@@ -64,7 +64,7 @@
 
     <footer class="container-fluid">
     <p><center>Pep8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
-      and is licened under the
+      and is licensed under the
       <a href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>; the source
       code can be found
       <a href="http://github.com/ralphbean/pep8bot">on github.</a>
