@@ -13,9 +13,8 @@ import pep8bot.models as m
 def github_login_complete_view(request):
     username = request.context.profile['preferredUsername']
     full_name = request.context.profile['displayName']
-    emails = ','.join((
-        item['value'] for item in request.context.profile['emails']
-    ))
+    emails = request.context.profile['emails'] or []
+    emails = ','.join((item['value'] for item in emails if item['value']))
 
     query = m.User.query.filter_by(username=username)
     if query.count() == 0:
