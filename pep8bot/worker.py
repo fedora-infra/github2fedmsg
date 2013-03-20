@@ -70,7 +70,7 @@ class Worker(object):
         self.queue.connect()
         # TODO -- set both of these with the config file.
         # Use pyramid tools to load config.
-        self.sleep_interval = 1
+        self.sleep_interval = 3
         self.scratch_dir = "/home/threebean/scratch/pep8bot-scratch"
         try:
             os.makedirs(self.scratch_dir)
@@ -79,8 +79,8 @@ class Worker(object):
 
     def run(self):
         while True:
-            time.sleep(self.sleep_interval)
             task = self.queue.wait()
+            time.sleep(self.sleep_interval)
             data = task.data
 
             repo = data['reponame']
