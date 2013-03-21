@@ -70,7 +70,7 @@ class Worker(object):
         self.queue.connect()
         # TODO -- set both of these with the config file.
         # Use pyramid tools to load config.
-        self.sleep_interval = 3
+        self.sleep_interval = 10
         self.scratch_dir = "/home/threebean/scratch/pep8bot-scratch"
         try:
             os.makedirs(self.scratch_dir)
@@ -79,8 +79,11 @@ class Worker(object):
 
     def run(self):
         while True:
+            print "**", time.time(), "waiting on a task."
             task = self.queue.wait()
+            print "**", time.time(), "popped a task off the queue.  Sleeping."
             time.sleep(self.sleep_interval)
+            print "**", time.time(), "woke up."
             data = task.data
 
             repo = data['reponame']
@@ -101,7 +104,7 @@ class Worker(object):
                 dir=self.scratch_dir,
             )
 
-            print "** Cloning to", self.working_dir
+            print "**", time.time(), "cloning to", self.working_dir
             print sh.git.clone(clone_url, self.working_dir)
 
             lookup = {
