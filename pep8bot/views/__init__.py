@@ -64,7 +64,7 @@ def webhook(request):
             commits = [sha]
             username = payload['repository']['owner']['login']
             reponame = payload['repository']['name']
-            clone_url = payload['pull_request']['base']['repo']['clone_url']
+            clone_url = payload['pull_request']['head']['repo']['clone_url']
 
         # Drop a note in our db about it
         user = m.User.query.filter_by(username=username).one()
