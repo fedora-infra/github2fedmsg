@@ -16,6 +16,7 @@ requires = [
     'waitress',
     'weberror',
     'velruse',
+    'alembic',
 
     'requests <= 0.14.0',
     # This breaks with the latest "requests"
