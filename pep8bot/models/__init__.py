@@ -216,7 +216,7 @@ class Commit(Base):
     sha = Column(Unicode(40), nullable=False)
     url = Column(Unicode, nullable=False)
     created = Column(DateTime, default=datetime.datetime.now)
-    repo_name = Column(Unicode, ForeignKey('repos.name'))
+    repo_id = Column(Unicode, ForeignKey('repos.id'))
 
     pep8_error_count = Column(Integer)
     pep8_errors = Column(Unicode)
