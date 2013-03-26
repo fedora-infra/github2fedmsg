@@ -39,7 +39,7 @@
     </span>
     <span class="span2">
       <h2>Author</h2>
-      <p>PEP8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
+      <p>Written by <a href="http://threebean.org">Ralph Bean</a>
       <div class="logo">
         <a href="http://threebean.org" target="_blank">
             <img src="http://threebean.org/threebean-logo.png"/>
