@@ -6,7 +6,7 @@ import pep8bot.models as m
 from sqlalchemy import and_
 
 import datetime
-from hashlib import md5
+import hashlib
 import hmac
 import requests
 
@@ -47,18 +47,20 @@ def webhook(request):
     github_secret = request.registry.settings.get("github.secret")
 
     if 'payload' in request.params:
-        payload = request.params['payload']
-
-        valid_sig = hmac.new(github_secret, payload).hexdigest()
+        hex = hmac.new(github_secret, request.body, hashlib.sha1).hexdigest()
+        valid_sig = "sha1=%s" % hex
 
         if not 'X-Hub-Signature' in request.headers:
-            raise HTTPUnauthorized("No X-Hub-Signature provided")
+            msg = "No X-Hub-Signature provided"
+            raise HTTPUnauthorized(msg)
 
         actual_sig = request.headers['X-Hub-Signature']
 
         if actual_sig != valid_sig:
-            raise HTTPForbidden("Invalid X-Hub-Signature")
+            msg = "Invalid X-Hub-Signature"
+            raise HTTPForbidden(msg)
 
+        payload = request.params['payload']
         payload = json.loads(payload)
 
         if 'action' not in payload:
