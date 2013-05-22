@@ -1,12 +1,13 @@
 from pyramid.view import view_config
 from pyramid.security import authenticated_userid
-from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized
+from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPForbidden
 
 import pep8bot.models as m
 from sqlalchemy import and_
 
 import datetime
-from hashlib import md5
+import hashlib
+import hmac
 import requests
 
 import json
@@ -43,14 +44,24 @@ def home(request):
 def webhook(request):
     """ Handle github webhook. """
 
-    # TODO -- check X-Hub-Signature
-    # TODO -- make this secret
-    salt = "TODO MAKE THIS SECRET"
+    github_secret = request.registry.settings.get("github.secret")
 
     if 'payload' in request.params:
+        hex = hmac.new(github_secret, request.body, hashlib.sha1).hexdigest()
+        valid_sig = "sha1=%s" % hex
+
+        if not 'X-Hub-Signature' in request.headers:
+            msg = "No X-Hub-Signature provided"
+            raise HTTPUnauthorized(msg)
+
+        actual_sig = request.headers['X-Hub-Signature']
+
+        if actual_sig != valid_sig:
+            msg = "Invalid X-Hub-Signature"
+            raise HTTPForbidden(msg)
+
         payload = request.params['payload']
-        if isinstance(payload, basestring):
-            payload = json.loads(payload)
+        payload = json.loads(payload)
 
         if 'action' not in payload:
             # This is a regular old push.. don't worry about it.
@@ -175,6 +186,7 @@ def repo_toggle_enabled(request):
             "hub.mode": ['unsubscribe', 'subscribe'][getattr(repo, attr)],
             # TODO -- use our real url
             "hub.callback": "http://pep8.me/webhook",
+            "hub.secret": request.registry.settings.get("github.secret"),
         }
 
         for event in github_events:
