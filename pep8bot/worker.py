@@ -136,11 +136,11 @@ class Worker(object):
                             if fname.endswith(".py")
                         ])
 
-                    # TODO -- document that the user can keep a .config/pep8
+                    # TODO -- document that the user can keep a setup.cfg
                     # file in their project dir.
                     pep8style = pep8.StyleGuide(
                         reporter=WebReport,
-                        config_file="./.config/pep8",
+                        config_file=self.working_dir + "setup.cfg",
                     )
                     result = pep8style.check_files(infiles)
 
