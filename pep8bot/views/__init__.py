@@ -36,8 +36,12 @@ github_events = [
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
-    return {
-    }
+    return {}
+
+
+@view_config(route_name='docs', renderer='docs.mak')
+def docs(request):
+    return {}
 
 
 @view_config(route_name='webhook', request_method="POST", renderer='string')

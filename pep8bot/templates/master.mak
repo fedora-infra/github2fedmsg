@@ -33,6 +33,9 @@
             <li class="${['', 'active'][request.on_stats]}">
               <a href="/stats">Stats</a>
             </li>
+            <li class="${['', 'active'][request.on_stats]}">
+              <a href="/docs">Docs</a>
+            </li>
             %if request.user:
               <li class="${['', 'active'][request.on_profile]}">
               <a href="/${request.user.username}">

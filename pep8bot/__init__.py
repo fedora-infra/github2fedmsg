@@ -45,5 +45,6 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('webhook', '/webhook')
     config.add_route('stats', '/stats')
+    config.add_route('docs', '/docs')
     config.scan()
     return config.make_wsgi_app()
