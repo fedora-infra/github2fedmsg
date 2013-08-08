@@ -27,7 +27,7 @@
   <body>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container">
+        <div class="container container-fluid">
           <a class="brand" href="http://pep8.me">pep8.me</a>
           <ul class="nav pull-right">
             <li class="${['', 'active'][request.on_stats]}">
@@ -58,11 +58,11 @@
 
     <div class="vspace"></div>
 
-    <div class="container-fluid">
+    <div class="container container-fluid">
       ${self.body()}
     </div>
 
-    <footer class="container-fluid">
+    <footer class="container container-fluid">
     <p><center>Pep8Bot is written by <a href="http://threebean.org">Ralph Bean</a>
       and is licensed under the
       <a href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>; the source
