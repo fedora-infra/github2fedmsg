@@ -90,17 +90,19 @@ def webhook(request):
             msg = "Invalid X-Hub-Signature"
             raise HTTPForbidden(msg)
 
+        event_type = request['headers']['X-Github-Event']
+
         payload = request.params['payload']
         payload = json.loads(payload)
 
+        # TODO - pack some Fedora-related metadata in the message (fas user?)
         import pprint
         print " ** RECEIVED THIS FROM GITHUB ** "
         pprint.pprint(payload)
 
-        # TODO -- extract a smart topic from the payload.
         fedmsg.publish(
             modname="github",
-            topic='wat',
+            topic=event_type,
             msg=payload,
         )
     else:
@@ -150,7 +152,6 @@ def repo_toggle_enabled(request):
     data = {
         "access_token": token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
-        # TODO -- use our real url
         "hub.callback": request.registry.settings.get("github.callback"),
         "hub.secret": request.registry.settings.get("github.secret"),
     }
