@@ -1,4 +1,4 @@
-- [ ] set up irc notifications to #fedora-apps for development
+- [X] set up irc notifications to #fedora-apps for development
 - [ ] Remove pygithub3, replace with our own lib.
 - [ ] Remove tw2, replace with standard templates/endpoints.
 - [ ] Remove pep8bot branding
