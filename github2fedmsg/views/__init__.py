@@ -90,7 +90,7 @@ def webhook(request):
             msg = "Invalid X-Hub-Signature"
             raise HTTPForbidden(msg)
 
-        event_type = request['headers']['X-Github-Event']
+        event_type = request.headers['X-Github-Event'].lower()
 
         payload = request.params['payload']
         payload = json.loads(payload)
