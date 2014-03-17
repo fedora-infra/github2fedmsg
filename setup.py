@@ -20,9 +20,9 @@ requires = [
     'alembic',
     ]
 
-setup(name='pep8bot',
+setup(name='github2fedmsg',
       version='0.0',
-      description='pep8bot',
+      description='A github to fedmsg relay service',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -32,18 +32,18 @@ setup(name='pep8bot',
         ],
       author='',
       author_email='',
-      url='',
+      url='https://github.com/fedora-infra/github2fedmsg',
       keywords='web wsgi bfg pylons pyramid',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='pep8bot',
+      test_suite='github2fedmsg',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = pep8bot:main
+      main = github2fedmsg:main
       [console_scripts]
-      initialize_pep8bot_db = pep8bot.scripts.initializedb:main
+      initialize_github2fedmsg_db = github2fedmsg.scripts.initializedb:main
       """,
       )
 
