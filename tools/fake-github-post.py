@@ -100,6 +100,7 @@ body = urllib.urlencode(blob)
 hex = hmac.new(github_secret, body, hashlib.sha1).hexdigest()
 headers = {
     'X-Hub-Signature': 'sha1=%s' % hex,
+    'X-GitHub-Event': 'this is going to be something...',
 }
 
 response = requests.post(
