@@ -79,8 +79,6 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('logout', '/logout')
     config.add_route('webhook', '/webhook')
-    config.add_route('stats', '/stats')
-    config.add_route('docs', '/docs')
     config.add_route('forget_github_token', '/forget_github_token')
     config.scan()
     return config.make_wsgi_app()

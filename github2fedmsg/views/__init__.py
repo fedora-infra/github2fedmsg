@@ -12,6 +12,8 @@ import requests
 
 import json
 
+import fedmsg
+
 import github2fedmsg.githubutils as gh
 
 # http://developer.github.com/v3/repos/hooks/
@@ -55,11 +57,6 @@ github_events = [
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
-    return {}
-
-
-@view_config(route_name='docs', renderer='docs.mak')
-def docs(request):
     return {}
 
 

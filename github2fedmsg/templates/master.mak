@@ -32,19 +32,6 @@
         <div class="container container-fluid">
           <a class="brand" href="/">github2fedmsg</a>
           <ul class="nav pull-right">
-            <li class="${['', 'active'][request.on_stats]}">
-              <a href="/stats">Stats</a>
-            </li>
-            <li class="${['', 'active'][request.on_stats]}">
-              <a href="/docs">Docs</a>
-            </li>
-            %if request.user:
-              <li class="${['', 'active'][request.on_profile]}">
-              <a href="/${request.user.username}">
-                Profile
-              </a>
-              </li>
-            %endif
             <li class="">
             %if request.user:
               <form class="navbar-form pull-right" action="/logout" method="get">

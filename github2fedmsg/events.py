@@ -29,12 +29,6 @@ def when_ready(func):
 def inject_globals(event):
     request = get_current_request()
 
-    # TODO -- fix this.
-    # This is a terrible way of doing things.
-    request.on_profile = request.user and request.url.endswith(
-        request.user.username)
-    request.on_stats = request.url.endswith('/stats')
-
     # Expose these as global attrs for our templates
     event['identity'] = authenticated_userid(request)
 
