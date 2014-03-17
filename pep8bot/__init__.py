@@ -5,6 +5,8 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.security import authenticated_userid
 from sqlalchemy import engine_from_config
 
+import pyramid_mako
+
 import pep8bot.models
 import pep8bot.traversal
 
@@ -36,6 +38,9 @@ def main(global_config, **settings):
     )
     # Make it so we can do "request.user" in templates.
     config.set_request_property(get_user, 'user', reify=True)
+
+    config.include('pyramid_mako')
+    config.add_mako_renderer('.mak')
 
     config.include('velruse.providers.github')
     config.add_github_login_from_settings()
