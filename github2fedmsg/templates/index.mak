@@ -4,11 +4,12 @@
   <div class="row">
     <span class="span8 offset2">
       <div class="hero-unit">
-        <h1>PEP8Bot</h1>
-        <p>Do you write code in Python?  PEP8Bot will monitor your github
-        repositories and mark commits as "PEP8 OK" or "Needs Work" according to the
-        sacrosanct <a href="http://www.python.org/dev/peps/pep-0008/">
-        style guide for Python code</a>
+        <h1>Github2fedmsg</h1>
+        <p>Do you host code on github? Would you like to integrate it to
+        <a href="http://fedmsg.com">fedmsg</a>? github2fedmsg gives you this
+        opportinuty. Register your project here and watch all actions happening
+        on your project on github be broadcasted on <a href="http://fedmsg.com">
+        fedmsg</a>!
         </p>
       </div>
     </span>
@@ -17,9 +18,12 @@
   <div class="row">
     <span class="span2 offset2">
       <h2>Foolish</h2>
-      <p>Was your latest work good enough or could it be more perfecter?
-        Let PEP8Bot enforce foolish consistency all over your workflow.
-        </p>
+      <p>
+        Want to mirror all actions happening on github to your own infrastructure?
+        Broadcast all action from your github onto fedmsg, listen to fedmsg
+        and act upon each action (git pull, create ticket, comment on ticket,
+        close ticket). It's up to you!
+      </p>
     </span>
     <span class="span2">
       <h2>Hobgoblin</h2>
@@ -29,7 +33,7 @@
     </span>
     <span class="span2">
       <h2>License</h2>
-      <p>PEP8Bot is licensed under the <a
+      <p>github2fedmsg is licensed under the <a
           href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>.  This means
         it is <a href="http://github.com/ralphbean/github2fedmsg">wreathed in
         garlands of freedom.</a></p>
