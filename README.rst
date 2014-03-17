@@ -37,6 +37,12 @@ Go off and `register your development application with github
 secret one to a new file you create called ``secrets.ini``.  Use the example
 ``secrets.ini.example`` file.
 
+
+Create the database::
+
+  $ initialize_github2fedmsg_db development.ini
+
+
 Now, start the webapp::
 
   $ workon github2fedmsg
