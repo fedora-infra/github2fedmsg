@@ -11,6 +11,6 @@ doc/build
 README.pdf
 *.pid
 *.log
-pep8bot/githubsecrets.*
+githu2fedmsg/githubsecrets.*
 web198.ini
 testlog.txt
