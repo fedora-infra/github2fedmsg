@@ -17,28 +17,6 @@ requires = [
     'weberror',
     'velruse',
     'alembic',
-
-    'requests <= 0.14.0',
-    # This breaks with the latest "requests"
-    # https://github.com/copitux/python-github3/issues/26
-    'pygithub3',
-
-    # Retask, for communication between webapp and the worker
-    'retask',
-    'redis',
-    'mock',
-
-    # Required by the worker to do git commands
-    'sh',
-
-    # Required by the worker to do its checking.
-    'pep8',
-
-    # Is this necessary?
-    'tw2.core <= 2.1.1',   # only because 2.1.2 is busted
-    'tw2.forms <= 2.1.1',  # only because 2.1.2 is busted
-    'tw2.bootstrap.forms',
-    'tw2.d3',
     ]
 
 setup(name='pep8bot',
