@@ -1,6 +1,7 @@
-- [ ] set up irc notifications to #fedora-apps for development
+- [x] set up irc notifications to #fedora-apps for development
+- [ ] clean out the model to only what we need
+- [ ] Add FAS <-> Github account linking.
 - [ ] Remove pygithub3, replace with our own lib.
-- [ ] Remove tw2, replace with standard templates/endpoints.
 - [ ] Remove pep8bot branding
 - [ ] Style with robyduck's latest bootstrap fedora
 - [ ] Add fedmsg publication code
