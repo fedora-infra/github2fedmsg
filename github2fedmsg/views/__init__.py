@@ -81,11 +81,6 @@ def webhook(request):
     return "OK"
 
 
-@view_config(context=m.Commit, renderer='commit.mak')
-def view_commit(request):
-    return dict(commit=request.context)
-
-
 @view_config(name='sync', context=m.User, renderer='json')
 def sync_user(request):
     # TODO -- someday, learn how to do the __acls__ thing.. :/
