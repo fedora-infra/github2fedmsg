@@ -8,12 +8,7 @@ def stats(request):
     """ Show the stats page """
     num_users = m.User.query.count()
     num_repos = m.Repo.query.count()
-    num_enabled_repos = m.Repo.query.filter(or_(
-        m.Repo.pep8_enabled==True,
-        m.Repo.pylint_enabled==True,
-        m.Repo.pyflakes_enabled==True,
-        m.Repo.mccabe_enabled==True,
-    )).count()
+    num_enabled_repos = m.Repo.query.filter(m.Repo.enabled == True).count()
 
     # Show the top 'n' in various categories.
     n = 10
