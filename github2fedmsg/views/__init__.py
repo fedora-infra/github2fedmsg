@@ -151,7 +151,7 @@ def repo_toggle_enabled(request):
         "access_token": token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
         # TODO -- use our real url
-        "hub.callback": "http://pep8.me/webhook",
+        "hub.callback": request.registry.settings.get("github.callback"),
         "hub.secret": request.registry.settings.get("github.secret"),
     }
 
