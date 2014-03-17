@@ -1,0 +1,7 @@
+- [ ] Remove pygithub3, replace with our own lib.
+- [ ] Remove mako, replace with jinja
+- [ ] Remove tw2, replace with standard templates/endpoints.
+- [ ] Remove pep8bot branding
+- [ ] Style with robyduck's latest bootstrap fedora
+- [ ] Add fedmsg publication code
+- [ ] Set up a cloud node for shared dev/testing
