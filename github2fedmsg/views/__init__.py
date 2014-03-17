@@ -88,8 +88,12 @@ def sync_user(request):
     if userid != request.context.username:
         raise HTTPUnauthorized()
 
+    config_key = 'github.secret_oauth_access_token'
+    value = request.registry.settings[config_key]
+    oauth_creds = dict(access_token=value)
+
     import transaction
-    request.context.sync_repos(gh_auth)
+    request.context.sync_repos(oauth_creds)
     transaction.commit()
     raise HTTPFound('/' + request.context.username)
 

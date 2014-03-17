@@ -15,9 +15,15 @@ class UserProfile(twc.Widget):
     def prepare(self):
         """ Query github for some information before display """
 
+        import pyramid
+        settings = pyramid.threadlocal.get_current_registry().settings
+        config_key = 'github.secret_oauth_access_token'
+        value = settings[config_key]
+        oauth_creds = dict(access_token=value)
+
         # Try to refresh list of repos only if the user has none.
         if not self.user.all_repos:
-            self.user.sync_repos(gh_auth)
+            self.user.sync_repos(oauth_creds)
 
 
     def make_button(self, username, repo_name):

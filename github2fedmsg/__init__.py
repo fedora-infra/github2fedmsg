@@ -7,6 +7,9 @@ from sqlalchemy import engine_from_config
 
 import pyramid_mako
 
+import ConfigParser
+import os
+
 import github2fedmsg.models
 import github2fedmsg.traversal
 
@@ -27,8 +30,25 @@ def get_user(request):
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+
+    # Load secret stuff from secret.ini.
+    try:
+        default_path = os.path.abspath("secret.ini")
+        secret_path = settings.get('secret_config_path', default_path)
+        # TODO: There is a better way to log this message than print.
+        print "Reading secrets from %r" % secret_path
+        parser = ConfigParser.ConfigParser()
+        parser.read(secret_path)
+        secret_config = dict(parser.items("github2fedmsg"))
+        settings.update(secret_config)
+        global_settings.update(secret_config)
+    except Exception as e:
+        # TODO: There is a better way to log this message than print.
+        print 'Failed to load secret.ini.  Reason: %r' % str(e)
+
     engine = engine_from_config(settings, 'sqlalchemy.')
     github2fedmsg.models.DBSession.configure(bind=engine)
+
     config = Configurator(
         settings=settings,
         root_factory=github2fedmsg.traversal.make_root,
@@ -36,6 +56,7 @@ def main(global_config, **settings):
         authentication_policy=authn_policy,
         #authorization_policy=authz_policy,
     )
+
     # Make it so we can do "request.user" in templates.
     config.set_request_property(get_user, 'user', reify=True)
 

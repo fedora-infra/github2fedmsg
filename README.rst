@@ -16,9 +16,6 @@ back to itself on repositories you ask it to monitor.  When one of those
 callbacks fire, github2fedmsg adds a work item to a redis queue with `retask
 <http://retask.rtfd.org>`_.
 
-A separate worker process picks tasks off the redis queue to perform the
-fork, clone, tidy, push, pull-request work flow.
-
 Hacking
 -------
 
@@ -37,17 +34,10 @@ Using `virtualenvwrapper <pypi.python.org/pypi/virtualenvwrapper>`_::
 
 Go off and `register your development application with github
 <https://github.com/settings/applications>`_.  Save the oauth tokens and add the
-secret one to a new file you create called ``github2fedmsg/githubsecrets.py``::
+secret one to a new file you create called ``secrets.ini``.  Use the example
+``secrets.ini.example`` file.
 
-    secret_oauth_token = "SECRET_STRING_GOES_HERE"
-
-Now, in two different terminals, start the webapp and the worker process.  In
-the first::
+Now, start the webapp::
 
   $ workon github2fedmsg
   $ pserve development.ini
-
-In the second::
-
-  $ workon github2fedmsg
-  $ python github2fedmsg/worker.py
