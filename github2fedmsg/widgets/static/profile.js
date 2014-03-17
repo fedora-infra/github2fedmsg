@@ -4,7 +4,7 @@ function subscribe(link) {
             var name, sel;
             name = json.repo.name;
             name = name.replace('.', '\\.');
-            sel = $("#"+json.user+'-'+name+'-'+json.kind);
+            sel = $("#"+json.github_username+'-'+name);
             sel.toggleClass('btn-success');
             sel.toggleClass('btn-danger');
 

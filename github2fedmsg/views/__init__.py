@@ -166,7 +166,8 @@ def repo_toggle_enabled(request):
     response = {
         'status': 'ok',
         'repo': request.context.__json__(),
-        'user': repo.user.username,
+        'username': repo.user.username,
+        'github_username': repo.user.github_username,
         'enabled': repo.enabled,
     }
     return response
