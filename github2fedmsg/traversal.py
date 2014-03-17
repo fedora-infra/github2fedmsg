@@ -3,7 +3,6 @@ import tw2.core as twc
 
 import github2fedmsg.models
 import github2fedmsg.widgets
-import pyramid.threadlocal
 from pyramid.security import authenticated_userid
 
 
@@ -33,8 +32,7 @@ class RootApp(dict):
         user = query.one()
 
         # TODO -- use __acl__ machinery some day
-        request = pyramid.threadlocal.get_current_request()
-        userid = authenticated_userid(request)
+        userid = authenticated_userid(self.request)
         # TODO -- check if this is an org that I own
         show_buttons = (userid == user.username)
         return UserApp(user=query.one(), show_buttons=show_buttons)
