@@ -35,7 +35,7 @@ class RootApp(dict):
         userid = authenticated_userid(self.request)
         # TODO -- check if this is an org that I own
         show_buttons = (userid == user.username)
-        return UserApp(user=query.one(), show_buttons=show_buttons)
+        return UserApp(user=user, show_buttons=show_buttons)
 
 
 class ApiApp(object):
