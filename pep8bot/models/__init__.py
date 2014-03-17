@@ -30,8 +30,8 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(cls=JSONifiable)
 Base.query = DBSession.query_property()
 
-from pygithub3 import Github
-gh = Github()
+#from pygithub3 import Github
+#gh = Github()
 
 
 org_to_user_mapping = Table(

@@ -11,8 +11,6 @@ import hmac
 import requests
 
 import json
-import retask.task
-import retask.queue
 
 import pep8bot.githubutils as gh
 
@@ -67,62 +65,16 @@ def webhook(request):
         payload = request.params['payload']
         payload = json.loads(payload)
 
-        if 'action' not in payload:
-            # This is a regular old push.. don't worry about it.
-            commits = [c['id'] for c in payload['commits']]
-            username = payload['repository']['owner']['name']
-            reponame = payload['repository']['name']
-            clone_url = "https://github.com/%s/%s/" % (username, reponame)
-        else:
-            # This is a pull request
-            sha = payload['pull_request']['head']['sha']
-            commits = [sha]
-            username = payload['repository']['owner']['login']
-            reponame = payload['repository']['name']
-            clone_url = payload['pull_request']['head']['repo']['clone_url']
+        import pprint
+        print " ** RECEIVED THIS FROM GITHUB ** "
+        pprint.pprint(payload)
 
-        # Drop a note in our db about it
-        user = m.User.query.filter_by(username=username).one()
-        repo = m.Repo.query.filter(and_(
-            m.Repo.name == reponame, m.Repo.username == username)).one()
-
-        template = "https://github.com/%s/%s/commit/%s"
-
-        for sha in commits:
-            if m.Commit.query.filter_by(sha=sha).count() > 0:
-                continue
-
-            m.DBSession.add(m.Commit(
-                status="pending",
-                sha=sha,
-                url=template % (username, reponame, sha),
-                repo=repo,
-            ))
-
-            status = "pending"
-            desc = "PEP8Bot scan pending"
-
-            token = user.oauth_access_token
-            if not token:
-                for u in user.users:
-                    if u.oauth_access_token:
-                        token = u.oauth_access_token
-
-            gh.post_status(username, reponame, sha, status, token, desc)
-
-        # Now, put a note in our work queue for it, too.
-        queue = retask.queue.Queue('commits')
-        task = retask.task.Task({
-            'reponame': reponame,
-            'username': username,
-            'commits': commits,
-            'clone_url': clone_url,
-        })
-        queue.connect()
-
-        # Fire and forget
-        job = queue.enqueue(task)
-
+        # TODO -- extract a smart topic from the payload.
+        fedmsg.publish(
+            modname="github",
+            topic='wat',
+            msg=payload,
+        )
     else:
         raise NotImplementedError()
 

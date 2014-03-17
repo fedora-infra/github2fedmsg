@@ -1,8 +1,8 @@
 import tw2.core as twc
 import tw2.bootstrap.forms as twb
 
-from pygithub3 import Github
-gh = Github()
+#from pygithub3 import Github
+#gh = Github()
 
 class NoSpaces(twc.Validator):
     def validate(self, val):
