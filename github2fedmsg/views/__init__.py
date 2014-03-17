@@ -89,7 +89,7 @@ def sync_user(request):
         raise HTTPUnauthorized()
 
     import transaction
-    request.context.sync_repos()
+    request.context.sync_repos(gh_auth)
     transaction.commit()
     raise HTTPFound('/' + request.context.username)
 
@@ -104,67 +104,45 @@ def repo_toggle_enabled(request):
         ]:
             raise HTTPUnauthorized()
 
-    possible_kinds = ['pep8', 'pylint', 'pyflakes', 'mccabe']
-    possible_attrs = ['%s_enabled' % kind for kind in possible_kinds]
-
-    kind = request.GET.get('kind')
-    if kind not in possible_kinds:
-        raise ValueError("%r not in %r" % (kind, possible_kinds))
-
-    attr = '%s_enabled' % kind
-
     repo = request.context
 
-    should_notify_github = False
-    # If we had *no* attributes on *before* toggling, then *subscribe*.
-    if not any([getattr(repo, a) for a in possible_attrs]):
-        should_notify_github = True
-
     # Toggle that attribute on our db model.
-    setattr(repo, attr, not getattr(repo, attr))
+    repo.enabled = not repo.enabled
 
-    # If we had *no* attributes on *after* toggling, then *unsubscribe*.
-    if not any([getattr(repo, a) for a in possible_attrs]):
-        should_notify_github = True
+    # Now notify github
+    token = repo.user.oauth_access_token
+    if not token and repo.user.users:
+        token = repo.user.users[0].oauth_access_token
 
-    if should_notify_github:
-        token = repo.user.oauth_access_token
-        if not token and repo.user.users:
-            token = repo.user.users[0].oauth_access_token
+    data = {
+        "access_token": token,
+        "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
+        # TODO -- use our real url
+        "hub.callback": "http://pep8.me/webhook",
+        "hub.secret": request.registry.settings.get("github.secret"),
+    }
 
-        data = {
-            "access_token": token,
-            "hub.mode": ['unsubscribe', 'subscribe'][getattr(repo, attr)],
-            # TODO -- use our real url
-            "hub.callback": "http://pep8.me/webhook",
-            "hub.secret": request.registry.settings.get("github.secret"),
-        }
+    for event in github_events:
+        data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
+            repo.user.username, repo.name, event)
+        # Subscribe to events via pubsubhubbub
+        result = requests.post(github_api_url, data=data)
 
-        for event in github_events:
-            data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
-                repo.user.username, repo.name, event)
-            # Subscribe to events via pubsubhubbub
-            result = requests.post(github_api_url, data=data)
+        if result.status_code != 204:
+            d = result.json
+            if callable(d):
+                d = d()
 
-            if result.status_code != 204:
-                d = result.json
-                if callable(d):
-                    d = d()
-
-                d = dict(d)
-                d['status_code'] = result.status_code
-                raise IOError(d)
+            d = dict(d)
+            d['status_code'] = result.status_code
+            raise IOError(d)
 
     response = {
         'status': 'ok',
         'repo': request.context.__json__(),
         'user': repo.user.username,
-        'kind': kind,
+        'enabled': repo.enabled,
     }
-    response.update(dict(zip(
-        possible_attrs,
-        [getattr(request.context, a) for a in possible_attrs]
-    )))
     return response
 
 

@@ -30,10 +30,7 @@
           <th>Description</th>
           <th>Language</th>
 % if w.show_buttons:
-          <th>PEP8?</th>
-          <th>PyLint?</th>
-          <th>PyFlakes?</th>
-          <th>McCabe?</th>
+          <th>Enabled?</th>
 % endif
         </tr>
         % for repo in list(w.user.all_repos):
@@ -42,10 +39,7 @@
             <td>${repo.description}</td>
             <td>${repo.language}</td>
 % if w.show_buttons:
-            <td>${w.make_button('pep8', repo.user.username, repo.name) | n}</td>
-            <td>${w.make_button('pylint', repo.user.username, repo.name) | n}</td>
-            <td>${w.make_button('pyflakes', repo.user.username, repo.name) | n}</td>
-            <td>${w.make_button('mccabe', repo.user.username, repo.name) | n}</td>
+            <td>${w.make_button(repo.user.username, repo.name) | n}</td>
 % endif
           </tr>
         % endfor

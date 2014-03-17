@@ -30,9 +30,7 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base(cls=JSONifiable)
 Base.query = DBSession.query_property()
 
-#from pygithub3 import Github
-#gh = Github()
-
+import github2fedmsg.githubutils as gh
 
 org_to_user_mapping = Table(
     'org_to_user_mapping', Base.metadata,
@@ -62,41 +60,41 @@ class User(Base):
             [self.repos] + [org.repos for org in self.organizations],
             [])
 
-    def sync_repos(self):
+    def sync_repos(self, gh_auth):
         """ Ask github about what repos I have and cache that. """
-        if self.users:
-            # Then I am an organization, not a user.
-            gh_repos = gh.repos.list_by_org(self.username).all()
-        else:
-            # Then I am a real boy
-            gh_repos = gh.repos.list(self.username).all()
+        gh_repos = gh.get_repos(self.username, gh_auth)
 
         # TODO -- fix this.  this is inefficient
         for repo in gh_repos:
+
+            # TODO -- remove this logging
+            import pprint
+            pprint.pprint(repo)
+
             if Repo.query.filter(and_(
-                Repo.name==repo.name,
+                Repo.name==repo['name'],
                 Repo.username==self.username
             )).count() < 1:
                 github2fedmsg.models.DBSession.add(github2fedmsg.models.Repo(
                     user=self,
-                    name=unicode(repo.name),
-                    description=unicode(repo.description),
-                    language=unicode(repo.language),
+                    name=unicode(repo['name']),
+                    description=unicode(repo['description']),
+                    language=unicode(repo['language']),
                 ))
 
         # Refresh my list of organizations.
         if not self.users:
             # Then I am a real User.
-            gh_orgs = gh.orgs.list(self.username).all()
+            gh_orgs = gh.get_orgs(self.username, gh_auth)
             for o in gh_orgs:
-                query = User.query.filter(User.username==o.login)
+                query = User.query.filter(User.username==o['login'])
                 if query.count() < 1:
-                    log.debug("Adding new org %r" % o.login)
+                    log.debug("Adding new org %r" % o['login'])
                     organization = User(
-                        username=o.login, full_name='', emails='')
+                        username=o['login'], full_name='', emails='')
                     DBSession.add(organization)
                 else:
-                    log.debug("Found prexisting org %r" % o.login)
+                    log.debug("Found prexisting org %r" % o['login'])
                     organization = query.one()
 
                 if self not in organization.users:
@@ -112,7 +110,7 @@ class User(Base):
 
         # Follow up with all my orgs too (they are also "User"s)
         for organization in self.organizations:
-            organization.sync_repos()
+            organization.sync_repos(gh_auth)
 
     @property
     def total_enabled_repos(self):

@@ -17,30 +17,23 @@ class UserProfile(twc.Widget):
 
         # Try to refresh list of repos only if the user has none.
         if not self.user.all_repos:
-            self.user.sync_repos()
+            self.user.sync_repos(gh_auth)
 
 
-    def make_button(self, kind, username, repo_name):
-        # Just for reference
-        unimplemented = ['pylint', 'pyflakes', 'mccabe']
-        implemented = ['pep8']
+    def make_button(self, username, repo_name):
+        # TODO -- Can we use resource_url here?
+        link = '/api/%s/%s/toggle' % (username, repo_name)
+        click = 'onclick="subscribe(\'%s\')"' % link
+        Repo = github2fedmsg.models.Repo
+        query = Repo.query.filter(and_(
+            Repo.username==username, Repo.name==repo_name))
 
-        if kind in implemented:
-            # TODO -- Can we use resource_url here?
-            link = '/api/%s/%s/toggle?kind=%s' % (username, repo_name, kind)
-            click = 'onclick="subscribe(\'%s\')"' % link
-            Repo = github2fedmsg.models.Repo
-            query = Repo.query.filter(and_(
-                Repo.username==username, Repo.name==repo_name))
+        repo = query.one()
 
-            repo = query.one()
-
-            if getattr(repo, '%s_enabled' % kind):
-                cls, text = "btn-success", "Disable"
-            else:
-                cls, text = "btn-danger", "Enable"
-
-            return "<button id='%s-%s-%s' class='btn %s' %s>%s</button>" % (
-                username, repo_name, kind, cls, click, text)
+        if repo.enabled:
+            cls, text = "btn-success", "Disable"
         else:
-            return "<button class='btn btn-inverse'>N/A</button>"
+            cls, text = "btn-danger", "Enable"
+
+        return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
+            username, repo_name, cls, click, text)
