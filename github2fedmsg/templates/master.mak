@@ -19,7 +19,8 @@
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        ga.src = ('https:' == document.location.protocol ?
+            'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(ga, s);
       })();
@@ -29,7 +30,7 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container container-fluid">
-          <a class="brand" href="http://pep8.me">pep8.me</a>
+          <a class="brand" href="/">github2fedmsg</a>
           <ul class="nav pull-right">
             <li class="${['', 'active'][request.on_stats]}">
               <a href="/stats">Stats</a>
