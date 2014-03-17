@@ -123,7 +123,7 @@ def sync_user(request):
 def repo_toggle_enabled(request):
     # TODO -- someday, learn how to do the __acls__ thing.. :/
     userid = authenticated_userid(request)
-    if userid != request.context.username:
+    if userid != request.context.user.username:
         if userid not in [
             member.username for member in request.context.user.users
         ]:
@@ -150,7 +150,7 @@ def repo_toggle_enabled(request):
 
     for event in github_events:
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
-            repo.user.username, repo.name, event)
+            repo.user.github_username, repo.name, event)
         # Subscribe to events via pubsubhubbub
         result = requests.post(github_api_url, data=data)
 

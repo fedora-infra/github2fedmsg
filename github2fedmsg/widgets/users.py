@@ -26,8 +26,9 @@ class UserProfile(twc.Widget):
 
     def make_button(self, repo):
         # TODO -- Can we use resource_url here?
+        username = repo.user.username
         github_username = repo.user.github_username
-        link = '/api/%s/%s/toggle' % (github_username, repo.name)
+        link = '/api/%s/%s/%s/toggle' % (username, github_username, repo.name)
         click = 'onclick="subscribe(\'%s\')"' % link
 
         if repo.enabled:

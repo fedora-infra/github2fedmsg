@@ -132,6 +132,9 @@ class User(Base):
         return str(self.created_on)
 
     def __getitem__(self, key):
+        if key == self.github_username:
+            return self
+
         for r in self.repos:
             if r.name == key:
                 return r
