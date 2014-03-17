@@ -177,51 +177,5 @@ class Repo(Base):
     description = Column(Unicode, nullable=False)
     language = Column(Unicode, nullable=False)
     username = Column(Unicode, ForeignKey('users.username'))
-    commits = relation('Commit', backref=('repo'))
 
-    #
-    pep8_enabled = Column(Boolean, default=False)
-    pylint_enabled = Column(Boolean, default=False)
-    pyflakes_enabled = Column(Boolean, default=False)
-    mccabe_enabled = Column(Boolean, default=False)
-
-    def __getitem__(self, key):
-        if key != 'commits':
-            raise KeyError
-
-        class DynamicCommitIndex(object):
-            def __getitem__(shmelf, key):
-                for commit in self.commits:
-                    if commit.sha == key:
-                        return commit
-
-                raise KeyError
-
-        return DynamicCommitIndex()
-
-
-    @property
-    def enabled(self):
-        return (
-            self.pep8_enabled or
-            self.pylint_enabled or
-            self.pyflakes_enabled or
-            self.mccabe_enabled
-        )
-
-class Commit(Base):
-    __tablename__ = 'commits'
-    id = Column(Integer, primary_key=True)
-    status = Column(Unicode(20), nullable=False)
-    sha = Column(Unicode(40), nullable=False)
-    url = Column(Unicode, nullable=False)
-    created = Column(DateTime, default=datetime.datetime.now)
-    repo_id = Column(Unicode, ForeignKey('repos.id'))
-
-    pep8_error_count = Column(Integer)
-    pep8_errors = Column(Unicode)
-    pylint_error_count = Column(Integer)
-    pylint_errors = Column(Unicode)
-    pyflakes_error_count = Column(Integer)
-    pyflakes_errors = Column(Unicode)
-    mccabe_complexity = Column(Integer)
+    enabled = Column(Boolean, default=False)
