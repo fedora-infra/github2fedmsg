@@ -19,7 +19,7 @@ from sqlalchemy.orm import (
 )
 
 import pyramid.threadlocal
-import pep8bot.traversal
+import github2fedmsg.traversal
 import datetime
 from hashlib import md5
 from .jsonifiable import JSONifiable
@@ -41,7 +41,7 @@ org_to_user_mapping = Table(
 )
 
 import logging
-log = logging.getLogger("pep8bot.models")
+log = logging.getLogger("github2fedmsg.models")
 
 
 class User(Base):
@@ -77,7 +77,7 @@ class User(Base):
                 Repo.name==repo.name,
                 Repo.username==self.username
             )).count() < 1:
-                pep8bot.models.DBSession.add(pep8bot.models.Repo(
+                github2fedmsg.models.DBSession.add(github2fedmsg.models.Repo(
                     user=self,
                     name=unicode(repo.name),
                     description=unicode(repo.description),

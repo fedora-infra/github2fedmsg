@@ -2,7 +2,7 @@ from pyramid.view import view_config
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPForbidden
 
-import pep8bot.models as m
+import github2fedmsg.models as m
 from sqlalchemy import and_
 
 import datetime
@@ -12,7 +12,7 @@ import requests
 
 import json
 
-import pep8bot.githubutils as gh
+import github2fedmsg.githubutils as gh
 
 # http://developer.github.com/v3/repos/hooks/
 github_api_url = "https://api.github.com/hub"

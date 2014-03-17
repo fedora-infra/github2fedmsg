@@ -29,4 +29,4 @@ class TestMyView(unittest.TestCase):
         request = testing.DummyRequest()
         info = my_view(request)
         self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'pep8bot')
+        self.assertEqual(info['project'], 'github2fedmsg')

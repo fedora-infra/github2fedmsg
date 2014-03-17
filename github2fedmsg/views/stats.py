@@ -1,5 +1,5 @@
 from pyramid.view import view_config
-import pep8bot.models as m
+import github2fedmsg.models as m
 from sqlalchemy import or_
 
 

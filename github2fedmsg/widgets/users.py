@@ -1,10 +1,10 @@
 import tw2.core as twc
-import pep8bot.models
+import github2fedmsg.models
 from sqlalchemy import and_
 
 
 class UserProfile(twc.Widget):
-    template = "mako:pep8bot.widgets.templates.profile"
+    template = "mako:github2fedmsg.widgets.templates.profile"
     user = twc.Param("An instance of the User SQLAlchemy model.")
     resources = [
         twc.JSLink(filename="static/profile.js"),
@@ -29,7 +29,7 @@ class UserProfile(twc.Widget):
             # TODO -- Can we use resource_url here?
             link = '/api/%s/%s/toggle?kind=%s' % (username, repo_name, kind)
             click = 'onclick="subscribe(\'%s\')"' % link
-            Repo = pep8bot.models.Repo
+            Repo = github2fedmsg.models.Repo
             query = Repo.query.filter(and_(
                 Repo.username==username, Repo.name==repo_name))
 

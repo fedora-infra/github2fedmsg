@@ -7,8 +7,8 @@ from sqlalchemy import engine_from_config
 
 import pyramid_mako
 
-import pep8bot.models
-import pep8bot.traversal
+import github2fedmsg.models
+import github2fedmsg.traversal
 
 # TODO -- replace this with pyramid_beaker
 crappy_session_factory = UnencryptedCookieSessionFactoryConfig('itsaseekreet')
@@ -19,7 +19,7 @@ authn_policy = AuthTktAuthenticationPolicy(secret='verysecret')
 def get_user(request):
     """ A utility property hanging on 'request' """
     username = authenticated_userid(request)
-    query = pep8bot.models.User.query.filter_by(username=username)
+    query = github2fedmsg.models.User.query.filter_by(username=username)
     if username and query.count() > 0:
         return query.one()
 
@@ -28,10 +28,10 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     engine = engine_from_config(settings, 'sqlalchemy.')
-    pep8bot.models.DBSession.configure(bind=engine)
+    github2fedmsg.models.DBSession.configure(bind=engine)
     config = Configurator(
         settings=settings,
-        root_factory=pep8bot.traversal.make_root,
+        root_factory=github2fedmsg.traversal.make_root,
         session_factory=crappy_session_factory,
         authentication_policy=authn_policy,
         #authorization_policy=authz_policy,

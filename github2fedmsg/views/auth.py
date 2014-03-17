@@ -6,7 +6,7 @@ from pyramid.security import (
     forget,
 )
 
-import pep8bot.models as m
+import github2fedmsg.models as m
 
 
 @view_config(context='velruse.AuthenticationComplete')

@@ -6,7 +6,7 @@ log = logging.getLogger("github")
 from githubsecrets import secret_oauth_token
 
 oauth_dict = dict(access_token=secret_oauth_token)
-my_name = 'pep8bot'
+my_name = 'github2fedmsg'
 prefix = "https://api.github.com"
 
 
@@ -63,7 +63,7 @@ def create_pull_request(username, repo, patch_branch):
         title='PEP8 Cleanup',
         body=pull_request_body,
         base=branch,
-        head="pep8bot:" + patch_branch,
+        head="github2fedmsg:" + patch_branch,
     )
     response = requests.post(url, params=oauth_dict, data=json.dumps(payload))
 

@@ -1,8 +1,8 @@
 from hashlib import md5
 import tw2.core as twc
 
-import pep8bot.models
-import pep8bot.widgets
+import github2fedmsg.models
+import github2fedmsg.widgets
 import pyramid.threadlocal
 from pyramid.security import authenticated_userid
 
@@ -26,7 +26,7 @@ class RootApp(dict):
         if key in self.static:
             return self.static[key]
 
-        query = pep8bot.models.User.query.filter_by(username=key)
+        query = github2fedmsg.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
 
@@ -42,13 +42,13 @@ class RootApp(dict):
 
 class ApiApp(object):
     def __getitem__(self, key):
-        query = pep8bot.models.User.query.filter_by(username=key)
+        query = github2fedmsg.models.User.query.filter_by(username=key)
         if query.count() != 1:
             raise KeyError("No such user")
         return query.one()
 
 
-class UserApp(pep8bot.widgets.UserProfile):
+class UserApp(github2fedmsg.widgets.UserProfile):
     __name__ = None
     __parent__ = RootApp
 
