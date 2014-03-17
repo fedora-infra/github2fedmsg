@@ -1,8 +1,8 @@
-- [ ] clean out the model to only what we need
-- [ ] Add FAS <-> Github account linking.
+- [X] clean out the model to only what we need
+- [X] Add FAS <-> Github account linking.
 - [X] set up irc notifications to #fedora-apps for development
 - [X] Remove pygithub3, replace with our own lib.
 - [ ] Remove pep8bot branding
 - [ ] Style with robyduck's latest bootstrap fedora
-- [ ] Add fedmsg publication code
+- [ ] Add fedmsg publication code, test it.
 - [ ] Set up a cloud node for shared dev/testing
