@@ -1,2 +1,2 @@
 include *.txt *.ini *.cfg *.rst
-recursive-include pep8bot *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include github2fedmsg *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml

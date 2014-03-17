@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="/static/pep8bot.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/static/github2fedmsg.css" media="all"/>
     <script type="text/javascript">
       $.extend($.gritter.options, {
         position: 'bottom-left',
@@ -70,7 +70,7 @@
       and is licensed under the
       <a href="http://www.gnu.org/licenses/agpl-3.0.txt">AGPL</a>; the source
       code can be found
-      <a href="http://github.com/ralphbean/pep8bot">on github.</a>
+      <a href="http://github.com/ralphbean/github2fedmsg">on github.</a>
       </center></p>
     </footer>
 
