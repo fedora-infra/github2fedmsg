@@ -22,7 +22,7 @@ requires = [
 
 setup(name='github2fedmsg',
       version='0.0',
-      description='github2fedmsg',
+      description='Pubsubhubbub app that rebroadcasts GH events over fedmsg',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -32,7 +32,7 @@ setup(name='github2fedmsg',
         ],
       author='',
       author_email='',
-      url='',
+      url='https://github.com/fedora-infra/github2fedmsg',
       keywords='web wsgi bfg pylons pyramid',
       packages=find_packages(),
       include_package_data=True,
