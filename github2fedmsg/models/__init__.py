@@ -34,8 +34,8 @@ import github2fedmsg.githubutils as gh
 
 org_to_user_mapping = Table(
     'org_to_user_mapping', Base.metadata,
-    Column('org_id', Unicode, ForeignKey('users.username'), primary_key=True),
-    Column('usr_id', Unicode, ForeignKey('users.username'), primary_key=True),
+    Column('org_id', Unicode, ForeignKey('users.github_username'), primary_key=True),
+    Column('usr_id', Unicode, ForeignKey('users.github_username'), primary_key=True),
 )
 
 import logging
@@ -45,6 +45,7 @@ log = logging.getLogger("github2fedmsg.models")
 class User(Base):
     __tablename__ = 'users'
     username = Column(Unicode, primary_key=True)
+    github_username = Column(Unicode, unique=True)
     emails = Column(Unicode, nullable=False)
     full_name = Column(Unicode, nullable=False)
     oauth_access_token = Column(Unicode)
@@ -53,27 +54,20 @@ class User(Base):
 
     @property
     def all_repos(self):
-        print "*" * 40
-        print len(self.repos)
-        print len(self.organizations)
         return sum(
             [self.repos] + [org.repos for org in self.organizations],
             [])
 
     def sync_repos(self, gh_auth):
         """ Ask github about what repos I have and cache that. """
-        gh_repos = gh.get_repos(self.username, gh_auth)
+        gh_repos = gh.get_repos(self.github_username, gh_auth)
 
         # TODO -- fix this.  this is inefficient
         for repo in gh_repos:
 
-            # TODO -- remove this logging
-            import pprint
-            pprint.pprint(repo)
-
             if Repo.query.filter(and_(
                 Repo.name==repo['name'],
-                Repo.username==self.username
+                Repo.username==self.github_username
             )).count() < 1:
                 github2fedmsg.models.DBSession.add(github2fedmsg.models.Repo(
                     user=self,
@@ -85,13 +79,16 @@ class User(Base):
         # Refresh my list of organizations.
         if not self.users:
             # Then I am a real User.
-            gh_orgs = gh.get_orgs(self.username, gh_auth)
+            gh_orgs = gh.get_orgs(self.github_username, gh_auth)
             for o in gh_orgs:
-                query = User.query.filter(User.username==o['login'])
+                query = User.query.filter(User.github_username==o['login'])
                 if query.count() < 1:
                     log.debug("Adding new org %r" % o['login'])
                     organization = User(
-                        username=o['login'], full_name='', emails='')
+                        username="github_org_" + o['login'],
+                        github_username=o['login'],
+                        full_name='',
+                        emails='')
                     DBSession.add(organization)
                 else:
                     log.debug("Found prexisting org %r" % o['login'])
@@ -99,11 +96,11 @@ class User(Base):
 
                 if self not in organization.users:
                     log.debug("Adding %r to %r" % (
-                        self.username, organization.username))
+                        self.github_username, organization.github_username))
                     organization.users.append(self)
                     DBSession.flush()
                 else:
-                    log.debug("Already in %r" % organization.username)
+                    log.debug("Already in %r" % organization.github_username)
         else:
             # I am an organization.  Do not recurse.
             pass
@@ -151,17 +148,10 @@ class User(Base):
     def repo_by_name(self, repo_name):
         return self[repo_name]
 
-    def widget_link(self):
-        prefix = pyramid.threadlocal.get_current_request().resource_url(None)
-        tmpl = "{prefix}widget/{username}/embed.js" + \
-            "?width=400&height=55&duration=1600&n=100"
-        link = tmpl.format(prefix=prefix, username=self.username)
-        return "<script type='text/javascript' src='%s'></script>" % link
-
 User.__mapper__.add_property('organizations', relation(
     User,
-    primaryjoin=User.username == org_to_user_mapping.c.org_id,
-    secondaryjoin=org_to_user_mapping.c.usr_id == User.username,
+    primaryjoin=User.github_username == org_to_user_mapping.c.org_id,
+    secondaryjoin=org_to_user_mapping.c.usr_id == User.github_username,
     secondary=org_to_user_mapping,
     doc="List of this users organizations",
     backref=backref('users', doc="List of this organizations users")
@@ -174,6 +164,6 @@ class Repo(Base):
     name = Column(Unicode, nullable=False)
     description = Column(Unicode, nullable=False)
     language = Column(Unicode, nullable=False)
-    username = Column(Unicode, ForeignKey('users.username'))
+    username = Column(Unicode, ForeignKey('users.github_username'))
 
     enabled = Column(Boolean, default=False)

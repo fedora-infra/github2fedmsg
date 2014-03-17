@@ -10,11 +10,48 @@ import github2fedmsg.models as m
 
 
 @view_config(context='velruse.AuthenticationComplete')
-def github_login_complete_view(request):
-    username = request.context.profile['preferredUsername']
-    full_name = request.context.profile['displayName']
-    emails = request.context.profile['emails'] or []
-    emails = ','.join((item['value'] for item in emails if item['value']))
+def login_complete_view(request):
+    """ This handles *both* login with FAS and login with github.. """
+
+    # Github gives us:
+    #{'accounts': [{'domain': 'github.com',
+    #               'userid': 331338,
+    #               'username': u'ralphbean'}],
+    # 'displayName': u'Ralph Bean',
+    # 'emails': [{'value': u'rbean@redhat.com'}],
+    # 'preferredUsername': u'ralphbean'}
+
+    # FAS gives us:
+    #{'accounts': [{'domain': 'openid.net',
+    #               'username': 'http://ralph.id.fedoraproject.org/'}],
+    #  'displayName': u'Ralph Bean',
+    #  'emails': [u'rbean@redhat.com'],
+    #  'name': {'formatted': u'Ralph Bean'},
+    #  'preferredUsername': u'ralph'}
+
+    ctx = request.context
+    accounts = ctx.profile['accounts']
+
+    if accounts and accounts[0]['domain'] == 'github.com':
+        if not request.user:
+            # Bad scene.  Someone is trying to link with github.com while not
+            # yet being signed in through FAS.  We will just deny this.
+            return HTTPForbidden()
+        token = ctx.credentials['oauthAccessToken']
+        request.user.github_username = ctx.profile['preferredUsername']
+        request.user.oauth_access_token = token
+        request.session['token'] = token
+        return HTTPFound(location="/" + request.user.username)
+
+    username = ctx.profile['preferredUsername']
+    full_name = ctx.profile['displayName']
+    emails = ctx.profile['emails'] or []
+
+    if emails:
+        if isinstance(emails[0], dict):
+            emails = [item['value'] for item in emails if item['value']]
+
+    emails = ','.join(emails)
 
     query = m.User.query.filter_by(username=username)
     if query.count() == 0:
@@ -26,14 +63,8 @@ def github_login_complete_view(request):
 
     user = query.one()
 
-    # TODO -- how to update the users emails if they change them on github
-
     headers = remember(request, username)
-
-    request.session['token'] = request.context.credentials['oauthAccessToken']
-
-    # Also save this in the db so our worker can use it later.
-    user.oauth_access_token = request.session['token']
+    request.session['token'] = user.oauth_access_token
 
     # TODO -- how not to hard code this location?
     return HTTPFound(location="/" + username, headers=headers)
@@ -49,3 +80,18 @@ def login_denied_view(request):
 def logout(request):
     headers = forget(request)
     return HTTPFound(location="/", headers=headers)
+
+
+@view_config(route_name='forget_github_token')
+def forget_github_token(request):
+    if 'token' in request.session:
+        request.session['token']
+
+    username = request.user.username
+
+    import transaction
+    request.user.github_username = None
+    request.user.oauth_access_token = None
+    transaction.commit()
+
+    return HTTPFound(location="/" + username)

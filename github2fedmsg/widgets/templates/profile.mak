@@ -8,14 +8,25 @@
         <small>${w.user.full_name} ${len(w.user.all_repos)} repos</small>
       </h1>
     </span>
+
+
   </div>
 
 % if w.show_buttons:
   <div class="row">
-    <span class="span1 offset10">
-      <button class="btn btn-warning" onclick="window.location = '/api/${w.user.username}/sync';">
-        Sync..
-      </button>
+    <span class="offset6 span4">
+    %if w.user.oauth_access_token:
+    <form action="/forget_github_token" method="get">
+      <input class="btn btn-primary" type="submit" value="Forget Github Auth" />
+    </form>
+    <form action="/api/${w.user.username}/sync" method="get">
+      <input class="btn btn-warning" type="submit" value="Sync"/>
+    </form>
+    %else:
+    <form action="/login/github">
+      <input class="btn btn-info" type="submit" value="Link Github Auth"/>
+    </form>
+    %endif
     </span>
   </div>
 % endif
@@ -35,11 +46,11 @@
         </tr>
         % for repo in list(w.user.all_repos):
           <tr>
-            <td>${repo.user.username}/${repo.name}</td>
+            <td>${repo.user.github_username}/${repo.name}</td>
             <td>${repo.description}</td>
             <td>${repo.language}</td>
 % if w.show_buttons:
-            <td>${w.make_button(repo.user.username, repo.name) | n}</td>
+            <td>${w.make_button(repo) | n}</td>
 % endif
           </tr>
         % endfor

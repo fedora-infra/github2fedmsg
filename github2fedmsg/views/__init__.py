@@ -114,9 +114,10 @@ def repo_toggle_enabled(request):
     repo.enabled = not repo.enabled
 
     # Now notify github
-    token = repo.user.oauth_access_token
-    if not token and repo.user.users:
-        token = repo.user.users[0].oauth_access_token
+    token = request.user.oauth_access_token
+
+    if not token:
+        raise HTTPForbidden("you need to link your account with github first")
 
     data = {
         "access_token": token,

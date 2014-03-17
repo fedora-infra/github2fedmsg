@@ -15,26 +15,20 @@ class UserProfile(twc.Widget):
     def prepare(self):
         """ Query github for some information before display """
 
-        import pyramid
-        settings = pyramid.threadlocal.get_current_registry().settings
-        config_key = 'github.secret_oauth_access_token'
-        value = settings[config_key]
-        oauth_creds = dict(access_token=value)
+        oauth_creds = dict(access_token=self.user.oauth_access_token)
 
         # Try to refresh list of repos only if the user has none.
-        if not self.user.all_repos:
+        if self.user.github_username and \
+           self.user.oauth_access_token and \
+           not self.user.all_repos:
             self.user.sync_repos(oauth_creds)
 
 
-    def make_button(self, username, repo_name):
+    def make_button(self, repo):
         # TODO -- Can we use resource_url here?
-        link = '/api/%s/%s/toggle' % (username, repo_name)
+        github_username = repo.user.github_username
+        link = '/api/%s/%s/toggle' % (github_username, repo.name)
         click = 'onclick="subscribe(\'%s\')"' % link
-        Repo = github2fedmsg.models.Repo
-        query = Repo.query.filter(and_(
-            Repo.username==username, Repo.name==repo_name))
-
-        repo = query.one()
 
         if repo.enabled:
             cls, text = "btn-success", "Disable"
@@ -42,4 +36,4 @@ class UserProfile(twc.Widget):
             cls, text = "btn-danger", "Enable"
 
         return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
-            username, repo_name, cls, click, text)
+            github_username, repo.name, cls, click, text)

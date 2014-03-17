@@ -51,8 +51,8 @@
                 <input class="btn btn-info" type="submit" value="Sign out" />
               </form>
             %else:
-              <form class="navbar-form pull-right" action="/login/github" method="post">
-                <input class="btn btn-primary" type="submit" value="Sign in with Github" />
+              <form class="navbar-form pull-right" action="/login/openid" method="post">
+                <input class="btn btn-primary" type="submit" value="Sign in with FAS" />
               </form>
             %endif
             </li>

@@ -12,6 +12,7 @@ import os
 
 import github2fedmsg.models
 import github2fedmsg.traversal
+import github2fedmsg.custom_openid
 
 # TODO -- replace this with pyramid_beaker
 crappy_session_factory = UnencryptedCookieSessionFactoryConfig('itsaseekreet')
@@ -66,11 +67,20 @@ def main(global_config, **settings):
     config.include('velruse.providers.github')
     config.add_github_login_from_settings()
 
+    config.include('velruse.providers.openid')
+    github2fedmsg.custom_openid.add_openid_login(
+        config,
+        realm=settings.get('velruse.openid.realm'),
+        identity_provider=settings.get('velruse.openid.identifier'),
+    )
+
+
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('logout', '/logout')
     config.add_route('webhook', '/webhook')
     config.add_route('stats', '/stats')
     config.add_route('docs', '/docs')
+    config.add_route('forget_github_token', '/forget_github_token')
     config.scan()
     return config.make_wsgi_app()
