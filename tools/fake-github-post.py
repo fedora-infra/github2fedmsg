@@ -91,7 +91,8 @@ import json
 blob = {'payload': json.dumps(payload)}
 
 import requests
-requests.post(
+response = requests.post(
     "http://localhost:6543/webhook",
     data=blob,
 )
+print response.status_code
