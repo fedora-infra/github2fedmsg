@@ -57,6 +57,8 @@ github_events = [
 
 @view_config(route_name='home', renderer='index.mak')
 def home(request):
+    if request.user:
+        return HTTPFound(location=request.user.username)
     return {}
 
 
