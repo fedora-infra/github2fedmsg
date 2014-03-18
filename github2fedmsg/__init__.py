@@ -42,7 +42,6 @@ def main(global_config, **settings):
         parser.read(secret_path)
         secret_config = dict(parser.items("github2fedmsg"))
         settings.update(secret_config)
-        global_settings.update(secret_config)
     except Exception as e:
         # TODO: There is a better way to log this message than print.
         print 'Failed to load secret.ini.  Reason: %r' % str(e)
