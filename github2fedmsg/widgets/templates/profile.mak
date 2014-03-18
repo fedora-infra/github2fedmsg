@@ -4,7 +4,8 @@
     <span class="col-md-1">
       <form method="POST" action="https://www.libravatar.org/openid/login/">
         <input type="hidden" name="openid_identifier" value="${w.user.openid_url}"/>
-        <input type="image" class="img-circle centered" src="${w.user.avatar}&s=64" style="outline: none;"
+        <input type="image" class="img-circle centered"
+               src="${w.user.avatar}&s=86" style="outline: none;"
                alt="${w.user.username}'s avatar"/>
       </form>
     </span>

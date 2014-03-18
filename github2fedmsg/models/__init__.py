@@ -21,7 +21,7 @@ from sqlalchemy.orm import (
 import pyramid.threadlocal
 import github2fedmsg.traversal
 import datetime
-from hashlib import md5
+from hashlib import sha256
 from .jsonifiable import JSONifiable
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -127,9 +127,8 @@ class User(Base):
 
     @property
     def avatar(self):
-        email = self.emails.split(',')[0]
-        digest = md5(email).hexdigest()
-        return "http://www.gravatar.com/avatar/%s" % digest
+        digest = sha256(self.openid_url).hexdigest()
+        return "https://seccdn.libravatar.org/avatar/%s?d=retro" % digest
 
     @property
     def created_on_fmt(self):
