@@ -105,6 +105,10 @@ def webhook(request):
         if event_type == 'issues':
             event_type = 'issue.' + payload['action']
 
+        # Same here
+        if event_type == 'pull_request':
+            event_type = 'pull_request.' + payload['action']
+
         # Make issues comments match our scheme more nicely
         if event_type == 'issue_comment':
             event_type = 'issue.comment'
