@@ -32,9 +32,9 @@ class UserProfile(twc.Widget):
         click = 'onclick="subscribe(\'%s\')"' % link
 
         if repo.enabled:
-            cls, text = "btn-success", "Disable"
+            cls, text = "btn-success", "On"
         else:
-            cls, text = "btn-danger", "Enable"
+            cls, text = "btn-default", "Off"
 
         return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
             github_username, repo.name, cls, click, text)
