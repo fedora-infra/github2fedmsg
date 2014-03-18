@@ -8,5 +8,7 @@
 - [X] Set up a cloud node for shared dev/testing
 - [ ] Write fedmsg.meta processors
 - [ ] Package it up; package review.
+- [ ] Take another pass through the UI and clean it up.  @ryanlerch is working
+      on a nicer design; in the meantime we can spruce it up ourselves.
 - [ ] Staging/ansible
 - [ ] Production
