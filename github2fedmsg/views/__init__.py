@@ -141,6 +141,9 @@ def prune_useless_urls(payload):
             payload[k] = prune_useless_urls(v)
         elif k.endswith('_url') and k != 'html_url':
             del payload[k]
+        elif k == '_links':
+            payload['html_url'] = v['html']['href']
+            del payload[k]
 
     return payload
 
