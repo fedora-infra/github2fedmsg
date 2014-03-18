@@ -6,12 +6,12 @@ function subscribe(link) {
             name = name.replace('.', '\\.');
             sel = $("#"+json.github_username+'-'+name);
             sel.toggleClass('btn-success');
-            sel.toggleClass('btn-danger');
+            sel.toggleClass('btn-default');
 
             if (json.repo.enabled) {
-                sel.html("Disable");
+                sel.html("On");
             } else {
-                sel.html("Enable");
+                sel.html("Off");
             }
         },
         error: function(json, stat, xhr) {
