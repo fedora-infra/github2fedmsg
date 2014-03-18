@@ -137,12 +137,12 @@ def prune_useless_urls(payload):
     """ Given *any* github message, strip out unneeded information. """
 
     for k, v in payload.items():
-        if isinstance(v, dict):
+        if k == '_links':
+            payload['html_url'] = v['html']['href']
+            del payload[k]
+        elif isinstance(v, dict):
             payload[k] = prune_useless_urls(v)
         elif k.endswith('_url') and k != 'html_url':
-            del payload[k]
-        elif k == '_links':
-            payload['html_url'] = v['html']['href']
             del payload[k]
 
     return payload
