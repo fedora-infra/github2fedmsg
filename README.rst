@@ -33,8 +33,8 @@ Using `virtualenvwrapper <pypi.python.org/pypi/virtualenvwrapper>`_::
   $ python setup.py develop
 
 Go off and `register your development application with github
-<https://github.com/settings/applications>`_.  Save the oauth tokens and add the
-secret one to a new file you create called ``secret.ini``.  Use the example
+<https://github.com/settings/applications>`_.  Save the oauth tokens and add
+the secret one to a new file you create called ``secret.ini``.  Use the example
 ``secret.ini.example`` file.
 
 
@@ -46,4 +46,4 @@ Create the database::
 Now, start the webapp::
 
   $ workon github2fedmsg
-  $ pserve development.ini
+  $ pserve development.ini --reload
