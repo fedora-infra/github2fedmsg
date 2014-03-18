@@ -1,40 +1,56 @@
 ## -*- coding: utf-8 -*-
 <div class="content">
-  <div class="row">
-    <span class="span10 offset1 profile-header">
-      <div class="photo-64"><img src="${w.user.avatar}&s=64" /></div>
+  <div class="row profile-header">
+    <span class="col-md-1">
+      <form method="POST" action="https://www.libravatar.org/openid/login/">
+        <input type="hidden" name="openid_identifier" value="${w.user.openid_url}"/>
+        <input type="image" class="img-circle centered" src="${w.user.avatar}&s=64" style="outline: none;"
+               alt="${w.user.username}'s avatar"/>
+      </form>
+    </span>
+    <span class="col-md-11">
       <h1>
         ${w.user.username}
-        <small>${w.user.full_name} ${len(w.user.all_repos)} repos</small>
+        <small>${w.user.full_name}
+        %if w.user.github_username:
+          (${w.user.github_username} on github with ${len(w.user.all_repos)} repos)
+        %else:
+          (github account not linked)
+        %endif
+        </small>
       </h1>
     </span>
-
-
   </div>
-
-% if w.show_buttons:
-  <div class="row">
-    <span class="offset6 span4">
-    %if w.user.oauth_access_token:
-    <form action="/forget_github_token" method="get">
-      <input class="btn btn-primary" type="submit" value="Forget Github Auth" />
-    </form>
-    <form action="/api/${w.user.username}/sync" method="get">
-      <input class="btn btn-warning" type="submit" value="Sync"/>
-    </form>
-    %else:
-    <form action="/login/github">
-      <input class="btn btn-info" type="submit" value="Link Github Auth"/>
-    </form>
-    %endif
+  <div class="row profile-buttons">
+    <span class="col-md-12">
+      <a href="/logout" class="pull-right btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-log-out"></span>
+        Sign out
+      </a>
+      % if w.show_buttons:
+      %if w.user.oauth_access_token:
+      <a href="/api/${w.user.username}/sync" class="pull-right btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-refresh"></span>
+        Refresh from Github
+      </a>
+      <a href="/forget_github_token" class="pull-right btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-floppy-remove"></span>
+        Forget Github Authz
+      </a>
+      %else:
+      <a href="/login/github" class="pull-right btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-transfer"></span>
+        Link with Github
+      </a>
+      %endif
+      % endif
     </span>
   </div>
-% endif
 
   <div class="row">&nbsp;</div>
 
   <div class="row">
-    <span class="span10 offset1">
+    <span class="col-md-10 col-md-offset-1">
       <table class="table table-condensed table-hover table-striped">
         <tr>
           <th>Name</th>

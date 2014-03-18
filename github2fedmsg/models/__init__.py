@@ -53,6 +53,10 @@ class User(Base):
     repos = relation('Repo', backref=('user'))
 
     @property
+    def openid_url(self):
+        return "http://%s.id.fedoraproject.org/" % self.username
+
+    @property
     def all_repos(self):
         return sum(
             [self.repos] + [org.repos for org in self.organizations],

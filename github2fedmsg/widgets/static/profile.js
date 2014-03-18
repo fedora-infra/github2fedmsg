@@ -8,7 +8,7 @@ function subscribe(link) {
             sel.toggleClass('btn-success');
             sel.toggleClass('btn-danger');
 
-            if (json.repo[json.kind+'_enabled']) {
+            if (json.repo.enabled) {
                 sel.html("Disable");
             } else {
                 sel.html("Enable");
