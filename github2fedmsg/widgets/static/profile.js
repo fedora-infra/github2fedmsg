@@ -3,7 +3,7 @@ function subscribe(link) {
         success: function(json, stat, xhr) {
             var name, sel;
             name = json.repo.name;
-            name = name.replace('.', '\\.');
+            name = name.replace(/\./g, '\\.');
             sel = $("#"+json.github_username+'-'+name);
             sel.toggleClass('btn-success');
             sel.toggleClass('btn-default');
