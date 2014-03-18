@@ -91,6 +91,9 @@ def webhook(request):
             msg = "Invalid X-Hub-Signature"
             raise HTTPForbidden(msg)
 
+        payload = request.params['payload']
+        payload = json.loads(payload)
+
         event_type = request.headers['X-Github-Event'].lower()
 
         # github sends us a 'ping' when we first subscribe to let us know that
@@ -98,8 +101,13 @@ def webhook(request):
         if event_type == 'ping':
             event_type = 'webhook'
 
-        payload = request.params['payload']
-        payload = json.loads(payload)
+        # Turn just 'issues' into 'issue.reopened'
+        if event_type == 'issues':
+            event_type = 'issue.' + payload['action']
+
+        # Make issues comments match our scheme more nicely
+        if event_type == 'issue_comment':
+            event_type = 'issue.comment'
 
         # TODO -- remove this debugging eventually.
         import pprint
