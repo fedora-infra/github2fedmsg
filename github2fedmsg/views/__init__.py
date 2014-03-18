@@ -153,9 +153,7 @@ def build_fas_lookup(payload):
         if user:
             mapping[github_username] = user.username
 
-    return dict([
-        (gh_user, user.username) for
-    ])
+    return mapping
 
 
 @view_config(name='sync', context=m.User, renderer='json')
