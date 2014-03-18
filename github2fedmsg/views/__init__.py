@@ -106,6 +106,9 @@ def webhook(request):
         print " ** RECEIVED THIS FROM GITHUB ** "
         pprint.pprint(payload)
 
+        # Strip out a bunch of redundant information that github sends us
+        payload = prune_useless_urls(payload)
+
         # Build a little table of github usernames to fas usernames so
         # consumers can have an easy time.
         fas_usernames = build_fas_lookup(payload)
@@ -121,6 +124,17 @@ def webhook(request):
 
     return "OK"
 
+
+def prune_useless_urls(payload):
+    """ Given *any* github message, strip out unneeded information. """
+
+    for k, v in payload.items():
+        if isinstance(v, dict):
+            payload[k] = prune_useless_urls(v)
+        elif k.endswith('_url') and k != 'html_url':
+            del payload[k]
+
+    return payload
 
 def build_fas_lookup(payload):
     """ Given *any* github message, build a lookup of github usernames to fas
