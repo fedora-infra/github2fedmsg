@@ -75,7 +75,6 @@ def webhook(request):
     pprint.pprint(request.params.items())
     # End debugging block
 
-
     github_secret = request.registry.settings.get("github.secret")
 
     if 'payload' in request.params:
@@ -94,13 +93,23 @@ def webhook(request):
 
         event_type = request.headers['X-Github-Event'].lower()
 
+        # github sends us a 'ping' when we first subscribe to let us know that
+        # it worked.
+        if event_type == 'ping':
+            event_type = 'webhook'
+
         payload = request.params['payload']
         payload = json.loads(payload)
 
-        # TODO - pack some Fedora-related metadata in the message (fas user?)
+        # TODO -- remove this debugging eventually.
         import pprint
         print " ** RECEIVED THIS FROM GITHUB ** "
         pprint.pprint(payload)
+
+        # Build a little table of github usernames to fas usernames so
+        # consumers can have an easy time.
+        fas_usernames = build_fas_lookup(payload)
+        payload['fas_usernames'] = fas_usernames
 
         fedmsg.publish(
             modname="github",
@@ -111,6 +120,42 @@ def webhook(request):
         raise NotImplementedError()
 
     return "OK"
+
+
+def build_fas_lookup(payload):
+    """ Given *any* github message, build a lookup of github usernames to fas
+    usernames for it.
+
+    This involves hand coding a bunch of knowledge about github message
+    formats.
+    """
+
+    usernames = set()
+
+    # Trawl through every possible corner we can to find github usernames
+    if 'commits' in payload:
+        for commit in payload['commits']:
+            usernames.add(commit['committer']['username'])
+            usernames.add(commit['author']['username'])
+
+    if 'pusher' in payload:
+        usernames.add(payload['pusher']['name'])
+
+    if 'sender' in payload:
+        usernames.add(payload['sender']['login'])
+
+    # Take all that, and roll it up into a dict mapping those to FAS
+    mapping = {}
+    for github_username in usernames:
+        if not github_username:
+            continue
+        user = m.User.query.filter_by(github_username=github_username).first()
+        if user:
+            mapping[github_username] = user.username
+
+    return dict([
+        (gh_user, user.username) for
+    ])
 
 
 @view_config(name='sync', context=m.User, renderer='json')
