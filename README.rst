@@ -13,8 +13,8 @@ on the `fedmsg`_ message bus.
 It is written in Python on the Pyramid framework, and uses `velruse
 <http://velruse.rtfd.org>`_ to talk with github.  It adds a webhook callback
 back to itself on repositories you ask it to monitor.  When one of those
-callbacks fire, github2fedmsg adds a work item to a redis queue with `retask
-<http://retask.rtfd.org>`_.
+callbacks fire, github2fedmsg republishes the message it receives to the
+`fedmsg`_ bus.
 
 Hacking
 -------
