@@ -4,5 +4,9 @@
 - [X] Remove pygithub3, replace with our own lib.
 - [ ] Remove pep8bot branding
 - [ ] Style with robyduck's latest bootstrap fedora
-- [ ] Add fedmsg publication code, test it.
-- [ ] Set up a cloud node for shared dev/testing
+- [X] Add fedmsg publication code, test it.
+- [X] Set up a cloud node for shared dev/testing
+- [ ] Write fedmsg.meta processors
+- [ ] Package it up; package review.
+- [ ] Staging/ansible
+- [ ] Production
