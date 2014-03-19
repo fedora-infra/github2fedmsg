@@ -22,7 +22,7 @@ requires = [
     ]
 
 setup(name='github2fedmsg',
-      version='0.0',
+      version='0.1',
       description='Pubsubhubbub app that rebroadcasts GH events over fedmsg',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
