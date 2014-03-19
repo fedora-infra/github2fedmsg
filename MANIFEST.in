@@ -1,2 +1,3 @@
-include *.txt *.ini *.cfg *.rst
-recursive-include github2fedmsg *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+include *.txt development.ini alembic.ini secret.ini.example *.cfg *.rst
+prune secret.ini
+cursive-include github2fedmsg *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
