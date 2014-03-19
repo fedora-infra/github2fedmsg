@@ -31,6 +31,7 @@ Using `virtualenvwrapper <pypi.python.org/pypi/virtualenvwrapper>`_::
   $ cd github2fedmsg
   $ mkvirtualenv github2fedmsg
   $ python setup.py develop
+  $ pip install waitress
 
 Go off and `register your development application with github
 <https://github.com/settings/applications>`_.  Save the oauth tokens and add
