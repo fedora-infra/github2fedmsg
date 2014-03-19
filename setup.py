@@ -19,6 +19,7 @@ requires = [
     'weberror',
     'velruse',
     'alembic',
+    'tw2.core',
     ]
 
 setup(name='github2fedmsg',
