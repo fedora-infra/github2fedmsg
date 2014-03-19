@@ -1,3 +1,9 @@
+import json
+import hmac
+import hashlib
+import urllib
+import requests
+
 payload = {
     "after": "3ef21292dd6448d4731f49864844d458ad3801a5",
     "before": "541d26405960ef934a398d7ee413bf7855cbe220",
@@ -87,11 +93,21 @@ payload = {
                "url": "https://github.com/ralphbean/statatat",
                "watchers": 3 } }
 
-import json
 blob = {'payload': json.dumps(payload)}
 
-import requests
-requests.post(
+github_secret = 'changeme!'
+body = urllib.urlencode(blob)
+hex = hmac.new(github_secret, body, hashlib.sha1).hexdigest()
+headers = {
+    'X-Hub-Signature': 'sha1=%s' % hex,
+    'X-GitHub-Event': 'this is going to be something...',
+}
+
+response = requests.post(
     "http://localhost:6543/webhook",
     data=blob,
+    headers=headers,
 )
+
+print response.status_code
+print response.text
