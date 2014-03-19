@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1
+0.2
 ---
 
-- 0.1 `fa489f03b <https://github.com/fedora-infra/github2fedmsg/commit/fa489f03b683c4d88d98fafcdbcc882f20994c2f>`_
+- Prune secret.ini. `ec496f86b <https://github.com/fedora-infra/github2fedmsg/commit/ec496f86b6415c6cb988b7c62baa3868efd8908a>`_
