@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.1
+-----
+
+- Fix inclusion of resources in the dist. `e43d151d5 <https://github.com/fedora-infra/github2fedmsg/commit/e43d151d51620240e1f16befaa999314f31e1da3>`_
+
 0.2
 ---
 

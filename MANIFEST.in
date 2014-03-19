@@ -1,3 +1,4 @@
 include *.txt development.ini alembic.ini secret.ini.example *.cfg *.rst
 prune secret.ini
-cursive-include github2fedmsg *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
+graft github2fedmsg/static
+graft github2fedmsg/widgets/static
