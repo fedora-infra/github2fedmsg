@@ -19,7 +19,6 @@ requires = [
     'weberror',
     'velruse',
     'alembic',
-    'tw2.bootstrap.forms',
     ]
 
 setup(name='github2fedmsg',

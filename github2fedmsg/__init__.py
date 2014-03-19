@@ -73,8 +73,6 @@ def main(global_config, **settings):
         identity_provider=settings.get('velruse.openid.identifier'),
     )
 
-    config.add_tween('github2fedmsg.tweens.remove_bootstrap_factory')
-
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('logout', '/logout')
