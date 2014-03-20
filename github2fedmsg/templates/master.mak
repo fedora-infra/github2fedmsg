@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script type="text/javascript"
+      src="/static/jquery-1.11.0.min.js" ></script>
     <link rel="stylesheet" type="text/css" media="all"
         href="/static/bootstrap-3.0.2-fedora/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" media="all"
