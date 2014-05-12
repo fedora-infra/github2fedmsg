@@ -4,7 +4,7 @@
     <script type="text/javascript"
       src="/static/jquery-1.11.0.min.js" ></script>
     <link rel="stylesheet" type="text/css" media="all"
-        href="/static/bootstrap-3.0.2-fedora/css/bootstrap.min.css"/>
+        href="/static/bootstrap-3.1.1-fedora/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" media="all"
         href="/static/github2fedmsg.css"/>
   </head>
