@@ -1,17 +1,15 @@
 github2fedmsg
 -------------
 
-A bot broadcasts every action made on your repo hosted on github on the
+A bot broadcasts every action made on your repo hosted on GitHub on the
 `fedmsg <http://www.fedmsg.com>`_ message bus.
 
-Status:  *Pre-Alpha*.
-
-It is a webapp that monitors github repositories you subscribe it to.  When
-new actions (commits, pull-request, tickets) are made, it brodcasts a message
-on the `fedmsg`_ message bus.
+It is a web application that monitors GitHub repositories you subscribe it to.
+When new actions (commits, pull-request, tickets) are made, it broadcasts a
+message on the `fedmsg`_ message bus.
 
 It is written in Python on the Pyramid framework, and uses `velruse
-<http://velruse.rtfd.org>`_ to talk with github.  It adds a webhook callback
+<http://velruse.rtfd.org>`_ to talk with GitHub.  It adds a webhook callback
 back to itself on repositories you ask it to monitor.  When one of those
 callbacks fire, github2fedmsg republishes the message it receives to the
 `fedmsg`_ bus.
@@ -33,7 +31,7 @@ Using `virtualenvwrapper <pypi.python.org/pypi/virtualenvwrapper>`_::
   $ python setup.py develop
   $ pip install waitress
 
-Go off and `register your development application with github
+Go off and `register your development application with GitHub
 <https://github.com/settings/applications>`_.  Save the oauth tokens and add
 the secret one to a new file you create called ``secret.ini``.  Use the example
 ``secret.ini.example`` file.
