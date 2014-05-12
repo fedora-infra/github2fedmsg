@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.2.3
+-----
+
+- Add jquery back in. `8985732f1 <https://github.com/fedora-infra/github2fedmsg/commit/8985732f1e22a565dfd3ce9964896e9e4f86657e>`_
+- This is gone. `b0e2e309f <https://github.com/fedora-infra/github2fedmsg/commit/b0e2e309f7eb9d00250e9cb164c3a4a3da141877>`_
+- Add agpl header notice to each .py file. `52063ac07 <https://github.com/fedora-infra/github2fedmsg/commit/52063ac07ad83a1ddceeb1c12a9ec93ebc6c65f1>`_
+- Grammar/style fixes in the README. `ba1a8ead4 <https://github.com/fedora-infra/github2fedmsg/commit/ba1a8ead4736a2e9607a886a0a973721b1017387>`_
+- Merge pull request #7 from fedora-infra/feature/review-items `f891d6c4a <https://github.com/fedora-infra/github2fedmsg/commit/f891d6c4a851c2ea381307b1811a3d2d7e21362e>`_
+
 0.2.2
 -----
 
