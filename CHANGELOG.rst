@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.4
+-----
+
+- Update to the lastest bootstrap-fedora. `62cc2def2 <https://github.com/fedora-infra/github2fedmsg/commit/62cc2def29e92abebd37b7bfaf3dc09691e24057>`_
+
 0.2.3
 -----
 
