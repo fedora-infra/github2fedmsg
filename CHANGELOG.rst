@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.5
+-----
+
+- Include templates and alembic stuff. `92147d6dc <https://github.com/fedora-infra/github2fedmsg/commit/92147d6dc4f057ceedc7e021f0b265d091ae3939>`_
+
 0.2.4
 -----
 
