@@ -108,6 +108,13 @@ def webhook(request):
         if event_type == 'ping':
             event_type = 'webhook'
 
+            # They don't actually tell us which repo is signed up, so, for
+            # presentation purposes only, we'll rip out the repo name here and
+            # build a nice human-clickable url.
+            tokens = payload['hook']['url'].split('/')
+            owner, repo = tokens[-4], tokens[-3]
+            payload['compare'] = 'https://github.com/%s/%s' % (owner, repo)
+
         # Turn just 'issues' into 'issue.reopened'
         if event_type == 'issues':
             event_type = 'issue.' + payload['action']
