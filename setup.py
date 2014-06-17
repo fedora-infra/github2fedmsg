@@ -32,7 +32,6 @@ requires = [
     'zope.sqlalchemy',
     'weberror',
     'velruse',
-    'alembic',
     'tw2.core',
     ]
 
