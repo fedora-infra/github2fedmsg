@@ -30,11 +30,6 @@ import github2fedmsg.models
 import github2fedmsg.traversal
 import github2fedmsg.custom_openid
 
-# TODO -- replace this with pyramid_beaker
-crappy_session_factory = UnencryptedCookieSessionFactoryConfig('itsaseekreet')
-authn_policy = AuthTktAuthenticationPolicy(secret='verysecret')
-#authz_policy = ACLAuthorizationPolicy()
-
 
 def get_user(request):
     """ A utility property hanging on 'request' """
@@ -61,6 +56,9 @@ def main(global_config, **settings):
     except Exception as e:
         # TODO: There is a better way to log this message than print.
         print 'Failed to load secret.ini.  Reason: %r' % str(e)
+
+    crappy_session_factory = UnencryptedCookieSessionFactoryConfig(settings['session.secret'])
+    authn_policy = AuthTktAuthenticationPolicy(secret=settings['authnsecret'], hashalg='sha256')
 
     engine = engine_from_config(settings, 'sqlalchemy.')
     github2fedmsg.models.DBSession.configure(bind=engine)

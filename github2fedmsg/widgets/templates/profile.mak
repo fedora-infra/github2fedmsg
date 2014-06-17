@@ -24,22 +24,22 @@
   </div>
   <div class="row profile-buttons">
     <span class="col-md-12">
-      <a href="/logout" class="pull-right btn btn-default btn-sm">
+      <a href="${w.request.route_url('logout')}" class="pull-right btn btn-default btn-sm">
         <span class="glyphicon glyphicon-log-out"></span>
         Sign out
       </a>
       % if w.show_buttons:
       %if w.user.oauth_access_token:
-      <a href="/api/${w.user.username}/sync" class="pull-right btn btn-default btn-sm">
+      <a href="${w.request.route_url('home')}api/${w.user.username}/sync" class="pull-right btn btn-default btn-sm">
         <span class="glyphicon glyphicon-refresh"></span>
         Refresh from Github
       </a>
-      <a href="/forget_github_token" class="pull-right btn btn-default btn-sm">
+      <a href="${w.request.route_url('forget_github_token')}" class="pull-right btn btn-default btn-sm">
         <span class="glyphicon glyphicon-floppy-remove"></span>
         Forget Github Authz
       </a>
       %else:
-      <a href="/login/github" class="pull-right btn btn-default btn-sm">
+      <a href="${w.request.route_url('velruse.github-login')}" class="pull-right btn btn-default btn-sm">
         <span class="glyphicon glyphicon-transfer"></span>
         Link with Github
       </a>
@@ -57,7 +57,7 @@
           <th>Name</th>
           <th>Description</th>
           <th>Language</th>
-% if w.show_buttons:
+% if w.show_buttons and w.user.oauth_access_token:
           <th>Enabled?</th>
 % endif
         </tr>
@@ -66,7 +66,7 @@
             <td>${repo.user.github_username}/${repo.name}</td>
             <td>${repo.description}</td>
             <td>${repo.language}</td>
-% if w.show_buttons:
+% if w.show_buttons and w.user.oauth_access_token:
             <td>${w.make_button(repo) | n}</td>
 % endif
           </tr>

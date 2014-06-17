@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <script type="text/javascript"
-      src="/static/jquery-1.11.0.min.js" ></script>
+      src="${request.static_url('github2fedmsg:static/jquery-1.11.0.min.js')}" ></script>
     <link rel="stylesheet" type="text/css" media="all"
-        href="/static/bootstrap-3.1.1-fedora/css/bootstrap.min.css"/>
+        href="${request.static_url('github2fedmsg:static/bootstrap-3.1.1-fedora/css/bootstrap.min.css')}"/>
     <link rel="stylesheet" type="text/css" media="all"
-        href="/static/github2fedmsg.css"/>
+        href="${request.static_url('github2fedmsg:static/github2fedmsg.css')}"/>
   </head>
   <body>
     <div id="wrap" class="container container-fluid">
