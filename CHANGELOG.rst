@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.7
+-----
+
+- Get relative urls right for serving behind a proxy. `6d60f5170 <https://github.com/fedora-infra/github2fedmsg/commit/6d60f5170c2e2a6d3d852412a2e1743fa1405b8c>`_
+- Add new vars to development.ini `935292e2d <https://github.com/fedora-infra/github2fedmsg/commit/935292e2d3a3113d8646afa15c4bef2dcb369f5a>`_
+
 0.2.6
 -----
 
