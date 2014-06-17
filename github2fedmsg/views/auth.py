@@ -47,6 +47,7 @@ def login_complete_view(request):
 
     ctx = request.context
     accounts = ctx.profile['accounts']
+    home = request.route_url('home')
 
     if accounts and accounts[0]['domain'] == 'github.com':
         if not request.user:
@@ -57,7 +58,7 @@ def login_complete_view(request):
         request.user.github_username = ctx.profile['preferredUsername']
         request.user.oauth_access_token = token
         request.session['token'] = token
-        return HTTPFound(location="/" + request.user.username)
+        return HTTPFound(location=home + request.user.username)
 
     username = ctx.profile['preferredUsername']
     full_name = ctx.profile['displayName']
@@ -78,12 +79,9 @@ def login_complete_view(request):
         ))
 
     user = query.one()
-
     headers = remember(request, username)
     request.session['token'] = user.oauth_access_token
-
-    # TODO -- how not to hard code this location?
-    return HTTPFound(location="/" + username, headers=headers)
+    return HTTPFound(location=home + user.username, headers=headers)
 
 
 @view_config(context='velruse.AuthenticationDenied', renderer='json')
@@ -95,7 +93,8 @@ def login_denied_view(request):
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
-    return HTTPFound(location="/", headers=headers)
+    home = request.route_url('home')
+    return HTTPFound(location=home, headers=headers)
 
 
 @view_config(route_name='forget_github_token')
@@ -104,10 +103,11 @@ def forget_github_token(request):
         request.session['token']
 
     username = request.user.username
+    home = request.route_url('home')
 
     import transaction
-    request.user.github_username = None
+    #request.user.github_username = None
     request.user.oauth_access_token = None
     transaction.commit()
 
-    return HTTPFound(location="/" + username)
+    return HTTPFound(location=home + username)

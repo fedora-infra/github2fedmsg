@@ -16,6 +16,7 @@
 
 import tw2.core as twc
 import github2fedmsg.models
+import pyramid.threadlocal
 from sqlalchemy import and_
 
 
@@ -44,7 +45,8 @@ class UserProfile(twc.Widget):
         # TODO -- Can we use resource_url here?
         username = repo.user.username
         github_username = repo.user.github_username
-        link = '/api/%s/%s/%s/toggle' % (username, github_username, repo.name)
+        home = self.request.route_url('home')
+        link = home + 'api/%s/%s/%s/toggle' % (username, github_username, repo.name)
         click = 'onclick="subscribe(\'%s\')"' % link
 
         if repo.enabled:
@@ -54,3 +56,7 @@ class UserProfile(twc.Widget):
 
         return "<button id='%s-%s' class='btn %s' %s>%s</button>" % (
             github_username, repo.name, cls, click, text)
+
+    @property
+    def request(self):
+        return pyramid.threadlocal.get_current_request()
