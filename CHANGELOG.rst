@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.6
+-----
+
+- Remove currently unused alembic stuff. `655844396 <https://github.com/fedora-infra/github2fedmsg/commit/6558443960bf4a2e8f656d0821729d5712a7d1e6>`_
+
 0.2.5
 -----
 
