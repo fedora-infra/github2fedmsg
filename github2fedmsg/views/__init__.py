@@ -215,7 +215,8 @@ def sync_user(request):
     import transaction
     request.context.sync_repos(oauth_creds)
     transaction.commit()
-    raise HTTPFound('/' + request.context.username)
+    home = request.route_url('home')
+    raise HTTPFound(home + request.context.username)
 
 
 @view_config(name='toggle', context=m.Repo, renderer='json')
