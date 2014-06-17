@@ -1,7 +1,5 @@
 include *.txt development.ini alembic.ini secret.ini.example *.cfg *.rst LICENSE
 prune secret.ini
-include alembic.ini
-graft alembic/
 graft github2fedmsg/static
 graft github2fedmsg/templates/
 graft github2fedmsg/widgets/templates

@@ -32,12 +32,11 @@ requires = [
     'zope.sqlalchemy',
     'weberror',
     'velruse',
-    'alembic',
     'tw2.core',
     ]
 
 setup(name='github2fedmsg',
-      version='0.2.5',
+      version='0.2.6',
       description='Pubsubhubbub app that rebroadcasts GH events over fedmsg',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
