@@ -82,15 +82,6 @@ def home(request):
 def webhook(request):
     """ Handle github webhook. """
 
-    # TODO -- eventually remove this debugging.
-    print "GOT A MESSAGE FROM GITHUB WOWOWOWOW"
-    print "here are the headers"
-    import pprint
-    pprint.pprint(request.headers.items())
-    print "and here are the params",
-    pprint.pprint(request.params.items())
-    # End debugging block
-
     github_secret = request.registry.settings.get("github.secret")
 
     if 'payload' in request.params:
@@ -128,11 +119,6 @@ def webhook(request):
         # Make issues comments match our scheme more nicely
         if event_type == 'issue_comment':
             event_type = 'issue.comment'
-
-        # TODO -- remove this debugging eventually.
-        import pprint
-        print " ** RECEIVED THIS FROM GITHUB ** "
-        pprint.pprint(payload)
 
         # Strip out a bunch of redundant information that github sends us
         payload = prune_useless_urls(payload)
