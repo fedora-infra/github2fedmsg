@@ -1,6 +1,22 @@
 Changelog
 =========
 
+0.3.0
+-----
+
+- Fix refresh link redirection for @pypingou. `f9d0aad9e <https://github.com/fedora-infra/github2fedmsg/commit/f9d0aad9e976618e7dff452d415a9af1d1aa3f6c>`_
+- Remove some debugging. `5cd637945 <https://github.com/fedora-infra/github2fedmsg/commit/5cd637945c63e093428b974ef6ce06ec8004fbfa>`_
+- Construct a nice url when new repos are added. `8b22a8931 <https://github.com/fedora-infra/github2fedmsg/commit/8b22a89318f368aebb17c002bead96056b83c6e0>`_
+- Remove unused utilities. `a98642c10 <https://github.com/fedora-infra/github2fedmsg/commit/a98642c10564af330922a4a1cf1ae555d07f7c9e>`_
+- Reduce oauth scope. `f093b633b <https://github.com/fedora-infra/github2fedmsg/commit/f093b633b7384719e2bbbc4ae37bae651da5838c>`_
+- Modern requests works fine here. `9ceb3110b <https://github.com/fedora-infra/github2fedmsg/commit/9ceb3110b893f2e57d01a593883bf019d1754718>`_
+- That reduced oauth scope doesn't actually work. `b9cc0892d <https://github.com/fedora-infra/github2fedmsg/commit/b9cc0892d0b6c2a161ca518f2846858613c44b78>`_
+- Update consumer key. `1789b722f <https://github.com/fedora-infra/github2fedmsg/commit/1789b722f11a7416bc06ee88d4fa6f1dd160d268>`_
+- Break toggling out into its own util function. `ad60e5c23 <https://github.com/fedora-infra/github2fedmsg/commit/ad60e5c231c74ee8aff6f70328952823948f0510>`_
+- Port from pubsubhubbub to webhooks. `08cc079cd <https://github.com/fedora-infra/github2fedmsg/commit/08cc079cda5551136c245ac17459930220063b9d>`_
+- These scopes work now.  /cc @puiterwijk `fad7394e7 <https://github.com/fedora-infra/github2fedmsg/commit/fad7394e70583497cb3ca02676fb60ea7dc79429>`_
+- Just reorganize some of these views.. `1641c5b82 <https://github.com/fedora-infra/github2fedmsg/commit/1641c5b827af6022286afc309370a565cb51b988>`_
+
 0.2.7
 -----
 
