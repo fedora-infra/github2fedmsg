@@ -72,64 +72,66 @@ def webhook(request):
 
     github_secret = request.registry.settings.get("github.secret")
 
+    hex = hmac.new(github_secret, request.body, hashlib.sha1).hexdigest()
+    valid_sig = "sha1=%s" % hex
+
+    if 'X-Hub-Signature' not in request.headers:
+        msg = "No X-Hub-Signature provided"
+        raise HTTPUnauthorized(msg)
+
+    actual_sig = request.headers['X-Hub-Signature']
+
+    if actual_sig != valid_sig:
+        msg = "Invalid X-Hub-Signature"
+        raise HTTPForbidden(msg)
+
     if 'payload' in request.params:
-        hex = hmac.new(github_secret, request.body, hashlib.sha1).hexdigest()
-        valid_sig = "sha1=%s" % hex
-
-        if 'X-Hub-Signature' not in request.headers:
-            msg = "No X-Hub-Signature provided"
-            raise HTTPUnauthorized(msg)
-
-        actual_sig = request.headers['X-Hub-Signature']
-
-        if actual_sig != valid_sig:
-            msg = "Invalid X-Hub-Signature"
-            raise HTTPForbidden(msg)
-
+        # pubsubhubbub
         payload = request.params['payload']
         payload = json.loads(payload)
-
-        event_type = request.headers['X-Github-Event'].lower()
-
-        # github sends us a 'ping' when we first subscribe to let us know that
-        # it worked.
-        if event_type == 'ping':
-            event_type = 'webhook'
-
-            # They don't actually tell us which repo is signed up, so, for
-            # presentation purposes only, we'll rip out the repo name here and
-            # build a nice human-clickable url.
-            tokens = payload['hook']['url'].split('/')
-            owner, repo = tokens[-4], tokens[-3]
-            payload['compare'] = 'https://github.com/%s/%s' % (owner, repo)
-
-        # Turn just 'issues' into 'issue.reopened'
-        if event_type == 'issues':
-            event_type = 'issue.' + payload['action']
-
-        # Same here
-        if event_type == 'pull_request':
-            event_type = 'pull_request.' + payload['action']
-
-        # Make issues comments match our scheme more nicely
-        if event_type == 'issue_comment':
-            event_type = 'issue.comment'
-
-        # Strip out a bunch of redundant information that github sends us
-        payload = prune_useless_urls(payload)
-
-        # Build a little table of github usernames to fas usernames so
-        # consumers can have an easy time.
-        fas_usernames = build_fas_lookup(payload)
-        payload['fas_usernames'] = fas_usernames
-
-        fedmsg.publish(
-            modname="github",
-            topic=event_type,
-            msg=payload,
-        )
     else:
-        raise NotImplementedError()
+        # whatever webhooks
+        payload = request.json_body
+
+    event_type = request.headers['X-Github-Event'].lower()
+
+    # github sends us a 'ping' when we first subscribe to let us know that
+    # it worked.
+    if event_type == 'ping':
+        event_type = 'webhook'
+
+        # They don't actually tell us which repo is signed up, so, for
+        # presentation purposes only, we'll rip out the repo name here and
+        # build a nice human-clickable url.
+        tokens = payload['hook']['url'].split('/')
+        owner, repo = tokens[-4], tokens[-3]
+        payload['compare'] = 'https://github.com/%s/%s' % (owner, repo)
+
+    # Turn just 'issues' into 'issue.reopened'
+    if event_type == 'issues':
+        event_type = 'issue.' + payload['action']
+
+    # Same here
+    if event_type == 'pull_request':
+        event_type = 'pull_request.' + payload['action']
+
+    # Make issues comments match our scheme more nicely
+    if event_type == 'issue_comment':
+        event_type = 'issue.comment'
+
+    # Strip out a bunch of redundant information that github sends us
+    payload = prune_useless_urls(payload)
+
+    # Build a little table of github usernames to fas usernames so
+    # consumers can have an easy time.
+    fas_usernames = build_fas_lookup(payload)
+    payload['fas_usernames'] = fas_usernames
+
+    fedmsg.publish(
+        modname="github",
+        topic=event_type,
+        msg=payload,
+    )
 
     return "OK"
 

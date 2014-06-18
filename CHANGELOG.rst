@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.1
+-----
+
+- Adapt this to handle webhook payloads as well as pubsubhubbub. `b821dbf99 <https://github.com/fedora-infra/github2fedmsg/commit/b821dbf99bda1e1ed3897db00336274c36f05c93>`_
+
 0.3.0
 -----
 
