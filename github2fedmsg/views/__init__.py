@@ -33,7 +33,7 @@ import fedmsg
 import github2fedmsg.githubutils as gh
 
 # http://developer.github.com/v3/repos/hooks/
-github_api_url = "https://api.github.com/hub"
+github_pubsubhubub_api_url = "https://api.github.com/hub"
 # All events: http://developer.github.com/webhooks/#events
 github_events = [
     #"push",            # Any git push to a Repository
@@ -233,7 +233,8 @@ def repo_toggle_enabled(request):
     if not token:
         raise HTTPForbidden("you need to link your account with github first")
 
-    toggle_pubsubhubbub_hooks(request, repo, token)
+    #toggle_pubsubhubbub_hooks(request, repo, token)
+    toggle_webhook_directly(request, repo, token)
 
     response = {
         'status': 'ok',
@@ -257,12 +258,79 @@ def toggle_pubsubhubbub_hooks(request, repo, token):
         data["hub.topic"] = "https://github.com/%s/%s/events/%s" % (
             repo.user.github_username, repo.name, event)
         # Subscribe to events via pubsubhubbub
-        result = requests.post(github_api_url, data=data)
+        result = requests.post(github_pubsubhubbub_api_url, data=data)
 
-        if result.status_code != 204:
+        if result.status_code < 200 or result.status_code > 299:
             d = result.json()
             d['status_code'] = result.status_code
             raise IOError(d)
+
+
+def toggle_webhook_directly(request, repo, token):
+    actually_enabled = _get_webhook_status_directly(request, repo, token)
+
+    # Here, repo.enabled represents our database knowledge of the hook state.
+    # "actually_enabled" represents github's own record keeping.
+
+    if repo.enabled and not actually_enabled:
+        _enable_webhook_directly(request, repo, token)
+    elif repo.enabled and actually_enabled:
+        pass  # nothing to do
+    elif not repo.enabled and actually_enabled:
+        _disable_webhook_directly(request, repo, actually_enabled, token)
+    elif not repo.enabled and not actually_enabled:
+        pass  # nothing to do
+
+def _get_webhook_status_directly(request, repo, token):
+    auth = {"access_token": token}
+    url = "https://api.github.com/repos/%s/%s/hooks" % (
+        repo.user.github_username, repo.name)
+    result = requests.get(url, params=auth)
+
+    if result.status_code < 200 or result.status_code > 299:
+        d = result.json()
+        d['status_code'] = result.status_code
+        raise IOError(d)
+
+    callback = request.registry.settings.get("github.callback")
+
+    hooks = result.json()
+    for hook in hooks:
+        if hook['name'] == 'web' and hook['config'].get('url') == callback:
+            return hook
+
+    return None
+
+def _enable_webhook_directly(request, repo, token):
+    auth = {"access_token": token}
+    data = {
+        "name": "web",
+        "active": True,
+        "events": github_events,
+        "config": {
+            "url": request.registry.settings.get("github.callback"),
+            "content_type": "json",
+            "secret": request.registry.settings.get("github.secret"),
+        },
+    }
+
+    headers = {'content-type': 'application/json'}
+    url = "https://api.github.com/repos/%s/%s/hooks" % (
+        repo.user.github_username, repo.name)
+    result = requests.post(
+        url, params=auth, data=json.dumps(data), headers=headers)
+
+    if result.status_code < 200 or result.status_code > 299:
+        d = result.json()
+        d['status_code'] = result.status_code
+        raise IOError(d)
+
+
+def _disable_webhook_directly(request, repo, hook, token):
+    auth = {"access_token": token}
+    url = "https://api.github.com/repos/%s/%s/hooks/%i" % (
+        repo.user.github_username, repo.name, hook['id'])
+    requests.delete(url, params=auth)
 
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
