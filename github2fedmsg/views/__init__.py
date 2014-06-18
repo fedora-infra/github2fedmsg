@@ -233,6 +233,19 @@ def repo_toggle_enabled(request):
     if not token:
         raise HTTPForbidden("you need to link your account with github first")
 
+    toggle_pubsubhubbub_hooks(request, repo, token)
+
+    response = {
+        'status': 'ok',
+        'repo': request.context.__json__(),
+        'username': repo.user.username,
+        'github_username': repo.user.github_username,
+        'enabled': repo.enabled,
+    }
+    return response
+
+
+def toggle_pubsubhubbub_hooks(request, repo, token):
     data = {
         "access_token": token,
         "hub.mode": ['unsubscribe', 'subscribe'][repo.enabled],
@@ -250,15 +263,6 @@ def repo_toggle_enabled(request):
             d = result.json()
             d['status_code'] = result.status_code
             raise IOError(d)
-
-    response = {
-        'status': 'ok',
-        'repo': request.context.__json__(),
-        'username': repo.user.username,
-        'github_username': repo.user.github_username,
-        'enabled': repo.enabled,
-    }
-    return response
 
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
