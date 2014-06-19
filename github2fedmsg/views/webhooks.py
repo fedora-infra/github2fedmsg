@@ -145,7 +145,7 @@ def prune_useless_urls(payload):
             del payload[k]
         elif isinstance(v, dict):
             payload[k] = prune_useless_urls(v)
-        elif k.endswith('_url') and k != 'html_url':
+        elif k.endswith('_url') and k not in ['html_url', 'target_url']:
             del payload[k]
 
     return payload
