@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>github2fedmsg - rebroadcast GitHub events to the fedmsg bus</title>
     <script type="text/javascript"
       src="${request.static_url('github2fedmsg:static/jquery-1.11.0.min.js')}" ></script>
     <link rel="stylesheet" type="text/css" media="all"
         href="${request.static_url('github2fedmsg:static/bootstrap-3.1.1-fedora/css/bootstrap.min.css')}"/>
     <link rel="stylesheet" type="text/css" media="all"
         href="${request.static_url('github2fedmsg:static/github2fedmsg.css')}"/>
+
   </head>
   <body>
     <div id="wrap" class="container container-fluid">
