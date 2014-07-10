@@ -173,6 +173,12 @@ def build_fas_lookup(payload):
     if 'sender' in payload:
         usernames.add(payload['sender']['login'])
 
+    if 'forkee' in payload:
+        usernames.add(payload['forkee']['owner']['login'])
+
+    if 'repository' in payload:
+        usernames.add(payload['repository']['owner']['login'])
+
     # Take all that, and roll it up into a dict mapping those to FAS
     mapping = {}
     for github_username in usernames:
