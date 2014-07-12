@@ -31,8 +31,9 @@ def home(request):
 @view_config(name='sync', context=m.User, renderer='json')
 def sync_user(request):
     # TODO -- someday, learn how to do the __acls__ thing.. :/
+    username = request.context.username
     userid = authenticated_userid(request)
-    if userid != request.context.username:
+    if userid != username:
         raise HTTPUnauthorized()
 
     config_key = 'github.secret_oauth_access_token'
@@ -43,7 +44,7 @@ def sync_user(request):
     request.context.sync_repos(oauth_creds)
     transaction.commit()
     home = request.route_url('home')
-    raise HTTPFound(home + request.context.username)
+    raise HTTPFound(home + username)
 
 
 @view_config(context="tw2.core.widgets.WidgetMeta",
