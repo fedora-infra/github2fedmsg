@@ -1,6 +1,19 @@
 Changelog
 =========
 
+0.3.2
+-----
+
+- A slash makes all the difference. `e56562181 <https://github.com/fedora-infra/github2fedmsg/commit/e56562181f7c68419782d5a880ee8cd6b0469bb3>`_
+- Preserve target_url `fee1c01ca <https://github.com/fedora-infra/github2fedmsg/commit/fee1c01ca50bd046a838b19c545f17359d29b253>`_
+- Add a ``<title>`` tag. `a66d502b3 <https://github.com/fedora-infra/github2fedmsg/commit/a66d502b32acaa2c12b63de885d98cf220f0392e>`_
+- Include repo owner in passive actions `ba67db9fa <https://github.com/fedora-infra/github2fedmsg/commit/ba67db9faefec61f449192c786f3670875e733ac>`_
+- Merge pull request #8 from fedora-infra/feature/include-owners `2220c655d <https://github.com/fedora-infra/github2fedmsg/commit/2220c655d145b870b0b16f16f641a60aeb2174b4>`_
+- Fix an 'unbound session' error. `4d6f4af9d <https://github.com/fedora-infra/github2fedmsg/commit/4d6f4af9df0b17cf7c8840884091dd0169aac49a>`_
+- Merge pull request #9 from fedora-infra/feature/fix-unbound-session-error `163e7afc1 <https://github.com/fedora-infra/github2fedmsg/commit/163e7afc19dd8a3d49d32503d3b85f910547e5e2>`_
+- Mark resources as traversed. `4347c0176 <https://github.com/fedora-infra/github2fedmsg/commit/4347c01761b256728ea88503fdf1dcec01d6f6c7>`_
+- Merge pull request #10 from fedora-infra/feature/fix-for-puiterwijk `5457d673d <https://github.com/fedora-infra/github2fedmsg/commit/5457d673d58294a8e2479567d1458aa7435d4ca2>`_
+
 0.3.1
 -----
 
