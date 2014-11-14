@@ -145,7 +145,7 @@ def prune_useless_urls(payload):
             del payload[k]
         elif isinstance(v, dict):
             payload[k] = prune_useless_urls(v)
-        elif k.endswith('_url') and k != 'html_url':
+        elif k.endswith('_url') and k not in ['html_url', 'target_url']:
             del payload[k]
 
     return payload
@@ -172,6 +172,12 @@ def build_fas_lookup(payload):
 
     if 'sender' in payload:
         usernames.add(payload['sender']['login'])
+
+    if 'forkee' in payload:
+        usernames.add(payload['forkee']['owner']['login'])
+
+    if 'repository' in payload:
+        usernames.add(payload['repository']['owner']['login'])
 
     # Take all that, and roll it up into a dict mapping those to FAS
     mapping = {}
