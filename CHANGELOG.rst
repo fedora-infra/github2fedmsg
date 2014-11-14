@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3.2
+0.3.3
 -----
 
 - A slash makes all the difference. `e56562181 <https://github.com/fedora-infra/github2fedmsg/commit/e56562181f7c68419782d5a880ee8cd6b0469bb3>`_
@@ -13,6 +13,7 @@ Changelog
 - Merge pull request #9 from fedora-infra/feature/fix-unbound-session-error `163e7afc1 <https://github.com/fedora-infra/github2fedmsg/commit/163e7afc19dd8a3d49d32503d3b85f910547e5e2>`_
 - Mark resources as traversed. `4347c0176 <https://github.com/fedora-infra/github2fedmsg/commit/4347c01761b256728ea88503fdf1dcec01d6f6c7>`_
 - Merge pull request #10 from fedora-infra/feature/fix-for-puiterwijk `5457d673d <https://github.com/fedora-infra/github2fedmsg/commit/5457d673d58294a8e2479567d1458aa7435d4ca2>`_
+- 0.3.2 `3c97c7acb <https://github.com/fedora-infra/github2fedmsg/commit/3c97c7acb1e0d16c08aa9857722f20f8853bb0ea>`_
 
 0.3.1
 -----
