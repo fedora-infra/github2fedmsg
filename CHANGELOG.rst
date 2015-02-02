@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3.4
+-----
+
+- Careful with the repo owner `3c083026a <https://github.com/fedora-infra/github2fedmsg/commit/3c083026af768c7fc40c5dfbe728e29ea66b528b>`_
+- Merge pull request #11 from fedora-infra/feature/payload-changes `9f2de8581 <https://github.com/fedora-infra/github2fedmsg/commit/9f2de858101e8b62f86d72b40750a50b54a8e46c>`_
+- Update TODO.md `8a6c50bf4 <https://github.com/fedora-infra/github2fedmsg/commit/8a6c50bf4b3ad097698e40f32fb254a00e332850>`_
+- Might as well be even more careful here. `1b64c77a5 <https://github.com/fedora-infra/github2fedmsg/commit/1b64c77a5a312b5c6e5d489c79b838353723d996>`_
+
 0.3.3
 -----
 
