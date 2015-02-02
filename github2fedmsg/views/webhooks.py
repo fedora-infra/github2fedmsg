@@ -171,10 +171,12 @@ def build_fas_lookup(payload):
         usernames.add(payload['pusher']['name'])
 
     if 'sender' in payload:
-        usernames.add(payload['sender']['login'])
+        if 'login' in payload['sender']:
+            usernames.add(payload['sender']['login'])
 
     if 'forkee' in payload:
-        usernames.add(payload['forkee']['owner']['login'])
+        if 'login' in payload['forkee']['owner']:
+            usernames.add(payload['forkee']['owner']['login'])
 
     if 'repository' in payload:
         if 'login' in payload['repository']['owner']:
