@@ -7,8 +7,8 @@
 - [X] Add fedmsg publication code, test it.
 - [X] Set up a cloud node for shared dev/testing
 - [X] Write fedmsg.meta processors
-- [ ] Package it up; package review.
+- [X] Package it up; package review.
 - [X] Take another pass through the UI and clean it up.  @ryanlerch is working
       on a nicer design; in the meantime we can spruce it up ourselves.
-- [ ] Staging/ansible
-- [ ] Production
+- [X] Staging/ansible
+- [X] Production
