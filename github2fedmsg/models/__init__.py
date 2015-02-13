@@ -153,7 +153,7 @@ class User(Base):
     def __getitem__(self, key):
         already_visited = getattr(self, '_visited', False)
         if not already_visited and key == self.github_username:
-            self._visisted = True
+            self._visited = True
             return self
 
         for r in self.repos:
