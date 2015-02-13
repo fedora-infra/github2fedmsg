@@ -15,6 +15,10 @@ function subscribe(link) {
             }
         },
         error: function(json, stat, xhr) {
+            Messenger({theme: 'flat'}).post({
+              message: "Sorry.  There was an error on the server.",
+              type: "error",
+            });
             console.log('error');
             console.log(json);
         },
