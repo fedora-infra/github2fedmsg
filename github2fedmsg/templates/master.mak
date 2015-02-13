@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <title>github2fedmsg - rebroadcast GitHub events to the fedmsg bus</title>
+
     <script type="text/javascript"
       src="${request.static_url('github2fedmsg:static/jquery-1.11.0.min.js')}" ></script>
     <link rel="stylesheet" type="text/css" media="all"
@@ -9,6 +10,14 @@
     <link rel="stylesheet" type="text/css" media="all"
         href="${request.static_url('github2fedmsg:static/github2fedmsg.css')}"/>
 
+    <script type="text/javascript"
+      src="${request.static_url('github2fedmsg:static/messenger-1.4.1/js/messenger.min.js')}" ></script>
+    <script type="text/javascript"
+      src="${request.static_url('github2fedmsg:static/messenger-1.4.1/js/messenger-theme-flat.js')}" ></script>
+    <link rel="stylesheet" type="text/css" media="all"
+        href="${request.static_url('github2fedmsg:static/messenger-1.4.1/css/messenger.css')}"/>
+    <link rel="stylesheet" type="text/css" media="all"
+        href="${request.static_url('github2fedmsg:static/messenger-1.4.1/css/messenger-theme-flat.css')}"/>
   </head>
   <body>
     <div id="wrap" class="container container-fluid">
@@ -25,7 +34,5 @@
         ©2014 Red Hat, Inc., and contributors.
       </div>
     </div>
-
-
   </body>
 </html>

@@ -1,6 +1,17 @@
 Changelog
 =========
 
+0.3.5
+-----
+
+- Change in default consumer key. `132d8cbeb <https://github.com/fedora-infra/github2fedmsg/commit/132d8cbeb02134ada3fbd685961d2c8e90731ea3>`_
+- Pull in messenger-1.4.1. `d46bd97bf <https://github.com/fedora-infra/github2fedmsg/commit/d46bd97bf499a3b86f620813d596f934ea07c88a>`_
+- Use messenger.js to show errors. `a2029df93 <https://github.com/fedora-infra/github2fedmsg/commit/a2029df93d950a35705c7ab6f9e756beb4ec1913>`_
+- Typofix `c67f97e0e <https://github.com/fedora-infra/github2fedmsg/commit/c67f97e0e846e89f65a1f042073da3a6dcbbcfdf>`_
+- Include messenger LICENSE. `cb98f6c7b <https://github.com/fedora-infra/github2fedmsg/commit/cb98f6c7b74bb50c7cb8ee58aff81033c23300ee>`_
+- Merge pull request #15 from fedora-infra/feature/name-name `18fc7b0c4 <https://github.com/fedora-infra/github2fedmsg/commit/18fc7b0c436d4982ab06b1093d581f9190ec51d6>`_
+- Merge pull request #14 from fedora-infra/feature/error-messages `7d389e0ac <https://github.com/fedora-infra/github2fedmsg/commit/7d389e0ac4ff0eb9ac86e3507667b9ef2ade4e53>`_
+
 0.3.4
 -----
 
