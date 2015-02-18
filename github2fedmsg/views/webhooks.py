@@ -107,6 +107,11 @@ def webhook(request):
         owner, repo = tokens[-4], tokens[-3]
         payload['compare'] = 'https://github.com/%s/%s' % (owner, repo)
 
+    # Convert github.watch messages to github.star messages.
+    # See http://da.gd/sUNkj
+    if event_type == 'watch':
+        event_type = 'star'
+
     # Turn just 'issues' into 'issue.reopened'
     if event_type == 'issues':
         event_type = 'issue.' + payload['action']
