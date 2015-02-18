@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.6
+-----
+
+- Convert github.watch messages to github.star messages. `8ead823b6 <https://github.com/fedora-infra/github2fedmsg/commit/8ead823b68c7410eb7cc0f413b2a8678e6aade16>`_
+- Merge pull request #16 from fedora-infra/feature/watch-to-star `288a5b85c <https://github.com/fedora-infra/github2fedmsg/commit/288a5b85c7041e078eb5a79ff970bf43fd53470f>`_
+
 0.3.5
 -----
 
