@@ -36,7 +36,7 @@ requires = [
     ]
 
 setup(name='github2fedmsg',
-      version='0.3.5',
+      version='0.3.6',
       description='Pubsubhubbub app that rebroadcasts GH events over fedmsg',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
