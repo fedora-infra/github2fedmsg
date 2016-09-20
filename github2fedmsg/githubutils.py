@@ -96,5 +96,5 @@ if __name__ == '__main__':
     username = raw_input("GitHub Username: ")
     password = getpass.getpass()
 
-    results = get_all(username, (username, password))
+    results = get_repos(username, (username, password))
     print len(results), "repos found."
