@@ -169,8 +169,16 @@ def build_fas_lookup(payload):
     # Trawl through every possible corner we can to find github usernames
     if 'commits' in payload:
         for commit in payload['commits']:
-            usernames.add(commit['committer']['username'])
-            usernames.add(commit['author']['username'])
+            if 'committer' in commit:
+                if 'username' in commit['committer']:
+                    usernames.add(commit['committer']['username'])
+                elif 'name' in commit['committer']:
+                    usernames.add(commit['committer']['name'])
+            if 'author' in commit:
+                if 'username' in commit['author']:
+                    usernames.add(commit['author']['username'])
+                elif 'name' in commit['author']:
+                    usernames.add(commit['author']['name'])
 
     if 'pusher' in payload:
         usernames.add(payload['pusher']['name'])
