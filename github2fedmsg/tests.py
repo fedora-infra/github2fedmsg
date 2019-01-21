@@ -18,31 +18,33 @@ import unittest
 import transaction
 
 from pyramid import testing
+from sqlalchemy import create_engine
 
-from .models import DBSession
+from .models import DBSession, Base, Repo
+from .views import home, widget_view
 
 class TestMyView(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
-        from sqlalchemy import create_engine
         engine = create_engine('sqlite://')
-        from .models import (
-            Base,
-            MyModel,
-            )
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
         with transaction.manager:
-            model = MyModel(name='one', value=55)
-            DBSession.add(model)
+            repo = Repo(name='testrepo', description="Test Repo", language="cobol")
+            DBSession.add(repo)
 
     def tearDown(self):
         DBSession.remove()
         testing.tearDown()
 
-    def test_it(self):
-        from .views import my_view
+    def test_home(self):
         request = testing.DummyRequest()
-        info = my_view(request)
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'github2fedmsg')
+        request.user = None
+        result = home(request)
+        self.assertEqual(result, {})
+
+    def test_widget_view(self):
+        request = testing.DummyRequest()
+        request.user = None
+        result = widget_view(request)
+        self.assertEqual(result, {'widget': None})
