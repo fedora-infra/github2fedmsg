@@ -23,7 +23,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'fedmsg',
+    'fedora-messaging',
     'pyramid',
     'SQLAlchemy',
     'transaction',
@@ -37,7 +37,7 @@ requires = [
 
 setup(name='github2fedmsg',
       version='0.3.6',
-      description='Pubsubhubbub app that rebroadcasts GH events over fedmsg',
+      description='Pubsubhubbub app that rebroadcasts GitHub events over fedora-messaging',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",

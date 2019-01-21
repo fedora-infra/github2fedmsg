@@ -2,11 +2,11 @@ github2fedmsg
 -------------
 
 A bot broadcasts every action made on your repo hosted on GitHub on the
-`fedmsg <http://www.fedmsg.com>`_ message bus.
+`fedora-messaging <http://fedora-messaging.readthedocs.io/>`_ message bus.
 
 It is a web application that monitors GitHub repositories you subscribe it to.
 When new actions (commits, pull-request, tickets) are made, it broadcasts a
-message on the `fedmsg`_ message bus.
+message on the `fedora-messaging`_ message bus.
 
 You can see all the current messages with `datagrepper's "github" category
 <https://apps.fedoraproject.org/datagrepper/raw?category=github>`_.
@@ -15,7 +15,7 @@ It is written in Python on the Pyramid framework, and uses `velruse
 <http://velruse.rtfd.org>`_ to talk with GitHub.  It adds a webhook callback
 back to itself on repositories you ask it to monitor.  When one of those
 callbacks fire, github2fedmsg republishes the message it receives to the
-`fedmsg`_ bus.
+`fedora-messaging`_ bus.
 
 Hacking
 -------
