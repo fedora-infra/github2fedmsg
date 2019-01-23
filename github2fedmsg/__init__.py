@@ -72,7 +72,11 @@ def main(global_config, **settings):
     )
 
     # Make it so we can do "request.user" in templates.
-    config.set_request_property(get_user, 'user', reify=True)
+    if hasattr(config, "add_request_method"):
+        # Pyramid >= 1.4
+        config.add_request_method(get_user, 'user', reify=True)
+    else:
+        config.set_request_property(get_user, 'user', reify=True)
 
     config.include('pyramid_mako')
     config.add_mako_renderer('.mak')
