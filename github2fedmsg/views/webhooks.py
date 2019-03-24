@@ -20,12 +20,16 @@ from pyramid.httpexceptions import HTTPFound, HTTPUnauthorized, HTTPForbidden
 
 import github2fedmsg.models as m
 
-import fedmsg
 import hashlib
 import hmac
 import json
 import requests
 
+import logging
+from fedora_messaging.api import Message, publish
+from fedora_messaging.exceptions import PublishReturned, ConnectionException
+
+LOGGER = logging.getLogger(__name__)
 
 # http://developer.github.com/v3/repos/hooks/
 github_pubsubhubub_api_url = "https://api.github.com/hub"
@@ -132,11 +136,19 @@ def webhook(request):
     fas_usernames = build_fas_lookup(payload)
     payload['fas_usernames'] = fas_usernames
 
-    fedmsg.publish(
-        modname="github",
-        topic=event_type,
-        msg=payload,
-    )
+    try:
+        msg = Message(
+            topic="github.{}".format(event_type),
+            body=payload,
+        )
+        publish(msg)
+    except PublishReturned as e:
+        LOGGER.warning(
+            "Fedora Messaging broker rejected message %s: %s",
+            msg.id, e
+        )
+    except ConnectionException as e:
+        LOGGER.warning("Error sending message %s: %s", msg.id, e)
 
     return "OK"
 

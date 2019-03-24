@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.security import (
     authenticated_userid,
     remember,
@@ -60,9 +60,12 @@ def login_complete_view(request):
         request.session['token'] = token
         return HTTPFound(location=home + request.user.username)
 
-    username = ctx.profile['preferredUsername']
-    full_name = ctx.profile['displayName']
-    emails = ctx.profile['emails'] or []
+    try:
+        username = ctx.profile['preferredUsername']
+    except KeyError:
+        username = accounts[0]["username"].split("/")[-2]
+    full_name = ctx.profile.get('displayName', username)
+    emails = ctx.profile.get('emails', [])
 
     if emails:
         if isinstance(emails[0], dict):
