@@ -34,17 +34,5 @@
         ©2014 Red Hat, Inc., and contributors.
       </div>
     </div>
-
-    % if request.registry.settings.get('fedmenu.url'):
-    <script src="${request.registry.settings.get('fedmenu.url')}/js/fedmenu.js"></script>
-    <script>
-      fedmenu({
-          'url': '${request.registry.settings.get("fedmenu.data_url")}',
-          'mimeType': 'application/javascript',
-          'position': 'bottom-right',
-      });
-    </script>
-    % endif
-
   </body>
 </html>
