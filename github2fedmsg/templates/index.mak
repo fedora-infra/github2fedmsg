@@ -4,8 +4,7 @@
   <h1>github2fedmsg
   <img class="logo" src="${request.static_url('github2fedmsg:static/github2fedmsg.png')}"/>
   </h1>
-  <p class="lead">Have stuff on github?  We'll put it on the <a
-    href="http://fedmsg.com">fedmsg</a> bus.
+  <p class="lead">Have stuff on github?  We'll put it on the fedmsg bus.
   </p>
   %if not request.user:
   <a href="${request.route_url('velruse.openid-url')}" class="btn btn-default btn-lg">
