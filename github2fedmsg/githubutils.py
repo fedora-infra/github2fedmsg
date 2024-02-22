@@ -67,7 +67,10 @@ def _getter(url, auth):
             kwargs = dict(auth=auth)
         elif isinstance(auth, dict):
             # Or, is it an oauth bearer token?
-            kwargs = dict(params=auth)
+            if "access_token" in auth:
+                kwargs = dict(headers={"Authorization": "token %s" % auth["access_token"]})
+            else:
+                raise TypeError("No clue how to handle github auth obj: %r" % auth)
         else:
             raise TypeError("No clue how to handle github auth obj: %r" % auth)
 

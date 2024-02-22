@@ -291,10 +291,10 @@ def toggle_webhook_directly(request, repo, token):
 
 
 def _get_webhook_status_directly(request, repo, token):
-    auth = {"access_token": token}
     url = "https://api.github.com/repos/%s/%s/hooks" % (
         repo.user.github_username, repo.name)
-    result = requests.get(url, params=auth)
+    headers = {"Authorization": "token %s" % token}
+    result = requests.get(url, headers=headers)
 
     if result.status_code < 200 or result.status_code > 299:
         d = result.json()
@@ -312,7 +312,6 @@ def _get_webhook_status_directly(request, repo, token):
 
 
 def _enable_webhook_directly(request, repo, token):
-    auth = {"access_token": token}
     data = {
         "name": "web",
         "active": True,
@@ -324,11 +323,14 @@ def _enable_webhook_directly(request, repo, token):
         },
     }
 
-    headers = {'content-type': 'application/json'}
+    headers = {
+        'content-type': 'application/json',
+        "Authorization": "token %s" % token
+    }
     url = "https://api.github.com/repos/%s/%s/hooks" % (
         repo.user.github_username, repo.name)
     result = requests.post(
-        url, params=auth, data=json.dumps(data), headers=headers)
+        url, data=json.dumps(data), headers=headers)
 
     if result.status_code < 200 or result.status_code > 299:
         d = result.json()
