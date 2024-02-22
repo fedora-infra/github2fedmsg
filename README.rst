@@ -9,7 +9,7 @@ When new actions (commits, pull-request, tickets) are made, it broadcasts a
 message on the `fedora-messaging`_ message bus.
 
 You can see all the current messages with `datagrepper's "github" category
-<https://apps.fedoraproject.org/datagrepper/raw?category=github>`_.
+<https://apps.fedoraproject.org/datagrepper/raw?category=github&delta=3600>`_.
 
 It is written in Python on the Pyramid framework, and uses `velruse
 <http://velruse.rtfd.org>`_ to talk with GitHub.  It adds a webhook callback
